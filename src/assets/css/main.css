@@ -1,0 +1,19 @@
+@import "@fontsource/fredoka";
+@import "@fontsource/nunito-sans";
+
+@import "tailwindcss";
+
+@theme {
+  --font-fredoka: "Fredoka", ui-rounded, sans-serif;
+  --font-nunito: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-indigo: #5a67b8;
+  --color-ink: #2a2e3a;
+  --color-paper: #fbf9f5;
+  --color-lavender: #e8e7f6;
+  --color-terracotta: #a15b42;
+}
+
+body {
+  @apply bg-paper text-ink font-nunito antialiased;
+}
