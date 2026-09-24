@@ -40,6 +40,7 @@ Règles : texte encre sur fond clair, texte papier (crème) sur aplats indigo.
 Typo : **Bricolage Grotesque** (titres + boutons, `font-display`, 700/800), **Instrument Serif** italique (accent, `font-serif`), **DM Sans** (corps, `font-sans`).
 Style : très arrondi, doux, ludique. Rayons d'arrondi généreux, boutons pleins.
 Mascotte « Tico » : blob indigo à deux yeux, sur écrans vides et de succès.
+Curseur Tico et ses easter eggs (humeurs, déclencheurs, réglages) : voir `docs/tico-easter-eggs.md`.
 Icônes : outline arrondies (Lucide ou Phosphor).
 
 ## Modèle de données (Baserow)

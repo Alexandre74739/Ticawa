@@ -1,6 +1,7 @@
 <template>
   <component
     :is="tag"
+    data-button
     :to="to"
     :href="href"
     :type="tag === 'button' ? type : undefined"

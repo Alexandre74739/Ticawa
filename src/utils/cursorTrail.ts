@@ -29,7 +29,9 @@ export function createTrail() {
 
   const advance = (instant: boolean) => {
     const head = path[0];
-    if (!head) return null;
+    const tip = path.at(-1);
+    if (!head || !tip) return null;
+    if (dist(head, tip) < REST) path = [head, tip];
     let length = 0;
     for (let i = 1; i < path.length; i++)
       length += dist(path[i - 1]!, path[i]!);

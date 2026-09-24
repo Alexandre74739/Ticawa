@@ -2,7 +2,7 @@
   <div
     aria-hidden="true"
     class="pointer-events-none fixed inset-0 z-100 transition-opacity duration-300"
-    :class="enabled && visible ? 'opacity-100' : 'opacity-0'"
+    :class="enabled && started ? 'opacity-100' : 'opacity-0'"
   >
     <canvas ref="canvas" class="absolute inset-0 size-full" />
     <div
@@ -11,12 +11,16 @@
     >
       <UiCursorTico
         :on-dark="onDark"
-        :angry="angry"
+        :mood="mood"
         class="size-full drop-shadow-[0_6px_8px_rgb(42_46_58/0.18)] transition-transform duration-300"
         :class="hovering && 'scale-115'"
       />
     </div>
-    <div ref="dot" class="absolute top-0 left-0 will-change-transform">
+    <div
+      ref="dot"
+      class="absolute top-0 left-0 transition-opacity duration-300 will-change-transform"
+      :class="visible ? 'opacity-100' : 'opacity-0'"
+    >
       <span
         class="absolute rounded-full border-2 transition-all duration-300 ease-out"
         :class="[
@@ -34,14 +38,14 @@
 const dot = ref<HTMLElement | null>(null);
 const tico = ref<HTMLElement | null>(null);
 const canvas = ref<HTMLCanvasElement | null>(null);
-const { enabled, visible, onDark, hovering, angry } = useCursor(
+const { enabled, started, visible, onDark, hovering, mood } = useCursor(
   dot,
   tico,
   canvas,
 );
 
 const tone = computed(() => {
-  if (angry.value)
+  if (mood.value === "angry")
     return {
       ring: "border-terracotta ring-2 ring-paper/70",
       fill: "bg-terracotta",

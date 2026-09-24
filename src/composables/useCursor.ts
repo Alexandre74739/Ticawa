@@ -1,14 +1,19 @@
 import type { Ref } from "vue";
+import type { Mood } from "~/data/tico";
+import type { Flash } from "~/utils/moodTriggers";
 
 const LOOK = 12;
 const STRIDE = 20;
 const FEET = 18;
 const DARK = ".bg-indigo, .bg-ink";
 const INTERACTIVE = "a, button, [role='button'], label";
+const BUTTON = "[data-button]";
 const INDIGO = [90, 103, 184];
 const PAPER = [251, 249, 245];
 const TERRACOTTA = [161, 91, 66];
 const RAGE = { clicks: 3, within: 700, radius: 60, lasts: 2000 };
+const FLASH_LASTS = 2500;
+const IDLE_AFTER = 8000;
 
 const BLINK: Keyframe[] = [
   { transform: "scaleY(1)" },
@@ -30,10 +35,21 @@ export function useCursor(
   canvas: Ref<HTMLCanvasElement | null>,
 ) {
   const enabled = ref(false);
+  const started = ref(false);
   const visible = ref(false);
   const onDark = ref(false);
   const hovering = ref(false);
+  const onButton = ref(false);
   const angry = ref(false);
+  const flash = ref<Flash | null>(null);
+  const idle = ref(false);
+  const mood = computed<Mood>(() => {
+    if (angry.value) return "angry";
+    if (flash.value) return flash.value;
+    if (onButton.value) return "perfect";
+    if (started.value && !visible.value) return "sad";
+    return idle.value ? "confused" : "neutral";
+  });
   let cleanup = () => {};
 
   onMounted(() => {
@@ -45,10 +61,14 @@ export function useCursor(
     const root = document.documentElement;
     const trail = createTrail();
     const fx = createFx(c);
-    const pupils = [...t.querySelectorAll<SVGElement>(".pupil")];
+    const pupils = [...t.querySelectorAll<SVGElement>(".pupil")].map((el) => ({
+      el,
+      look: Number(el.dataset.look ?? 1),
+    }));
     const eyes = [...t.querySelectorAll<SVGElement>(".eye")];
     const mouse = { x: 0, y: 0 };
     const gaze = { x: 0, y: 0 };
+    const ticoAt = { x: 0, y: 0 };
     let clicks: { x: number; y: number; at: number }[] = [];
     let lean = 0;
     let walked = 0;
@@ -58,13 +78,15 @@ export function useCursor(
     let frame = 0;
     let blinkTimer: ReturnType<typeof setTimeout>;
     let calmTimer: ReturnType<typeof setTimeout>;
+    let flashTimer: ReturnType<typeof setTimeout>;
+    let idleTimer: ReturnType<typeof setTimeout>;
 
     const blink = () =>
       eyes.forEach((eye) => eye.animate(BLINK, { duration: 220 }));
     const idleBlink = () => {
       blinkTimer = setTimeout(
         () => {
-          if (visible.value && !angry.value) blink();
+          if (started.value && !angry.value) blink();
           idleBlink();
         },
         2500 + Math.random() * 3500,
@@ -76,8 +98,15 @@ export function useCursor(
       const below = document.elementFromPoint(mouse.x, mouse.y);
       onDark.value = !!below?.closest(DARK);
       hovering.value = !!below?.closest(INTERACTIVE);
+      onButton.value = !!below?.closest(BUTTON);
       wake();
     };
+
+    const triggers = createMoodTriggers((f) => {
+      flash.value = f;
+      clearTimeout(flashTimer);
+      flashTimer = setTimeout(() => (flash.value = null), FLASH_LASTS);
+    });
 
     const walk = (x: number, y: number, dx: number, dy: number) => {
       const angle = Math.atan2(dy, dx);
@@ -92,6 +121,7 @@ export function useCursor(
       const s = trail.advance(reduced);
       if (!s) return (frame = 0);
       const moved = Math.hypot(s.dx, s.dy);
+      Object.assign(ticoAt, { x: s.x, y: s.y });
       const effort = reduced ? 0 : Math.min(s.speed / 8, 1);
       walked += moved;
       if (effort > 0.2 && walked - lastPrint > STRIDE)
@@ -108,10 +138,12 @@ export function useCursor(
       const gy = ((dy / len) * LOOK - gaze.y) * 0.2;
       gaze.x += gx;
       gaze.y += gy;
-      const look = `translate(${gaze.x}px, ${gaze.y}px)`;
-      pupils.forEach((p) => (p.style.transform = look));
+      pupils.forEach(({ el, look }) => {
+        el.style.transform = `translate(${gaze.x * look}px, ${gaze.y * look}px)`;
+      });
 
-      const goal = angry.value ? TERRACOTTA : onDark.value ? PAPER : INDIGO;
+      const goal =
+        mood.value === "angry" ? TERRACOTTA : onDark.value ? PAPER : INDIGO;
       let fading = 0;
       ink.forEach((v, i) => {
         const delta = goal[i]! - v;
@@ -130,11 +162,16 @@ export function useCursor(
 
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
+      const dx = e.clientX - mouse.x;
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      if (visible.value) trail.push(mouse);
+      if (started.value) trail.push(mouse);
       else trail.reset(mouse);
-      visible.value = true;
+      if (visible.value) triggers.move(mouse.x, mouse.y, dx, ticoAt);
+      started.value = visible.value = true;
+      idle.value = false;
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => (idle.value = true), IDLE_AFTER);
       d.style.transform = `translate(${mouse.x}px, ${mouse.y}px)`;
       sample();
     };
@@ -160,7 +197,11 @@ export function useCursor(
       if (!reduced)
         body.animate(angry.value ? SHAKE : PRESS, { duration: 320 });
     };
-    const onLeave = () => (visible.value = false);
+    const onLeave = () => {
+      visible.value = false;
+      triggers.reset();
+      clearTimeout(idleTimer);
+    };
 
     fx.resize();
     idleBlink();
@@ -175,6 +216,8 @@ export function useCursor(
     cleanup = () => {
       clearTimeout(blinkTimer);
       clearTimeout(calmTimer);
+      clearTimeout(flashTimer);
+      clearTimeout(idleTimer);
       root.classList.remove("custom-cursor");
       removeEventListener("pointermove", onMove);
       removeEventListener("pointerdown", onDown);
@@ -187,5 +230,5 @@ export function useCursor(
 
   onBeforeUnmount(() => cleanup());
 
-  return { enabled, visible, onDark, hovering, angry };
+  return { enabled, started, visible, onDark, hovering, mood };
 }

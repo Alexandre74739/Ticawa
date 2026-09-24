@@ -1,7 +1,7 @@
 <template>
   <div
     aria-hidden="true"
-    class="pointer-events-none absolute inset-x-0 top-0 hidden h-svh md:block"
+    class="pointer-events-none absolute inset-x-0 top-0 hidden h-svh select-none md:block"
   >
     <motion.div
       v-for="(mascot, i) in mascots"
@@ -15,6 +15,7 @@
       <motion.img
         :src="`/mascotte/${mascot.src}`"
         alt=""
+        draggable="false"
         class="brightness-0 invert"
         :class="mascot.size"
         :animate="{
