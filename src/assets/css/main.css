@@ -5,7 +5,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "DM Sans Variable", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
 
@@ -18,4 +19,9 @@
 
 body {
   @apply bg-paper text-ink font-sans antialiased;
+}
+
+html.custom-cursor,
+html.custom-cursor * {
+  cursor: none !important;
 }

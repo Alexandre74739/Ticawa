@@ -1,5 +1,6 @@
 <template>
   <MotionConfig reduced-motion="user">
+    <UiCursor />
     <LayoutHeader />
 
     <div class="pb-20 sm:pb-0">
