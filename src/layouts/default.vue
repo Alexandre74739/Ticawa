@@ -1,9 +1,13 @@
 <template>
-  <div>
+  <MotionConfig reduced-motion="user">
     <LayoutHeader />
 
     <div class="pb-20 sm:pb-0">
       <slot />
     </div>
-  </div>
+  </MotionConfig>
 </template>
+
+<script setup lang="ts">
+import { MotionConfig } from "motion-v";
+</script>

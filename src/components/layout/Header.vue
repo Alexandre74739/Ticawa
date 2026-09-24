@@ -1,35 +1,32 @@
 <template>
-  <header class="border-b border-ink/10 bg-paper px-4 py-3 md:px-8">
-    <div class="mx-auto flex max-w-6xl items-center justify-between">
-      <NuxtLink to="/" class="shrink-0">
-        <img
-          src="~/assets/logos/Logo-base.svg"
-          alt="Ticawa"
-          class="h-8 w-auto md:h-9"
-        />
+  <header class="fixed inset-x-0 top-0 z-30 px-3 pt-3 md:px-6 md:pt-5">
+    <div
+      class="mx-auto flex max-w-6xl items-center justify-between rounded-2xl border border-ink/15 bg-paper py-2 pr-2 pl-5 shadow-xl shadow-ink/15"
+    >
+      <NuxtLink
+        to="/"
+        class="shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
+      >
+        <UiLogo class="h-7 w-auto md:h-8" />
       </NuxtLink>
 
-      <nav class="flex items-center gap-3">
-        <span class="hidden sm:contents">
-          <Button to="/connexion" variant="ghost">Connexion</Button>
-        </span>
+      <nav class="flex items-center gap-1">
+        <Button to="/connexion" variant="ghost">Connexion</Button>
 
-        <Button
-          to="/"
-          variant="primary"
-          class="fixed right-4 sm:static sm:right-auto"
+        <div
+          class="fixed right-4 z-30 sm:static"
           style="bottom: calc(1rem + env(safe-area-inset-bottom))"
         >
-          Télécharger l'application
-          <ChevronRight
-            class="h-4 w-4 text-paper transition-transform duration-300 group-hover:translate-x-1 group-active:translate-x-1"
-          />
-        </Button>
+          <Button
+            to="/"
+            arrow
+            class="shadow-xl shadow-ink/25 max-sm:px-8! max-sm:py-3.5! sm:shadow-none"
+          >
+            <span class="sm:hidden">Obtenir l'app</span>
+            <span class="hidden sm:inline">Télécharger l'application</span>
+          </Button>
+        </div>
       </nav>
     </div>
   </header>
 </template>
-
-<script setup lang="ts">
-import { ChevronRight } from "lucide-vue-next";
-</script>
