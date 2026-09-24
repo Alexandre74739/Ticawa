@@ -1,5 +1,8 @@
 <template>
-  <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 top-0 hidden h-svh md:block">
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 top-0 hidden h-svh md:block"
+  >
     <motion.div
       v-for="(mascot, i) in mascots"
       :key="mascot.src"

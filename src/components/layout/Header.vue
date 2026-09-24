@@ -14,19 +14,40 @@
         <Button to="/connexion" variant="ghost">Connexion</Button>
 
         <div
+          ref="floating"
           class="fixed right-4 z-30 sm:static"
           style="bottom: calc(1rem + env(safe-area-inset-bottom))"
         >
           <Button
             to="/"
             arrow
+            :variant="onIndigo ? 'light' : 'primary'"
             class="shadow-xl shadow-ink/25 max-sm:px-8! max-sm:py-3.5! sm:shadow-none"
           >
-            <span class="sm:hidden">Obtenir l'app</span>
-            <span class="hidden sm:inline">Télécharger l'application</span>
+            Installer l'app
           </Button>
         </div>
       </nav>
     </div>
   </header>
 </template>
+
+<script setup lang="ts">
+const floating = ref<HTMLElement | null>(null);
+const onIndigo = ref(false);
+
+const update = () => {
+  const el = floating.value;
+  if (!el || getComputedStyle(el).position !== "fixed")
+    return (onIndigo.value = false);
+  const { left, top, height } = el.getBoundingClientRect();
+  const below = document.elementFromPoint(left - 4, top + height / 2);
+  onIndigo.value = !!below?.closest(".bg-indigo");
+};
+
+onMounted(() => {
+  update();
+  addEventListener("scroll", update, { passive: true });
+});
+onBeforeUnmount(() => removeEventListener("scroll", update));
+</script>
