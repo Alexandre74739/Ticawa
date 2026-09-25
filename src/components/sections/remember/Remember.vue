@@ -1,17 +1,12 @@
 <template>
-  <section id="rappels" class="bg-paper px-4 pb-24 md:px-8 md:pb-36">
+  <section id="rappels" class="bg-paper px-4 pb-20 md:px-8 md:pb-28">
     <MotionReveal
       :y="48"
-      class="relative isolate mx-auto grid max-w-6xl items-center gap-12 overflow-hidden rounded-[3rem] bg-indigo px-6 py-16 text-paper md:grid-cols-5 md:gap-16 md:px-14 md:py-24"
+      class="relative isolate mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2.5rem] bg-indigo px-6 py-12 text-paper md:grid-cols-5 md:gap-12 md:px-12 md:py-14"
     >
-      <div
-        aria-hidden="true"
-        class="absolute -right-32 -bottom-48 -z-10 size-112 rounded-full bg-terracotta/30 blur-3xl"
-      />
-
       <div class="md:col-span-3">
         <h2
-          class="font-display text-4xl leading-[1.05] font-extrabold tracking-[-0.02em] md:text-6xl"
+          class="font-display text-3xl leading-[1.05] font-extrabold tracking-[-0.02em] md:text-5xl"
         >
           {{ title }}
           <span
@@ -20,24 +15,21 @@
             {{ titleAccent }}
           </span>
         </h2>
-        <p
-          class="mt-6 max-w-xl text-base leading-relaxed text-paper/85 md:text-lg"
-        >
+        <p class="mt-5 max-w-lg text-base leading-relaxed text-paper/85">
           {{ description }}
         </p>
         <Button
           v-if="cta"
           :to="cta.to"
           variant="light"
-          size="lg"
           arrow
-          class="mt-10 shadow-xl shadow-ink/25"
+          class="mt-8 shadow-xl shadow-ink/25"
         >
           {{ cta.label }}
         </Button>
       </div>
 
-      <SectionsRememberBell class="md:col-span-2" />
+      <SectionsRememberDevices class="md:col-span-2" />
     </MotionReveal>
   </section>
 </template>
