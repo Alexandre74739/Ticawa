@@ -4,30 +4,22 @@
     class="pointer-events-none relative isolate grid aspect-[4/3.4] place-items-center select-none"
   >
     <div class="absolute inset-0 -z-10 rounded-[2.5rem] bg-lavender" />
-    <motion.div
+    <MotionLoop
       v-for="(ring, i) in rings"
       :key="i"
+      :keyframes="{ rotate: ring.rotate, scale: ring.scale }"
+      :duration="duration + ring.speed"
       class="absolute inset-0 rounded-[2.5rem] border-indigo"
       :class="ring.style"
-      :animate="{ rotate: ring.rotate, scale: ring.scale }"
-      :transition="{
-        duration: duration + ring.speed,
-        repeat: Infinity,
-        ease: 'easeInOut',
-      }"
     />
 
-    <motion.div
-      class="flex w-full flex-col items-center"
-      :animate="{
+    <MotionLoop
+      :keyframes="{
         x: ['0%', '9%', '-7%', '4%', '0%'],
         rotate: [0, 4, -3, 2, 0],
       }"
-      :transition="{
-        duration: 14 + duration,
-        repeat: Infinity,
-        ease: 'easeInOut',
-      }"
+      :duration="14 + duration"
+      class="flex w-full flex-col items-center"
     >
       <motion.img
         :src="`/mascotte/${mascot}`"
@@ -45,12 +37,12 @@
           scaleY: { duration: 4.3, repeat: Infinity, ease: 'easeInOut' },
         }"
       />
-      <motion.div
+      <MotionLoop
+        :keyframes="{ scaleX: [1, 0.75, 1], opacity: [1, 0.6, 1] }"
+        :duration="3.2"
         class="mt-4 h-3 w-1/4 min-w-14 rounded-full bg-indigo/25 blur-sm"
-        :animate="{ scaleX: [1, 0.75, 1], opacity: [1, 0.6, 1] }"
-        :transition="{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }"
       />
-    </motion.div>
+    </MotionLoop>
   </div>
 </template>
 

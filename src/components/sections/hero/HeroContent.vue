@@ -13,14 +13,15 @@
       </span>
     </h1>
 
-    <motion.p
-      v-bind="fadeUp(0.9)"
+    <MotionFadeUp
+      as="p"
+      :delay="0.9"
       class="mt-6 max-w-2xl text-[15px] leading-relaxed font-medium text-paper md:mt-7 md:text-xl"
     >
       {{ description }}
-    </motion.p>
+    </MotionFadeUp>
 
-    <motion.div v-bind="fadeUp(1.05)" class="mt-8 md:mt-10">
+    <MotionFadeUp :delay="1.05" class="mt-8 md:mt-10">
       <Button
         :to="cta.to"
         variant="light"
@@ -30,12 +31,11 @@
       >
         {{ cta.label }}
       </Button>
-    </motion.div>
+    </MotionFadeUp>
   </div>
 </template>
 
 <script setup lang="ts">
-import { motion } from "motion-v";
 import type { SectionLink } from "~/types/sections";
 
 defineProps<{

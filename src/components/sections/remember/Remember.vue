@@ -1,7 +1,7 @@
 <template>
   <section id="rappels" class="bg-paper px-4 pb-24 md:px-8 md:pb-36">
-    <motion.div
-      v-bind="revealOnScroll(0, 48)"
+    <MotionReveal
+      :y="48"
       class="relative isolate mx-auto grid max-w-6xl items-center gap-12 overflow-hidden rounded-[3rem] bg-indigo px-6 py-16 text-paper md:grid-cols-5 md:gap-16 md:px-14 md:py-24"
     >
       <div
@@ -38,12 +38,11 @@
       </div>
 
       <SectionsRememberBell class="md:col-span-2" />
-    </motion.div>
+    </MotionReveal>
   </section>
 </template>
 
 <script setup lang="ts">
-import { motion } from "motion-v";
 import type { SectionLink } from "~/types/sections";
 
 defineProps<{

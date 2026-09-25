@@ -1,14 +1,14 @@
 <template>
   <article class="grid items-center gap-14 md:grid-cols-5 md:gap-16 lg:gap-24">
-    <motion.div
-      v-bind="revealOnScroll(0, 40)"
+    <MotionReveal
+      :y="40"
       class="mx-auto w-3/4 max-w-72 md:col-span-2 md:w-full md:max-w-none"
       :class="{ 'md:order-last': reverse }"
     >
       <UiMascotCard :mascot="feature.mascot" :duration="5 + index" />
-    </motion.div>
+    </MotionReveal>
 
-    <motion.div v-bind="revealOnScroll(0.15)" class="md:col-span-3">
+    <MotionReveal :delay="0.15" class="md:col-span-3">
       <h3
         class="font-display text-3xl leading-[1.1] font-bold tracking-[-0.01em] text-ink md:text-5xl"
       >
@@ -34,12 +34,11 @@
       <Button v-if="feature.cta" :to="feature.cta.to" arrow class="mt-8">
         {{ feature.cta.label }}
       </Button>
-    </motion.div>
+    </MotionReveal>
   </article>
 </template>
 
 <script setup lang="ts">
-import { motion } from "motion-v";
 import { Check } from "lucide-vue-next";
 import type { ProductFeature } from "~/types/sections";
 

@@ -3,14 +3,12 @@
     aria-hidden="true"
     class="pointer-events-none absolute inset-x-0 top-0 hidden h-svh select-none md:block"
   >
-    <motion.div
+    <MotionPopIn
       v-for="(mascot, i) in mascots"
       :key="mascot.src"
+      :delay="1.4 + i * 0.2"
       class="absolute"
       :class="mascot.place"
-      :initial="{ opacity: 0, scale: 0.6 }"
-      :animate="{ opacity: 1, scale: 1 }"
-      :transition="{ duration: 0.8, delay: 1.4 + i * 0.2, ease: EASE_OUT }"
     >
       <motion.img
         :src="`/mascotte/${mascot.src}`"
@@ -28,7 +26,7 @@
           ease: 'easeInOut',
         }"
       />
-    </motion.div>
+    </MotionPopIn>
   </div>
 </template>
 
