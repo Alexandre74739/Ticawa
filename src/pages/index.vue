@@ -11,7 +11,7 @@
       highlight="Ticawa"
     />
     <SectionsProduct :features="features" />
-    <SectionsRemember
+    <SectionsBandeau
       title="Votre garantie expire bientôt ?"
       title-accent="Vous le saurez avant."
       description="Ticawa vous envoie une notification avant la fin de chaque garantie et assurance. Assez tôt pour vérifier votre produit, retrouver la preuve d'achat et faire valoir vos droits si besoin. La démarche reste entre vos mains."
