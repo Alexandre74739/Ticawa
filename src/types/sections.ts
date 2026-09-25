@@ -3,7 +3,10 @@ export interface SectionLink {
   to: string;
 }
 
-export interface AboutStep {
+export interface ProductFeature {
   title: string;
   text: string;
+  bullets: string[];
+  mascot: string;
+  cta?: SectionLink;
 }

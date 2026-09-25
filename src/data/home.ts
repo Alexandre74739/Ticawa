@@ -1,16 +1,36 @@
-import type { AboutStep } from "~/types/sections";
+import type { ProductFeature } from "~/types/sections";
 
-export const steps: AboutStep[] = [
+export const features: ProductFeature[] = [
   {
-    title: "Gardez vos tickets de caisse",
-    text: "Une photo du ticket de caisse, une facture PDF importée : vos preuves d'achat restent lisibles, même quand l'encre du ticket s'efface.",
+    title: "Numérisez vos tickets de caisse en une photo",
+    text: "Ticket de caisse, facture PDF, bon de garantie : chaque preuve d'achat est conservée dans l'application et reste lisible, même quand l'encre du ticket thermique s'efface.",
+    bullets: [
+      "Photo du ticket ou import de la facture PDF",
+      "Date d'achat, prix et magasin rattachés au produit",
+      "Une fiche par produit, avec tous ses justificatifs",
+    ],
+    mascot: "Happy.svg",
+    cta: { label: "Numériser mon premier ticket", to: "/connexion" },
   },
   {
-    title: "Voyez ce qui vous couvre",
-    text: "Garantie légale de conformité, garantie commerciale, extension de garantie, assurance : pour chaque produit, Ticawa affiche ce qui s'applique et jusqu'à quelle date. Sans jargon technique.",
+    title: "Suivez chaque garantie produit, date par date",
+    text: "Pour chaque achat, Ticawa indique quelles garanties et assurances le couvrent et jusqu'à quand. Sans jargon juridique, sans calcul de tête.",
+    bullets: [
+      "Garantie légale de conformité de 2 ans sur les produits neufs",
+      "Garantie commerciale et extension de garantie",
+      "Assurances souscrites au moment de l'achat",
+    ],
+    mascot: "Interrogated.svg",
   },
   {
-    title: "Recevez une alerte à temps",
-    text: "Ticawa vous prévient avant l'expiration de chaque garantie. Vous gardez le temps de faire valoir vos droits, et la démarche reste entre vos mains.",
+    title: "Vos preuves d'achat restent les vôtres",
+    text: "Ticawa est pensé pour le RGPD dès la conception : vos factures et tickets sont hébergés en Europe, et vous gardez la main sur vos données.",
+    bullets: [
+      "Hébergement des données dans l'Union européenne",
+      "Export de toutes vos données à tout moment",
+      "Suppression définitive du compte et des données",
+    ],
+    mascot: "Perfect.svg",
+    cta: { label: "Créer mon espace", to: "/connexion" },
   },
 ];

@@ -9,13 +9,19 @@
     <SectionsAbout
       statement="Un ticket s'efface. Une facture se perd. Une date s'oublie. Ticawa garde tout au même endroit et vous prévient avant qu'il ne soit trop tard."
       highlight="Ticawa"
-      :steps="steps"
+    />
+    <SectionsProduct :features="features" />
+    <SectionsRemember
+      title="Votre garantie expire bientôt ?"
+      title-accent="Vous le saurez avant."
+      description="Ticawa vous envoie une notification avant la fin de chaque garantie et assurance. Assez tôt pour vérifier votre produit, retrouver la preuve d'achat et faire valoir vos droits si besoin. La démarche reste entre vos mains."
+      :cta="{ label: 'Activer mes rappels', to: '/connexion' }"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { steps } from "~/data/home";
+import { features } from "~/data/home";
 
 useSeoMeta({
   title: "Ticawa",
