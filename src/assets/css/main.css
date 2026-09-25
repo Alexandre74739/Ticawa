@@ -5,8 +5,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display:
-    "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "DM Sans Variable", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
 
@@ -15,7 +14,6 @@
   --color-paper: #fbf9f5;
   --color-lavender: #e8e7f6;
   --color-terracotta: #a15b42;
-
 }
 
 body {
