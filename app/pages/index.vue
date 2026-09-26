@@ -23,11 +23,23 @@
       description=" Garantie légale de conformité, garantie commerciale, assurance casse : trois situations du quotidien où la couverture court encore, et où la preuve d'achat fait la différence."
       :cases="cases"
     />
+    <SectionsFaq
+      title="Tout savoir sur vos garanties"
+      title-accent="et vos preuves d'achat."
+      description="Comment Ticawa conserve vos tickets de caisse, calcule la durée de chaque garantie et protège vos données personnelles : les réponses aux questions les plus posées."
+      :items="faq"
+    />
+    <SectionsCta
+      title="Une photo aujourd'hui,"
+      title-accent="vos droits deux ans plus tard."
+      description="Ticawa garde la preuve d'achat, calcule la fin de chaque garantie et vous prévient avant l'échéance."
+      :cta="{ label: 'Commencer avec Ticawa', to: '/connexion' }"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { cases, features } from "~/data/home";
+import { cases, faq, features } from "~/data/home";
 
 useSeoMeta({
   title: "Ticawa",
@@ -38,5 +50,22 @@ useSeoMeta({
   ogDescription:
     "L'application qui garde vos preuves d'achat et vous prévient avant l'expiration de vos garanties et assurances.",
   ogType: "website",
+});
+
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      innerHTML: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faq.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      }),
+    },
+  ],
 });
 </script>

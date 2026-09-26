@@ -1,4 +1,4 @@
-import type { CaseStudy, ProductFeature } from "#shared/types/sections";
+import type { CaseStudy, FaqItem, ProductFeature } from "#shared/types/sections";
 
 export const features: ProductFeature[] = [
   {
@@ -65,5 +65,33 @@ export const cases: CaseStudy[] = [
       href: "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000032042316",
     },
     mascot: "Neutre.svg",
+  },
+];
+
+export const faq: FaqItem[] = [
+  {
+    question: "Est-ce que Ticawa fait la réclamation à ma place ?",
+    answer:
+      "Non, et c'est volontaire. Ticawa vous indique quelle garantie couvre encore le produit, jusqu'à quelle date, et ressort la preuve d'achat au bon moment. Contacter le vendeur, le SAV ou l'assureur reste votre démarche : vous seul décidez quoi demander, et quand.",
+  },
+  {
+    question: "Comment Ticawa connaît la durée de mes garanties ?",
+    answer:
+      "À partir de la catégorie du produit, de sa date d'achat et des documents que vous ajoutez. La garantie légale de conformité est appliquée automatiquement aux produits neufs. Les garanties commerciales et les assurances sont renseignées d'après vos justificatifs. Quand une information manque, Ticawa la signale au lieu de la deviner.",
+  },
+  {
+    question: "La photo d'un ticket vaut-elle la preuve d'achat d'origine ?",
+    answer:
+      "Face à un professionnel, la preuve est libre : elle peut se faire par tout moyen. Une photo nette, datée et lisible peut donc être présentée, et beaucoup d'enseignes l'acceptent directement au comptoir. Raison de plus pour la prendre le jour de l'achat, avant que l'encre thermique ne s'efface.",
+  },
+  {
+    question: "Où sont stockées mes factures et mes tickets ?",
+    answer:
+      "Sur des serveurs situés dans l'Union européenne, et nulle part ailleurs. Ticawa applique le RGPD : vos données ne sont ni revendues ni exploitées à des fins publicitaires. Vous gardez les droits que le règlement vous donne : consulter vos données personnelles, les exporter, supprimer définitivement votre compte, à tout moment depuis l'application.",
+  },
+  {
+    question: "Comment installer l'application Ticawa sur iPhone ou Android ?",
+    answer:
+      "Ticawa s'installe directement depuis votre navigateur, en un seul clic : ni App Store, ni Google Play, l'application s'ouvre comme n'importe quelle autre, sur iPhone comme sur Android.",
   },
 ];

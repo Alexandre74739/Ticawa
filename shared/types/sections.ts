@@ -23,3 +23,8 @@ export interface ProductFeature {
   mascot: string;
   cta?: SectionLink;
 }
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
