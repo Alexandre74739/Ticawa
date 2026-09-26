@@ -40,21 +40,30 @@ export const cases: CaseStudy[] = [
     result: "Un lave-linge réparé sans payer, 18 mois après l'achat",
     text: "La panne tombe bien après la garantie commerciale du magasin. La garantie légale de conformité, elle, couvre deux ans : Ticawa affiche la date de fin et ressort la facture à présenter au SAV.",
     coverage: "Garantie légale de conformité",
-    detail: "2 ans sur un produit neuf",
+    source: {
+      label: "Art. L217-3 du code de la consommation",
+      href: "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000044142579",
+    },
     mascot: "Happy.svg",
   },
   {
     result: "Un écran cassé pris en charge avant l'échéance",
     text: "L'assurance casse souscrite le jour de l'achat s'oublie en quelques semaines. Ticawa rappelle qu'elle couvre toujours le téléphone, jusqu'à quelle date, et prévient avant l'échéance. La déclaration à l'assureur, elle, reste la vôtre.",
     coverage: "Assurance casse et vol",
-    detail: "Durée fixée au contrat",
+    source: {
+      label: "Art. L113-2 du code des assurances",
+      href: "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006791998",
+    },
     mascot: "Perfect.svg",
   },
   {
     result: "Un échange obtenu avec un ticket illisible depuis des mois",
     text: "L'encre thermique s'efface en quelques mois, bien avant la fin de la garantie, et sans preuve d'achat la demande s'arrête là. La photo prise à la caisse, elle, reste nette : date, prix et magasin toujours lisibles au comptoir du SAV.",
     coverage: "Preuve d'achat numérisée",
-    detail: "Ticket, facture PDF ou e-mail de commande",
+    source: {
+      label: "Art. 1358 du code civil",
+      href: "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000032042316",
+    },
     mascot: "Neutre.svg",
   },
 ];

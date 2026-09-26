@@ -20,7 +20,7 @@
     <SectionsCas
       title="La garantie courait encore"
       title-accent="Il fallait juste le savoir"
-      description="Garantie légale de conformité, extension de garantie, assurance casse : trois situations du quotidien où la couverture était toujours valable et où la preuve d'achat a fait la différence."
+      description=" Garantie légale de conformité, garantie commerciale, assurance casse : trois situations du quotidien où la couverture court encore, et où la preuve d'achat fait la différence."
       :cases="cases"
     />
   </div>

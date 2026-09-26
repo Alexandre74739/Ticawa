@@ -41,7 +41,7 @@
           <p class="font-display text-sm font-semibold text-ink">
             {{ item.coverage }}
           </p>
-          <p class="text-xs text-ink/60">{{ item.detail }}</p>
+          <UiSourceLink :source="item.source" />
         </div>
       </div>
     </article>
