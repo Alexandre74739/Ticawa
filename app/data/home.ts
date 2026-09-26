@@ -45,7 +45,7 @@ export const cases: CaseStudy[] = [
   },
   {
     result: "Un écran cassé pris en charge avant l'échéance",
-    text: "L'assurance casse souscrite le jour de l'achat s'oublie en quelques semaines. Ticawa la rattache au téléphone et prévient avant la fin, assez tôt pour monter le dossier.",
+    text: "L'assurance casse souscrite le jour de l'achat s'oublie en quelques semaines. Ticawa rappelle qu'elle couvre toujours le téléphone, jusqu'à quelle date, et prévient avant l'échéance. La déclaration à l'assureur, elle, reste la vôtre.",
     coverage: "Assurance casse et vol",
     detail: "Durée fixée au contrat",
     mascot: "Perfect.svg",
