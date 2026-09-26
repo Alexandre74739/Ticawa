@@ -17,11 +17,17 @@
       description="Ticawa vous envoie une notification avant la fin de chaque garantie et assurance. Assez tôt pour vérifier votre produit, retrouver la preuve d'achat et faire valoir vos droits si besoin. La démarche reste entre vos mains."
       :cta="{ label: 'Activer mes rappels', to: '/connexion' }"
     />
+    <SectionsCas
+      title="La garantie courait encore"
+      title-accent="Il fallait juste le savoir"
+      description="Garantie légale de conformité, extension de garantie, assurance casse : trois situations du quotidien où la couverture était toujours valable et où la preuve d'achat a fait la différence."
+      :cases="cases"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { features } from "~/data/home";
+import { cases, features } from "~/data/home";
 
 useSeoMeta({
   title: "Ticawa",
