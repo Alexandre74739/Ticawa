@@ -11,7 +11,7 @@
           :keyframes="{ y: [0, -14, 0], rotate: [-5, 5, -5] }"
           :duration="3.2"
         >
-          <TicoLive
+          <UiTicoLive
             :mood="excited ? 'happy' : notFound ? 'confused' : 'dizzy'"
             class="h-auto w-full"
           />

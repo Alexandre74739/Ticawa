@@ -44,7 +44,7 @@ const tag = computed(() => (props.to ? NuxtLink : props.href ? "a" : "button"));
 const variants: Record<Variant, string> = {
   primary: "bg-indigo text-paper hover:bg-indigo/90",
   light: "bg-paper text-indigo hover:bg-lavender",
-  ghost: "text-ink hover:bg-lavender/80",
+  ghost: "text-ink hover:bg-lavender",
 };
 
 const sizes: Record<Size, string> = {

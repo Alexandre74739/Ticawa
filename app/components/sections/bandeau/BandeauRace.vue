@@ -31,7 +31,7 @@
       <SectionsBandeauSign />
     </g>
     <g v-for="r in runners" :key="r.x" data-runner :transform="restPose(r.x)">
-      <TicoLive :mood="r.mood" width="220" height="212" />
+      <UiTicoLive :mood="r.mood" width="220" height="212" />
     </g>
   </svg>
 </template>

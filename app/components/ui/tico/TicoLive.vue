@@ -1,5 +1,5 @@
 <template>
-  <Tico ref="tico" :dark-bg="false" :mood="mood" />
+  <UiTico ref="tico" :dark-bg="false" :mood="mood" />
 </template>
 
 <script setup lang="ts">

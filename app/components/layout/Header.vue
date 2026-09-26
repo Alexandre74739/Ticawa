@@ -10,7 +10,7 @@
         <BrandLogo class="h-7 w-auto md:h-8" />
       </NuxtLink>
 
-      <nav class="flex items-center gap-1">
+      <nav class="flex items-center gap-2">
         <UiButton to="/connexion" variant="ghost">Connexion</UiButton>
 
         <div

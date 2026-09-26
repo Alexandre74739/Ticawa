@@ -5,7 +5,7 @@
       class="mx-auto w-3/4 max-w-72 md:col-span-2 md:w-full md:max-w-none"
       :class="{ 'md:order-last': reverse }"
     >
-      <TicoCard :mascot="feature.mascot" :duration="5 + index" />
+      <UiTicoCard :mascot="feature.mascot" :duration="5 + index" />
     </MotionReveal>
 
     <MotionReveal :delay="0.15" class="md:col-span-3">

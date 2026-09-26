@@ -9,7 +9,7 @@
       ref="tico"
       class="absolute top-0 left-0 -mt-5.5 -ml-5.5 size-11 will-change-transform"
     >
-      <Tico
+      <UiTico
         :dark-bg="onDark"
         :mood="mood"
         class="size-full drop-shadow-[0_6px_8px_rgb(42_46_58/0.18)] transition-transform duration-300"
