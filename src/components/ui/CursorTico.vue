@@ -66,14 +66,14 @@
 import { body, lids, rage, type Mood } from "~/data/tico";
 import { faces } from "~/data/ticoFaces";
 
-const props = defineProps<{ onDark: boolean; mood: Mood }>();
+const props = defineProps<{ darkBg: boolean; mood: Mood }>();
 const uid = useId();
 
 const shown = computed(() => (props.mood === "angry" ? "neutral" : props.mood));
 const tone = computed(() => {
   if (props.mood === "angry")
     return { body: "fill-terracotta", white: "fill-paper" };
-  return props.onDark
+  return props.darkBg
     ? { body: "fill-paper", white: "fill-indigo" }
     : { body: "fill-indigo", white: "fill-paper" };
 });

@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { BellRing, Hand, ReceiptEuro } from "lucide-vue-next";
+import { BellRing, Hand, ReceiptEuro } from "@lucide/vue";
 import type { SectionLink } from "~/types/sections";
 
 defineProps<{

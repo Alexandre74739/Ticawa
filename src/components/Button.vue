@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { NuxtLink } from "#components";
-import { ArrowRight } from "lucide-vue-next";
+import { ArrowRight } from "@lucide/vue";
 
 type Variant = "primary" | "light" | "ghost";
 type Size = "md" | "lg";

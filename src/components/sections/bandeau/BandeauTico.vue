@@ -1,5 +1,5 @@
 <template>
-  <UiCursorTico ref="tico" :on-dark="false" :mood="mood" />
+  <UiCursorTico ref="tico" :dark-bg="false" :mood="mood" />
 </template>
 
 <script setup lang="ts">

@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { Check } from "lucide-vue-next";
+import { Check } from "@lucide/vue";
 import type { ProductFeature } from "~/types/sections";
 
 defineProps<{
