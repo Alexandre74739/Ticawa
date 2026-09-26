@@ -29,7 +29,7 @@
           :style="{ animationDelay: `${i * 0.12}s` }"
           :d="d"
         />
-        <g class="eye">
+        <g :class="{ eye: key !== 'dizzy' }">
           <path v-for="d in face.whites" :key="d" :d="d" :class="tone.white" />
           <g :clip-path="`url(#${uid}-${key})`">
             <g

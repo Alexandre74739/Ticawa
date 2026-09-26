@@ -29,6 +29,14 @@ const SHAKE: Keyframe[] = [0, -5, 5, -4, 3, 0].map((x) => ({
   transform: `translateX(${x}px) rotate(${x * 1.5}deg)`,
 }));
 
+type Point = { x: number; y: number };
+
+export const cursorShape = {
+  active: false,
+  tico: { x: 0, y: 0 } as Point,
+  path: [] as Point[],
+};
+
 export function useCursor(
   dot: Ref<HTMLElement | null>,
   tico: Ref<HTMLElement | null>,
@@ -122,6 +130,7 @@ export function useCursor(
       if (!s) return (frame = 0);
       const moved = Math.hypot(s.dx, s.dy);
       Object.assign(ticoAt, { x: s.x, y: s.y });
+      cursorShape.path = trail.path;
       const effort = reduced ? 0 : Math.min(s.speed / 8, 1);
       walked += moved;
       if (effort > 0.2 && walked - lastPrint > STRIDE)
@@ -169,6 +178,7 @@ export function useCursor(
       else trail.reset(mouse);
       if (visible.value) triggers.move(mouse.x, mouse.y, dx, ticoAt);
       started.value = visible.value = true;
+      cursorShape.active = true;
       idle.value = false;
       clearTimeout(idleTimer);
       idleTimer = setTimeout(() => (idle.value = true), IDLE_AFTER);
@@ -199,10 +209,12 @@ export function useCursor(
     };
     const onLeave = () => {
       visible.value = false;
+      cursorShape.active = false;
       triggers.reset();
       clearTimeout(idleTimer);
     };
 
+    cursorShape.tico = ticoAt;
     fx.resize();
     idleBlink();
     enabled.value = true;
@@ -219,6 +231,7 @@ export function useCursor(
       clearTimeout(flashTimer);
       clearTimeout(idleTimer);
       root.classList.remove("custom-cursor");
+      cursorShape.active = false;
       removeEventListener("pointermove", onMove);
       removeEventListener("pointerdown", onDown);
       removeEventListener("scroll", sample);
