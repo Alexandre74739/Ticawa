@@ -87,7 +87,7 @@ export const faq: FaqItem[] = [
   {
     question: "Où sont stockées mes factures et mes tickets ?",
     answer:
-      "Sur des serveurs situés dans l'Union européenne, et nulle part ailleurs. Ticawa applique le RGPD : vos données ne sont ni revendues ni exploitées à des fins publicitaires. Vous gardez les droits que le règlement vous donne : consulter vos données personnelles, les exporter, supprimer définitivement votre compte, à tout moment depuis l'application.",
+      "Vos factures, tickets et informations produits sont stockés sur des serveurs situés dans l'Union européenne. Le site lui-même est servi par un hébergeur américain (Vercel), qui ne traite que des données techniques de connexion comme l'adresse IP. Ticawa applique le RGPD : vos données ne sont ni revendues ni exploitées à des fins publicitaires. Vous gardez les droits que le règlement vous donne : consulter vos données personnelles, les exporter, supprimer définitivement votre compte, à tout moment depuis l'application.",
   },
   {
     question: "Comment installer l'application Ticawa sur iPhone ou Android ?",
