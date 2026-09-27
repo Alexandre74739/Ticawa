@@ -1,7 +1,7 @@
 <template>
   <UiModal v-model="open" :labelledby="titleId">
     <div class="text-center">
-      <UiTicoLive mood="neutral" class="mx-auto h-auto w-24" />
+      <UiTicoLive mood="happy" class="mx-auto h-auto w-24" />
       <h2
         :id="titleId"
         class="mt-4 font-display text-xl font-extrabold md:text-2xl"
