@@ -4,6 +4,8 @@
 
 @import "tailwindcss";
 
+@custom-variant standalone (@media (display-mode: standalone));
+
 @theme {
   --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "DM Sans Variable", ui-sans-serif, system-ui, sans-serif;

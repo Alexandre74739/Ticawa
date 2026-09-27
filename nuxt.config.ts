@@ -69,6 +69,7 @@ export default defineNuxtConfig({
   },
   pwa: {
     registerType: "autoUpdate",
+    client: { periodicSyncForUpdates: 3600 },
     manifest: {
       name: "Ticawa",
       short_name: "Ticawa",

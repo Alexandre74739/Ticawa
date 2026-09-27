@@ -16,7 +16,7 @@
 
         <div
           ref="floating"
-          class="fixed right-4 z-30 sm:static"
+          class="fixed right-4 z-30 sm:static standalone:hidden"
           :class="{ 'max-sm:hidden': !isHome }"
           style="bottom: calc(1rem + env(safe-area-inset-bottom))"
         >

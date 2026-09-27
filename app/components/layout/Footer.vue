@@ -39,7 +39,7 @@
           </p>
         </div>
 
-        <div class="hidden shrink-0 sm:block">
+        <div class="hidden shrink-0 sm:block standalone:hidden!">
           <UiButton
             variant="light"
             arrow
