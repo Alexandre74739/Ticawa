@@ -2,7 +2,7 @@
   <motion.div
     :initial="{ opacity: 0, y: 32 }"
     :animate="show ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }"
-    :transition="{ duration: 0.8, delay: index * 0.08, ease: EASE_OUT }"
+    :transition="{ duration: 0.8, delay: index * 0.15, ease: EASE_OUT }"
   >
     <div
       class="overflow-hidden rounded-3xl ring-1 transition duration-300"
