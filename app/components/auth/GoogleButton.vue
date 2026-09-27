@@ -1,6 +1,6 @@
 <template>
   <a
-    href="/auth/google"
+    :href="href"
     class="flex w-full items-center justify-center gap-3 rounded-xl border border-ink/15 bg-white px-4 py-2.5 font-display text-sm font-semibold md:text-base 2xl:py-3 text-ink shadow-sm shadow-ink/5 transition-[border-color,box-shadow] duration-300 hover:border-indigo hover:shadow-md hover:shadow-indigo/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
   >
     <svg viewBox="0 0 48 48" aria-hidden="true" class="size-5">
@@ -24,3 +24,13 @@
     Continuer avec Google
   </a>
 </template>
+
+<script setup lang="ts">
+const route = useRoute();
+const href = computed(() => {
+  const redirect = route.query.redirect;
+  return isSafeRedirect(redirect)
+    ? `/auth/google?redirect=${encodeURIComponent(redirect)}`
+    : "/auth/google";
+});
+</script>

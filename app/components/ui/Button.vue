@@ -23,7 +23,7 @@
 import { NuxtLink } from "#components";
 import { ArrowRight } from "@lucide/vue";
 
-type Variant = "primary" | "light" | "ghost";
+type Variant = "primary" | "light" | "ghost" | "danger";
 type Size = "md" | "lg";
 
 const props = withDefaults(
@@ -45,6 +45,7 @@ const variants: Record<Variant, string> = {
   primary: "bg-indigo text-paper hover:bg-indigo/90",
   light: "bg-paper text-indigo hover:bg-lavender",
   ghost: "text-ink hover:bg-lavender",
+  danger: "bg-terracotta text-paper hover:bg-terracotta/90",
 };
 
 const sizes: Record<Size, string> = {

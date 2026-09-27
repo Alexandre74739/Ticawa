@@ -1,7 +1,7 @@
 <template>
   <section id="produit" class="overflow-x-clip bg-paper px-4 pb-24 md:px-8 md:pb-36">
     <div class="mx-auto flex max-w-6xl flex-col gap-20 md:gap-32">
-      <SectionsProductFeature
+      <LandingProductFeature
         v-for="(feature, i) in features"
         :key="feature.title"
         :feature="feature"

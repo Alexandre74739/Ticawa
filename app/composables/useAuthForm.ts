@@ -14,12 +14,8 @@ export function useAuthForm(endpoint: string) {
     try {
       await $fetch(endpoint, { method: "POST", body });
       await refreshSession();
-      const redirect = String(route.query.redirect ?? "");
-      await navigateTo(
-        redirect.startsWith("/") && !redirect.startsWith("//")
-          ? redirect
-          : "/dashboard",
-      );
+      const redirect = route.query.redirect;
+      await navigateTo(isSafeRedirect(redirect) ? redirect : "/dashboard");
     } catch (e) {
       error.value =
         (e as { data?: { message?: string } }).data?.message ??

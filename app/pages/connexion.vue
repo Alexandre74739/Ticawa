@@ -17,6 +17,14 @@
         type="password"
         autocomplete="current-password"
       />
+      <p class="-mt-1.5 text-right text-sm">
+        <NuxtLink
+          to="/mot-de-passe"
+          class="font-medium text-indigo underline-offset-4 hover:underline"
+        >
+          Mot de passe oublié ?
+        </NuxtLink>
+      </p>
       <UiButton type="submit" class="w-full 2xl:py-3" :disabled="pending">
         {{ pending ? "Connexion…" : "Se connecter" }}
       </UiButton>

@@ -8,7 +8,6 @@ export default defineEventHandler(async (event) => {
     nom: row.nom,
     email: row.email,
     password: Boolean(row.password_hash),
-    google: Boolean(row.google_id),
     createdAt: row.created_at,
   };
 });

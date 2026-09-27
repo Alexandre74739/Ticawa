@@ -7,17 +7,17 @@ export default defineEventHandler(async (event) => {
 
   if (!prenom || !nom)
     throw createError({ statusCode: 400, message: "Prénom et nom obligatoires." });
+  assertName(prenom, "Prénom");
+  assertName(nom, "Nom");
   assertEmail(email);
-  if (password.length < PASSWORD_MIN || password.length > 200)
-    throw createError({
-      statusCode: 400,
-      message: `Le mot de passe doit faire au moins ${PASSWORD_MIN} caractères.`,
-    });
+  assertPassword(password);
   if (body.cgu !== true)
     throw createError({
       statusCode: 400,
       message: "Vous devez accepter les CGU et la politique de confidentialité.",
     });
+
+  await rateLimit(`register:ip:${clientIp(event)}`, 10, 60 * 60);
 
   const existing = await findUserByEmail(email);
   if (existing)
@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
       nom,
       passwordHash: await hashPassword(password),
     });
-    await setUserSession(event, { user: toSessionUser(user) });
+    await startSession(event, user);
     return { ok: true };
   } catch (error) {
     if (isUniqueViolation(error))

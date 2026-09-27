@@ -3,7 +3,7 @@
     class="relative isolate flex h-[calc(100svh+3rem)] flex-col justify-center overflow-hidden bg-indigo pb-12 text-paper md:h-[calc(100svh+5rem)] md:pb-20"
   >
     <div aria-hidden="true" class="absolute inset-0 -z-10">
-      <SectionsHeroGrid />
+      <LandingHeroGrid />
       <div
         class="absolute -top-72 left-1/2 size-224 -translate-x-1/2 rounded-full bg-lavender/10 blur-3xl"
       />
@@ -15,13 +15,13 @@
       />
     </div>
 
-    <SectionsHeroContent
+    <LandingHeroContent
       :title="title"
       :title-accent="titleAccent"
       :description="description"
       :cta="cta"
     />
-    <SectionsHeroMascots />
+    <LandingHeroMascots />
 
     <svg
       aria-hidden="true"

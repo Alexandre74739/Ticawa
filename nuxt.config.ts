@@ -1,5 +1,27 @@
 import tailwindcss from "@tailwindcss/vite";
 
+// Nuxt injecte des scripts inline (payload, config) : 'unsafe-inline' reste
+// nécessaire, mais tout chargement depuis un autre domaine est bloqué.
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+
+const securityHeaders: Record<string, string> = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(self), microphone=(), geolocation=()",
+};
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
@@ -8,6 +30,26 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
   runtimeConfig: {
     databaseUrl: "",
+    brevoApiKey: "",
+    mailFromEmail: "",
+    mailFromName: "Ticawa",
+    // Obligatoire en prod (liens des mails) ; localhost en dev si vide.
+    siteUrl: "",
+  },
+  routeRules: {
+    "/**": { headers: securityHeaders },
+  },
+  // CSP et HSTS en prod seulement : le serveur de dev (HMR) n'est pas en HTTPS.
+  $production: {
+    routeRules: {
+      "/**": {
+        headers: {
+          ...securityHeaders,
+          "Content-Security-Policy": csp,
+          "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+        },
+      },
+    },
   },
   app: {
     head: {

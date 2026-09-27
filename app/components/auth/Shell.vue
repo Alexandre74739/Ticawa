@@ -33,13 +33,15 @@
       </div>
 
       <div class="mt-5 space-y-4 md:mt-6 2xl:space-y-5">
-        <AuthGoogleButton />
+        <template v-if="!hideGoogle">
+          <AuthGoogleButton />
 
-        <div class="flex items-center gap-3 text-xs text-ink/60 2xl:text-sm">
-          <span class="h-px flex-1 bg-ink/15" />
-          ou avec votre email
-          <span class="h-px flex-1 bg-ink/15" />
-        </div>
+          <div class="flex items-center gap-3 text-xs text-ink/60 2xl:text-sm">
+            <span class="h-px flex-1 bg-ink/15" />
+            ou avec votre email
+            <span class="h-px flex-1 bg-ink/15" />
+          </div>
+        </template>
 
         <slot />
       </div>
@@ -58,5 +60,6 @@ defineProps<{
   title: string;
   accent: string;
   error?: string;
+  hideGoogle?: boolean;
 }>();
 </script>

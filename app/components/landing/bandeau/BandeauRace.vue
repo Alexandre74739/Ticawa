@@ -28,7 +28,7 @@
     <use v-for="n in 48" :key="n" data-dust opacity="0" class="fill-indigo" />
 
     <g data-sign :transform="restSign">
-      <SectionsBandeauSign />
+      <LandingBandeauSign />
     </g>
     <g v-for="r in runners" :key="r.x" data-runner :transform="restPose(r.x)">
       <UiTicoLive :mood="r.mood" width="220" height="212" />

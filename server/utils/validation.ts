@@ -11,3 +11,16 @@ export function assertEmail(email: string) {
   if (!EMAIL_RE.test(email) || email.length > 254)
     throw createError({ statusCode: 400, message: "Adresse email invalide." });
 }
+
+export function assertPassword(password: string) {
+  if (password.length < PASSWORD_MIN || password.length > 200)
+    throw createError({
+      statusCode: 400,
+      message: `Le mot de passe doit faire au moins ${PASSWORD_MIN} caractères.`,
+    });
+}
+
+export function assertName(value: string, label: string) {
+  if (!value || value.length > 100)
+    throw createError({ statusCode: 400, message: `${label} invalide.` });
+}

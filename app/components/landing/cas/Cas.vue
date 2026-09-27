@@ -1,5 +1,8 @@
 <template>
-  <section id="faq" class="bg-paper px-4 pb-24 md:px-8 md:pb-36">
+  <section
+    id="cas-concrets"
+    class="bg-paper px-4 pt-4 pb-24 md:px-8 md:pt-8 md:pb-36"
+  >
     <div class="mx-auto max-w-6xl">
       <MotionReveal class="max-w-3xl">
         <h2
@@ -17,15 +20,13 @@
         </p>
       </MotionReveal>
 
-      <div ref="list" class="mt-12 flex flex-col gap-4 md:mt-20 md:gap-5">
-        <SectionsFaqItem
-          v-for="(item, i) in items"
-          :key="item.question"
+      <div class="mt-12 grid gap-6 md:mt-20 md:grid-cols-3">
+        <LandingCasCard
+          v-for="(item, i) in cases"
+          :key="item.result"
           :item="item"
           :index="i"
-          :open="opened === i"
-          :show="started"
-          @toggle="toggle(i)"
+          :raised="i === 1"
         />
       </div>
     </div>
@@ -33,25 +34,12 @@
 </template>
 
 <script setup lang="ts">
-import { useInView } from "motion-v";
-import type { FaqItem } from "#shared/types/sections";
+import type { CaseStudy } from "#shared/types/sections";
 
 defineProps<{
   title: string;
   titleAccent: string;
   description: string;
-  items: FaqItem[];
+  cases: CaseStudy[];
 }>();
-
-const list = ref<HTMLElement | null>(null);
-
-// Une seule entrée en vue déclenche la cascade de toute la liste.
-const started = useInView(list, {
-  once: true,
-  margin: "0px 0px -15% 0px",
-});
-
-const opened = ref(-1);
-
-const toggle = (i: number) => (opened.value = opened.value === i ? -1 : i);
 </script>

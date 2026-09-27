@@ -1,7 +1,7 @@
 <template>
   <section id="rappels" class="-mt-16 md:-mt-28">
-    <SectionsBandeauRace class="block h-40 w-full md:h-56 lg:h-64" />
-    <SectionsBandeauCard
+    <LandingBandeauRace class="block h-40 w-full md:h-56 lg:h-64" />
+    <LandingBandeauCard
       :title="title"
       :title-accent="titleAccent"
       :description="description"

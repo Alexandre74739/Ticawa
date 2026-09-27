@@ -3,7 +3,7 @@
     <MotionReveal
       class="relative isolate mx-auto flex max-w-6xl flex-col gap-8 overflow-hidden rounded-[2.5rem] bg-indigo px-6 py-10 text-paper shadow-2xl shadow-indigo/35 sm:flex-row sm:items-center sm:justify-between sm:gap-16 md:px-12 md:py-12 lg:gap-24"
     >
-      <SectionsCtaDecor />
+      <LandingCtaDecor />
 
       <div class="min-w-0">
         <h2

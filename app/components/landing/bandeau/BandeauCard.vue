@@ -3,7 +3,7 @@
     <MotionReveal
       class="relative isolate mx-auto grid max-w-6xl gap-8 overflow-hidden rounded-[2.5rem] bg-indigo shadow-2xl shadow-indigo/35 px-6 py-12 text-paper md:grid-cols-[1.15fr_1fr] md:items-center md:gap-16 md:px-12 md:py-16"
     >
-      <SectionsBandeauCardIcons />
+      <LandingBandeauCardIcons />
 
       <div>
         <h2

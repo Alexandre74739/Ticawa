@@ -1,18 +1,18 @@
 <template>
-  <LayoutLegalPage
+  <LegalPage
     title="Conditions d'utilisation"
     title-accent="les règles du jeu, simplement."
     intro="Ces conditions encadrent l'utilisation du site et de l'application Ticawa. Créer un compte implique de les accepter."
   >
-    <LayoutLegalSection title="Éditeur">
+    <LegalSection title="Éditeur">
       <p>
         Ticawa est édité par Alexandre-Philippe Perez (Fablioo). Les coordonnées
         complètes figurent dans les
         <NuxtLink to="/mentions-legales">mentions légales</NuxtLink>.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Le service">
+    <LegalSection title="Le service">
       <p>
         Ticawa permet de conserver ses preuves d'achat, de savoir quelles
         garanties et assurances couvrent chaque produit et jusqu'à quand, et
@@ -25,9 +25,9 @@
         </p>
       </UiLabelCard>
       <p>Le coût de votre connexion internet reste à votre charge.</p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Ce que Ticawa fait, et ne fait pas">
+    <LegalSection title="Ce que Ticawa fait, et ne fait pas">
       <h3>Ce que Ticawa fait</h3>
       <p>
         Ticawa <strong>informe et alerte</strong>. Les dates de fin de garantie
@@ -52,9 +52,9 @@
           pour les achats importants, conservez-le aussi.
         </p>
       </UiLabelCard>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Votre compte">
+    <LegalSection title="Votre compte">
       <p>
         Vous vous engagez à fournir une adresse email valide et à garder vos
         identifiants confidentiels. Le compte est personnel.
@@ -63,9 +63,9 @@
         Vous pouvez supprimer votre compte à tout moment depuis l'application.
         Toutes vos données sont alors supprimées définitivement.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Utilisation du service">
+    <LegalSection title="Utilisation du service">
       <p>En utilisant Ticawa, vous vous engagez à :</p>
       <ul>
         <li>n'y enregistrer que des contenus licites ;</li>
@@ -78,17 +78,17 @@
         En cas de manquement, l'éditeur peut suspendre ou supprimer le compte
         concerné.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Vos contenus">
+    <LegalSection title="Vos contenus">
       <p>
         Vous restez propriétaire des documents et informations que vous
         enregistrez. Ils sont utilisés uniquement pour faire fonctionner le
         service à votre profit.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Disponibilité et responsabilité">
+    <LegalSection title="Disponibilité et responsabilité">
       <p>
         L'éditeur fait de son mieux pour que Ticawa soit disponible et fiable,
         sans pouvoir le garantir en permanence : le service peut être interrompu
@@ -101,32 +101,32 @@
         alerte non reçue ou à une décision prise sur la seule base des
         indications de Ticawa.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Propriété intellectuelle">
+    <LegalSection title="Propriété intellectuelle">
       <p>
         Le nom Ticawa, son logo, la mascotte Tico et les contenus du site
         appartiennent à l'éditeur et ne peuvent être réutilisés sans son
         autorisation.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Données personnelles">
+    <LegalSection title="Données personnelles">
       <p>
         Leur traitement est détaillé dans la
         <NuxtLink to="/confidentialite">politique de confidentialité</NuxtLink>.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Modification des conditions">
+    <LegalSection title="Modification des conditions">
       <p>
         Ces conditions peuvent évoluer avec le service. En cas de changement
         important, vous en serez informé dans l'application ou par email avant
         son entrée en vigueur.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Droit applicable">
+    <LegalSection title="Droit applicable">
       <p>
         Les présentes conditions sont soumises au droit français. En cas de
         désaccord, une solution amiable sera recherchée en priorité en écrivant
@@ -139,8 +139,8 @@
         À défaut, les tribunaux compétents seront saisis selon les règles de
         droit commun.
       </p>
-    </LayoutLegalSection>
-  </LayoutLegalPage>
+    </LegalSection>
+  </LegalPage>
 </template>
 
 <script setup lang="ts">

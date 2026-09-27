@@ -4,6 +4,7 @@
     <LayoutHeader />
     <slot />
     <LayoutFooter />
+    <AccountDangerGoodbyeModal />
   </MotionConfig>
 </template>
 

@@ -1,10 +1,10 @@
 <template>
-  <LayoutLegalPage
+  <LegalPage
     title="Mentions légales"
     title-accent="qui se cache derrière Ticawa."
     intro="Qui édite Ticawa, qui l'héberge et à qui appartiennent ses contenus."
   >
-    <LayoutLegalSection title="Éditeur du site">
+    <LegalSection title="Éditeur du site">
       <p>
         Le site et l'application Ticawa sont édités par
         <strong>Alexandre-Philippe Perez</strong>, entrepreneur individuel
@@ -33,18 +33,18 @@
           Perez
         </li>
       </ul>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Nature du projet">
+    <LegalSection title="Nature du projet">
       <UiLabelCard tone="trust">
         <p>
           Ticawa est un projet <strong>bénévole</strong>, gratuit et sans
           publicité. Il n'a pas de but commercial.
         </p>
       </UiLabelCard>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Hébergement">
+    <LegalSection title="Hébergement">
       <h3>Site</h3>
       <p>
         <strong>Vercel Inc.</strong>, 440 N Barranca Ave #4133, Covina, CA
@@ -60,9 +60,9 @@
         Hébergées dans l'Union européenne. Le prestataire concerné sera indiqué
         ici dès son choix définitif.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Propriété intellectuelle">
+    <LegalSection title="Propriété intellectuelle">
       <p>
         Le nom Ticawa, son logo, la mascotte Tico, les textes, illustrations et
         éléments graphiques du site sont la propriété de l'éditeur.
@@ -71,9 +71,9 @@
         Toute reproduction ou réutilisation, totale ou partielle, sans
         autorisation écrite préalable est interdite.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Informations fournies">
+    <LegalSection title="Informations fournies">
       <p>
         Les informations présentées sur les garanties et assurances sont
         générales et données à titre indicatif. Elles ne constituent pas un
@@ -85,15 +85,15 @@
           de l'utilisateur.
         </p>
       </UiLabelCard>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Données personnelles">
+    <LegalSection title="Données personnelles">
       <p>
         Le traitement de vos données est décrit dans la
         <NuxtLink to="/confidentialite">politique de confidentialité</NuxtLink>.
       </p>
-    </LayoutLegalSection>
-  </LayoutLegalPage>
+    </LegalSection>
+  </LegalPage>
 </template>
 
 <script setup lang="ts">

@@ -1,4 +1,6 @@
-export default defineOAuthGoogleEventHandler({
+const REDIRECT_COOKIE = "ticawa_auth_redirect";
+
+const oauth = defineOAuthGoogleEventHandler({
   config: { scope: ["openid", "email", "profile"] },
 
   async onSuccess(event, { user: google }) {
@@ -20,11 +22,27 @@ export default defineOAuthGoogleEventHandler({
           });
     }
 
-    await setUserSession(event, { user: toSessionUser(user) });
-    return sendRedirect(event, "/dashboard");
+    await startSession(event, user);
+
+    const redirect = getCookie(event, REDIRECT_COOKIE);
+    deleteCookie(event, REDIRECT_COOKIE, { path: "/" });
+    return sendRedirect(event, isSafeRedirect(redirect) ? redirect : "/dashboard");
   },
 
   onError(event) {
     return sendRedirect(event, "/connexion?erreur=google");
   },
+});
+
+export default defineEventHandler((event) => {
+  const { redirect } = getQuery(event);
+  if (isSafeRedirect(redirect))
+    setCookie(event, REDIRECT_COOKIE, redirect, {
+      httpOnly: true,
+      secure: !import.meta.dev,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 600,
+    });
+  return oauth(event);
 });

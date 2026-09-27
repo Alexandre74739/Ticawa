@@ -1,10 +1,10 @@
 <template>
-  <LayoutLegalPage
+  <LegalPage
     title="Confidentialité"
     title-accent="vos données restent les vôtres."
     intro="Ticawa conserve des documents personnels : vos tickets, vos factures, vos achats. Voici quelles données sont traitées, pourquoi, combien de temps, et comment exercer vos droits."
   >
-    <LayoutLegalSection title="Responsable du traitement">
+    <LegalSection title="Responsable du traitement">
       <p>
         <strong>Alexandre-Philippe Perez</strong>, entrepreneur individuel
         exerçant sous le nom commercial Fablioo, Terr. Jean Renaudie, 38400
@@ -16,9 +16,9 @@
           >perezalexandre430@gmail.com</a
         >
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Données collectées">
+    <LegalSection title="Données collectées">
       <h3>Quand vous visitez le site</h3>
       <ul>
         <li>
@@ -41,9 +41,9 @@
       <UiLabelCard tone="trust">
         <p>Ticawa ne vous demande jamais de données bancaires.</p>
       </UiLabelCard>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Pourquoi ces données">
+    <LegalSection title="Pourquoi ces données">
       <h3>Fournir le service</h3>
       <p>
         Conserver vos preuves d'achat, calculer les dates de fin de garantie et
@@ -62,9 +62,9 @@
           publicitaires ou de profilage.
         </p>
       </UiLabelCard>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Durée de conservation">
+    <LegalSection title="Durée de conservation">
       <ul>
         <li>
           <strong>Données du compte :</strong> conservées tant que votre compte
@@ -76,9 +76,9 @@
           l'hébergeur pour une durée limitée, nécessaire à la sécurité du site.
         </li>
       </ul>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Qui a accès à vos données">
+    <LegalSection title="Qui a accès à vos données">
       <p>
         Seul l'éditeur de Ticawa y a accès, ainsi que les prestataires
         techniques strictement nécessaires au service, dans la limite de leur
@@ -94,9 +94,9 @@
           choix définitif.
         </li>
       </ul>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Transferts hors UE">
+    <LegalSection title="Transferts hors UE">
       <p>
         Les données de votre compte (tickets, factures, produits) sont hébergées
         dans l'Union européenne.
@@ -108,9 +108,9 @@
         RGPD, notamment les clauses contractuelles types de la Commission
         européenne.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Cookies">
+    <LegalSection title="Cookies">
       <p>
         Ticawa n'utilise aucun cookie publicitaire ni de traçage : c'est
         pourquoi aucun bandeau de consentement ne s'affiche.
@@ -119,9 +119,9 @@
         Seuls des cookies strictement nécessaires au fonctionnement, comme celui
         qui garde votre session connectée, peuvent être utilisés.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Vos droits">
+    <LegalSection title="Vos droits">
       <p>Conformément au RGPD, vous pouvez à tout moment :</p>
       <ul>
         <li>accéder à vos données et en obtenir une copie ;</li>
@@ -152,22 +152,22 @@
           >cnil.fr</a
         >).
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Sécurité">
+    <LegalSection title="Sécurité">
       <p>
         Les échanges avec le site sont chiffrés (HTTPS) et l'accès aux données
         est limité à ce qui est nécessaire au service.
       </p>
-    </LayoutLegalSection>
+    </LegalSection>
 
-    <LayoutLegalSection title="Modifications">
+    <LegalSection title="Modifications">
       <p>
         Cette politique peut évoluer avec le service. En cas de changement
         important, vous en serez informé dans l'application ou par email.
       </p>
-    </LayoutLegalSection>
-  </LayoutLegalPage>
+    </LegalSection>
+  </LegalPage>
 </template>
 
 <script setup lang="ts">
