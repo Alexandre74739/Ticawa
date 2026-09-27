@@ -14,6 +14,10 @@
   --color-paper: #fbf9f5;
   --color-lavender: #e8e7f6;
   --color-terracotta: #a15b42;
+
+  --color-success: #3f7a5e;
+  --color-warning: #8a5e12;
+  --color-danger: #b04a4a;
 }
 
 body {

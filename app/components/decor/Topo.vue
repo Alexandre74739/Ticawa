@@ -5,7 +5,7 @@
     viewBox="0 0 1440 900"
     preserveAspectRatio="xMidYMid slice"
     fill="none"
-    class="pointer-events-none absolute inset-0 -z-10 size-full mask-[radial-gradient(ellipse_at_center,transparent_25%,black_70%)]"
+    class="pointer-events-none absolute inset-0 -z-10 size-full [mask-image:radial-gradient(ellipse_at_center,transparent_25%,black_70%),linear-gradient(to_bottom,black_70%,transparent)] [mask-composite:intersect]"
   >
     <defs>
       <filter

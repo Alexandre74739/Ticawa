@@ -1,9 +1,8 @@
 <template>
   <NuxtLayout>
     <section
-      class="relative isolate flex min-h-svh flex-col items-center justify-center overflow-hidden bg-linear-to-b from-indigo/35 via-lavender to-paper px-4 pt-36 pb-24 text-center md:pt-[calc(4rem+16svh)] md:pb-[6svh]"
+      class="relative isolate flex min-h-svh flex-col items-center justify-center overflow-hidden bg-linear-to-b from-indigo/35 via-lavender to-paper px-4 pt-36 pb-40 text-center md:pt-[calc(4rem+16svh)] md:pb-[16svh]"
     >
-      <DecorGlow />
       <DecorTopo />
 
       <MotionPopIn class="w-36 md:w-[min(12rem,20svh)]">

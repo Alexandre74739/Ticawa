@@ -17,7 +17,7 @@
         />
       </div>
 
-      <MotionReveal
+      <div
         class="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between"
       >
         <div>
@@ -41,16 +41,16 @@
 
         <div class="hidden shrink-0 sm:block">
           <UiButton
-            to="/"
             variant="light"
             arrow
             size="lg"
             class="shadow-xl shadow-ink/25"
+            @click="install"
           >
             Installer l'application
           </UiButton>
         </div>
-      </MotionReveal>
+      </div>
 
       <div
         class="mt-6 flex flex-col gap-2 border-t border-paper/20 pt-5 text-sm sm:flex-row sm:items-center sm:justify-between md:mt-8"
@@ -74,6 +74,8 @@
 </template>
 
 <script setup lang="ts">
+const { install } = usePwaInstall();
+
 const legal = [
   { label: "Mentions légales", to: "/mentions-legales" },
   { label: "Confidentialité", to: "/confidentialite" },

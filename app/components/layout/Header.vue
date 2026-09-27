@@ -11,18 +11,20 @@
       </NuxtLink>
 
       <nav class="flex items-center gap-2">
-        <UiButton to="/connexion" variant="ghost">Connexion</UiButton>
+        <LayoutUserMenu v-if="loggedIn" />
+        <UiButton v-else to="/connexion" variant="ghost">Connexion</UiButton>
 
         <div
           ref="floating"
           class="fixed right-4 z-30 sm:static"
+          :class="{ 'max-sm:hidden': !isHome }"
           style="bottom: calc(1rem + env(safe-area-inset-bottom))"
         >
           <UiButton
-            to="/"
             arrow
             :variant="onIndigo ? 'light' : 'primary'"
             class="shadow-xl shadow-ink/25 max-sm:px-8! max-sm:py-3.5! sm:shadow-none"
+            @click="install"
           >
             Installer l'app
           </UiButton>
@@ -33,6 +35,10 @@
 </template>
 
 <script setup lang="ts">
+const { loggedIn } = useUserSession();
+const { install } = usePwaInstall();
+const route = useRoute();
+const isHome = computed(() => route.path === "/");
 const floating = ref<HTMLElement | null>(null);
 const onIndigo = ref(false);
 

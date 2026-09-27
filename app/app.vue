@@ -3,6 +3,7 @@
     <NuxtLayout>
       <NuxtPage :page-key="(route) => route.path + pageKey" />
     </NuxtLayout>
+    <PwaInstallGuide />
   </div>
 </template>
 
