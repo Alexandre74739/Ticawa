@@ -56,6 +56,11 @@ const update = () => {
 onMounted(() => {
   update();
   addEventListener("scroll", update, { passive: true });
+  addEventListener("resize", update, { passive: true });
 });
-onBeforeUnmount(() => removeEventListener("scroll", update));
+onBeforeUnmount(() => {
+  removeEventListener("scroll", update);
+  removeEventListener("resize", update);
+});
+watch(() => route.path, () => nextTick(update));
 </script>
