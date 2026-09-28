@@ -6,7 +6,7 @@
     style="padding-bottom: calc(0.75rem + env(safe-area-inset-bottom))"
   >
     <ul
-      class="mx-auto flex max-w-sm items-center gap-1 rounded-3xl border border-ink/15 bg-paper p-1.5 shadow-xl shadow-ink/15"
+      class="mx-auto flex max-w-md items-center gap-1 rounded-3xl border border-ink/15 bg-paper p-1.5 shadow-xl shadow-ink/15"
     >
       <li v-for="tab in tabs" :key="tab.to" class="flex-1">
         <NuxtLink
@@ -22,12 +22,14 @@
 </template>
 
 <script setup lang="ts">
-import { LayoutDashboard, UserRound } from "@lucide/vue";
+import { House, LayoutDashboard, Settings, UserRound } from "@lucide/vue";
 
 const { loggedIn } = useUserSession();
 
 const tabs = [
-  { label: "Mes droits", to: "/dashboard", icon: LayoutDashboard },
+  { label: "Accueil", to: "/", icon: House },
+  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
   { label: "Compte", to: "/compte", icon: UserRound },
+  { label: "Paramètres", to: "/parametres", icon: Settings },
 ];
 </script>
