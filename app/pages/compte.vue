@@ -1,7 +1,8 @@
 <template>
-  <main class="px-3 pt-28 pb-24 md:px-6 md:pt-36">
-    <div class="mx-auto mt-4 max-w-6xl space-y-6">
-      <MotionReveal class="max-w-3xl pb-4">
+  <main class="px-3 pt-28 pb-24 md:px-6 md:pt-36 standalone:pt-3">
+    <div class="mx-auto mt-4 max-w-6xl space-y-6 standalone:mt-0">
+      <h1 class="sr-only hidden standalone:block">Mon compte</h1>
+      <MotionReveal class="max-w-3xl pb-4 standalone:hidden">
         <h1
           class="font-display text-3xl leading-[1.05] font-bold tracking-[-0.02em] text-ink md:text-5xl"
         >

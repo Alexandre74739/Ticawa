@@ -1,5 +1,7 @@
 <template>
-  <header class="fixed inset-x-0 top-0 z-30 px-3 pt-3 md:px-6 md:pt-5">
+  <header
+    class="fixed inset-x-0 top-0 z-30 px-3 pt-3 md:px-6 md:pt-5 standalone:hidden"
+  >
     <div
       class="mx-auto flex max-w-6xl items-center justify-between rounded-2xl border border-ink/15 bg-paper py-2 pr-2 pl-5 shadow-xl shadow-ink/15"
     >

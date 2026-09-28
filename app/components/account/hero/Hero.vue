@@ -25,7 +25,7 @@
       </MotionLoop>
     </MotionPopIn>
 
-    <div class="min-w-0 shrink">
+    <div class="min-w-0 shrink standalone:pr-12">
       <p
         class="truncate font-display text-xl font-extrabold sm:text-2xl md:text-3xl"
       >
@@ -39,11 +39,20 @@
         Membre depuis {{ since }}
       </p>
     </div>
+
+    <button
+      type="button"
+      aria-label="Se déconnecter"
+      class="absolute top-4 right-4 hidden size-10 place-items-center rounded-full bg-paper/15 transition-colors duration-300 hover:bg-paper/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper standalone:grid"
+      @click="logout"
+    >
+      <LogOut aria-hidden="true" class="size-4.5" />
+    </button>
   </MotionFadeUp>
 </template>
 
 <script setup lang="ts">
-import { Sparkles } from "@lucide/vue";
+import { LogOut, Sparkles } from "@lucide/vue";
 
 const props = defineProps<{
   prenom: string;
@@ -51,6 +60,13 @@ const props = defineProps<{
   email: string;
   createdAt: string;
 }>();
+
+const { clear } = useUserSession();
+
+async function logout() {
+  await clear();
+  await navigateTo("/connexion");
+}
 
 const since = computed(() =>
   new Date(props.createdAt).toLocaleDateString("fr-FR", {

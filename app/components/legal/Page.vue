@@ -1,5 +1,5 @@
 <template>
-  <main class="px-4 pt-28 pb-24 md:px-8 md:pt-36">
+  <main class="px-4 pt-28 pb-24 md:px-8 md:pt-36 standalone:pt-8">
     <div class="mx-auto max-w-2xl">
       <p
         class="font-display text-sm font-bold tracking-wide text-indigo uppercase"

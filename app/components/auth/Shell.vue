@@ -1,6 +1,6 @@
 <template>
   <main
-    class="relative isolate flex min-h-dvh flex-col overflow-hidden bg-linear-to-b from-indigo/35 via-lavender to-paper px-4 pt-24 pb-8 md:px-8 md:pt-28"
+    class="relative isolate flex min-h-dvh flex-col overflow-hidden bg-linear-to-b from-indigo/35 via-lavender to-paper px-4 pt-24 pb-8 md:px-8 md:pt-28 standalone:pt-10"
   >
     <div
       class="mx-auto flex w-full max-w-sm flex-1 md:max-w-md 2xl:max-w-lg flex-col justify-center"
