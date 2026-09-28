@@ -17,8 +17,8 @@ Brouillé, Surpris et Content durent 2,5 s. Si plusieurs humeurs sont possibles 
 
 ## Où régler
 
-- Seuils des gestes : `SPIN`, `FLICK`, `PET` dans `src/utils/moodTriggers.ts`
-- Clics d'Énervé, durées, délai de Perplexe : `RAGE`, `FLASH_LASTS`, `IDLE_AFTER` dans `src/composables/useCursor.ts`
-- Visages et déplacement des pupilles par humeur (`look`) : `src/data/ticoFaces.ts`
-- Animations des décors : `src/components/ui/CursorTico.vue`
-- Parfait détecte les boutons grâce à l'attribut `data-button` posé par `src/components/Button.vue`
+- Seuils des gestes : `SPIN`, `FLICK`, `PET` dans `app/utils/cursorMoods.ts`
+- Clics d'Énervé, durées, délai de Perplexe : `RAGE`, `FLASH_LASTS`, `IDLE_AFTER` dans `app/composables/useCursor.ts`
+- Visages et déplacement des pupilles par humeur (`look`) : `app/data/ticoFaces.ts`
+- Animations des décors : `app/components/ui/tico/Tico.vue`
+- Parfait détecte les boutons grâce à l'attribut `data-button` posé par `app/components/ui/Button.vue`

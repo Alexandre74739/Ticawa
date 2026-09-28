@@ -1,75 +1,56 @@
-# Nuxt Minimal Starter
+# Ticawa
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+> Perdez votre ticket, jamais vos droits.
 
-## Setup
+Ticawa est une application mobile (PWA) qui conserve les preuves d'achat, indique quelles garanties et assurances couvrent chaque produit et jusqu'à quand, puis prévient avant l'expiration. L'app informe et alerte : elle ne fait aucune démarche à la place de l'utilisateur.
 
-Make sure to install dependencies:
+Stack : Nuxt 4 (Vue 3, TypeScript), Tailwind CSS 4, PostgreSQL, nuxt-auth-utils, @vite-pwa/nuxt, déploiement sur Vercel.
+
+## Démarrer
+
+Prérequis : Node.js 22.19 ou plus (exigé par Nuxt 4.5), et une base PostgreSQL avec le schéma décrit dans [docs/base-de-donnees.md](docs/base-de-donnees.md).
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+cp .env.example .env   # puis remplir les variables ci-dessous
+npm run dev            # http://localhost:3000
 ```
 
-## Development Server
+| Script | Rôle |
+|---|---|
+| `npm run dev` | serveur de développement avec rechargement à chaud |
+| `npm run build` | build de production |
+| `npm run preview` | sert le build de production en local |
+| `npm run generate` | pré-rendu statique (non utilisé : l'app a besoin de son serveur) |
 
-Start the development server on `http://localhost:3000`:
+## Variables d'environnement
 
-```bash
-# npm
-npm run dev
+Nuxt lit les variables préfixées `NUXT_` et les range dans `runtimeConfig` ([nuxt.config.ts](nuxt.config.ts)).
 
-# pnpm
-pnpm dev
+| Variable | Obligatoire | Rôle |
+|---|---|---|
+| `NUXT_DATABASE_URL` | oui | chaîne de connexion PostgreSQL |
+| `NUXT_SESSION_PASSWORD` | oui en prod | clé de chiffrement des cookies de session, 32 caractères minimum. En dev, nuxt-auth-utils la génère dans `.env` si elle manque |
+| `NUXT_OAUTH_GOOGLE_CLIENT_ID` | pour Google | identifiant OAuth de « Continuer avec Google » |
+| `NUXT_OAUTH_GOOGLE_CLIENT_SECRET` | pour Google | secret OAuth associé |
+| `NUXT_BREVO_API_KEY` | pour les mails | clé API Brevo (mails de mot de passe) |
+| `NUXT_MAIL_FROM_EMAIL` | pour les mails | adresse d'expédition, validée dans Brevo |
+| `NUXT_MAIL_FROM_NAME` | non | nom d'expéditeur, `Ticawa` par défaut |
+| `NUXT_SITE_URL` | oui en prod | URL publique, utilisée dans les liens des mails. `http://localhost:3000` en dev si vide |
 
-# yarn
-yarn dev
+Le dépôt ne contient pas encore de `.env.example` : il reste à créer à partir de ce tableau.
 
-# bun
-bun run dev
-```
+## Documentation
 
-## Production
+| Document | Contenu |
+|---|---|
+| [Architecture](docs/architecture.md) | arborescence, conventions de nommage, rendu serveur, où ranger quoi |
+| [Authentification](docs/authentification.md) | sessions, Google, mot de passe oublié, déconnexion forcée |
+| [API](docs/api.md) | chaque route serveur : entrée, sortie, erreurs, limites |
+| [Base de données](docs/base-de-donnees.md) | tables, colonnes, schéma SQL |
+| [Front](docs/front.md) | pages, middlewares, composables, composants UI, design system |
+| [PWA](docs/pwa.md) | installation, mises à jour, autorisations de l'appareil |
+| [Sécurité et RGPD](docs/securite-rgpd.md) | en-têtes, limitation de débit, export et suppression des données |
+| [Easter eggs de Tico](docs/tico-easter-eggs.md) | humeurs du curseur et leurs réglages |
 
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Le contexte produit et le design system sont aussi résumés dans [CLAUDE.md](CLAUDE.md).
