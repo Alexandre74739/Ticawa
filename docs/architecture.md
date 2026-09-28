@@ -28,7 +28,7 @@ Nuxt (Vercel) ─── app/      pages, composants, composables
 | `app/assets/css/main.css` | Tailwind, polices, couleurs du thème |
 | `server/api/` | routes JSON, voir [api.md](api.md) |
 | `server/routes/auth/` | connexion Google (hors `/api`, car c'est une redirection) |
-| `server/middleware/` | `session.ts` : invalide les sessions révoquées |
+| `server/middleware/` | `session.ts` : ferme les sessions révoquées ou inactives depuis 90 jours, renouvelle les autres une fois par jour, voir [authentification.md](authentification.md#durée-de-la-session) |
 | `server/utils/` | accès base, mails, validation, limitation de débit |
 | `shared/` | code importable à la fois par `app/` et `server/` |
 | `public/` | fichiers servis tels quels : mascottes, icônes PWA |
