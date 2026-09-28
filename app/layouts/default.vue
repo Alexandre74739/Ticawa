@@ -6,6 +6,7 @@
     <LayoutFooter />
     <LayoutTabBar />
     <AccountDangerGoodbyeModal />
+    <SettingsUpdatesWhatsNewModal />
   </MotionConfig>
 </template>
 

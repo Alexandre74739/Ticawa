@@ -4,6 +4,7 @@ export default defineEventHandler(async (event) => {
   if (!row) throw createError({ statusCode: 404, message: "Compte introuvable." });
 
   const resets = await listPasswordResets(row.id);
+  const settings = await findUserSettings(row.id);
   const now = new Date();
 
   setResponseHeaders(event, {
@@ -25,6 +26,10 @@ export default defineEventHandler(async (event) => {
         inscritLe: row.created_at,
         connexionParMotDePasse: Boolean(row.password_hash),
         connexionGoogle: Boolean(row.google_id),
+      },
+      parametres: {
+        ...toSettings(settings),
+        modifiesLe: settings?.updated_at ?? null,
       },
       demandesDeMotDePasse: resets.map((r) => ({
         demandeLe: r.created_at,
