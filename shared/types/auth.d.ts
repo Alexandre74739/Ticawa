@@ -8,6 +8,7 @@ declare module "#auth-utils" {
 
   interface SecureSessionData {
     sessionVersion: number;
+    issuedAt?: number;
   }
 }
 

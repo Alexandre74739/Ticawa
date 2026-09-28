@@ -36,6 +36,7 @@ export default defineNuxtConfig({
     // Obligatoire en prod (liens des mails) ; localhost en dev si vide.
     siteUrl: "",
     trustedOrigins: "",
+    session: { sessionHeader: false, cookie: { maxAge: 60 * 60 * 24 * 90 } },
   },
   routeRules: {
     "/**": { headers: securityHeaders },
