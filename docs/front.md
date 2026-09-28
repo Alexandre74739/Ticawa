@@ -6,7 +6,7 @@
 |---|---|---|---|
 | `/` | `index.vue` | public | landing : hero, produit, cas concrets, FAQ, appel à l'action |
 | `/connexion` | `connexion.vue` | visiteur | email et mot de passe, ou Google |
-| `/inscription` | `inscription.vue` | visiteur | création de compte, acceptation des CGU |
+| `/inscription` | `inscription.vue` | visiteur | sans `?token` : formulaire et acceptation des CGU, puis envoi du lien de confirmation. Avec : crée le compte et entre dans l'espace |
 | `/mot-de-passe` | `mot-de-passe.vue` | tous | sans `?token` : demander un lien. Avec : choisir le mot de passe |
 | `/dashboard` | `dashboard.vue` | connecté | espace personnel (encore vide) |
 | `/compte` | `compte.vue` | connecté | profil (lecture seule), mot de passe, export des données, suppression du compte |
@@ -53,7 +53,7 @@ Cliquer sur l'onglet de la page déjà ouverte remonte en haut et relance ses an
 | Composable | Rôle |
 |---|---|
 | `useAction(fn)` | lance une action asynchrone et expose `pending`, `error` (message de l'API), `done` et `execute()` |
-| `useAuthForm(url)` | envoie un formulaire de connexion ou d'inscription, puis redirige |
+| `useAuthForm(url, { redirect })` | envoie un formulaire de connexion ou d'inscription, puis redirige. Avec `redirect: false`, s'arrête sur `done` sans rediriger (demande d'inscription) |
 | `useNotificationSettings()` | charge et enregistre les réglages de notification. L'affichage change aussitôt et revient en arrière si l'enregistrement échoue |
 | `useStopPush()` | désabonne ce téléphone des notifications et coupe le canal push |
 | `usePermissions()` | état des autorisations notifications, caméra et stockage, relu quand l'app revient au premier plan |

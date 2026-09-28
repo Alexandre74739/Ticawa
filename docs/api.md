@@ -6,11 +6,13 @@ Les corps de requête et de réponse sont en JSON. En cas d'erreur, la réponse 
 
 « Session » signifie que la route appelle `requireUserSession` et répond **401** sans utilisateur connecté.
 
+Toute requête `POST`, `PATCH` ou `DELETE` vers `/api/*` doit porter un en-tête `Origin` autorisé, sinon **403** ([server/middleware/csrf.ts](../server/middleware/csrf.ts)). Le navigateur le pose tout seul pour les appels `$fetch` de l'app ; un appel en ligne de commande doit l'ajouter. Détails dans [securite-rgpd.md](securite-rgpd.md#requêtes-venues-dun-autre-site-csrf).
+
 ## Authentification
 
 ### `POST /api/auth/register`
 
-Crée un compte avec mot de passe et ouvre la session.
+Ne crée pas de compte : envoie un mail. La réponse est la même que l'adresse soit libre ou déjà prise, pour qu'on ne puisse pas s'en servir pour savoir qui a un compte.
 
 | Champ | Règle |
 |---|---|
@@ -19,7 +21,17 @@ Crée un compte avec mot de passe et ouvre la session.
 | `password` | 10 à 200 caractères |
 | `cgu` | doit valoir `true` |
 
-Réponse : `{ ok: true }`. Erreurs : **400** champ invalide, **409** email déjà pris (le message indique s'il s'agit d'un compte Google), **429** plus de 10 inscriptions par heure depuis la même IP.
+- **Adresse libre** : mail avec un lien `/inscription?token=…`, valable 60 minutes. Le jeton contient le compte à créer (email, prénom, nom, empreinte du mot de passe), chiffré en AES-GCM avec une clé dérivée de `NUXT_SESSION_PASSWORD` ([pendingRegistrations.ts](../server/utils/pendingRegistrations.ts)). Rien n'est écrit en base avant la confirmation.
+- **Adresse déjà prise** : mail « Vous avez déjà un espace Ticawa », qui indique comment se connecter (Google ou mot de passe).
+- Au plus 3 mails par adresse et par heure. Au-delà, rien ne part, mais la réponse ne change pas.
+
+Réponse : `{ ok: true }`, sans session. En production, le mail part en arrière-plan. Erreurs : **400** champ invalide, **429** plus de 10 inscriptions par heure depuis la même IP.
+
+### `POST /api/auth/register/confirm`
+
+Appelée par la page `/inscription` quand elle s'ouvre avec `?token=`. Corps : `{ token }`. Crée le compte, avec l'email déjà vérifié, et ouvre la session.
+
+Erreurs : **400** lien expiré ou illisible, **409** compte déjà créé (lien ouvert deux fois), **429** plus de 10 essais par IP en 15 minutes.
 
 ### `POST /api/auth/login`
 

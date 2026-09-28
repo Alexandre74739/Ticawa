@@ -29,12 +29,14 @@ Ne pas utiliser le `maxAge` de h3 à la place (`session.maxAge`) : il compte dep
 
 ## Trois façons de se connecter
 
-**Email et mot de passe.** `POST /api/auth/register` crée le compte, `POST /api/auth/login` vérifie le mot de passe. Les mots de passe sont hachés par nuxt-auth-utils (scrypt) et re-hachés à la connexion si l'algorithme a évolué. Pour un email inconnu, la route vérifie quand même un faux hachage : la réponse prend le même temps, ce qui empêche de deviner quels emails ont un compte.
+**Email et mot de passe.** L'inscription se fait en deux temps. `POST /api/auth/register` n'écrit rien en base : il envoie un lien de confirmation, qui porte le compte à créer, chiffré. Ouvrir ce lien (`/inscription?token=…`) appelle `POST /api/auth/register/confirm`, qui crée le compte avec l'email vérifié et ouvre la session. Personne ne peut donc réserver l'adresse d'un autre, et la réponse de l'inscription est la même que l'adresse soit libre ou non. Détails dans [api.md](api.md#post-apiauthregister).
+
+`POST /api/auth/login` vérifie le mot de passe. Les mots de passe sont hachés par nuxt-auth-utils (scrypt) et re-hachés à la connexion si l'algorithme a évolué. Pour un email inconnu, la route vérifie quand même un faux hachage : la réponse prend le même temps, ce qui empêche de deviner quels emails ont un compte.
 
 **Google.** Le bouton pointe vers `/auth/google?redirect=…` ([server/routes/auth/google.get.ts](../server/routes/auth/google.get.ts)). La page de retour est gardée dans un cookie de 10 minutes, le temps de l'aller-retour chez Google. Au retour :
 1. Google doit confirmer que l'email est vérifié, sinon retour à `/connexion?erreur=google`.
 2. Si un compte porte déjà cet identifiant Google, on le connecte.
-3. Sinon, si un compte existe avec le même email, on lui rattache Google. Si cet email n'avait jamais été vérifié, son mot de passe est effacé et ses sessions sont coupées : quelqu'un a pu créer le compte avec l'adresse d'un autre.
+3. Sinon, si un compte existe avec le même email, on lui rattache Google. Si cet email n'avait jamais été vérifié, son mot de passe est effacé et ses sessions sont coupées : quelqu'un a pu créer le compte avec l'adresse d'un autre. Ce cas ne concerne plus que les comptes créés avant la confirmation par mail.
 4. Sinon, on crée un compte, sans mot de passe.
 
 **Lien par mail.** Voir « Mot de passe oublié » plus bas. Définir un mot de passe via ce lien connecte aussi l'utilisateur.

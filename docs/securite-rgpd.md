@@ -19,24 +19,39 @@ Ajouter un service externe côté navigateur (analytics, carte, vidéo…) deman
 
 ## Limitation de débit
 
-[rateLimit(clé, max, fenêtre)](../server/utils/rateLimit.ts) compte les appels en base, dans la table `rate_limits`, et répond **429** au-delà du maximum. Le compteur tient donc entre les instances Vercel.
+[rateLimit(clé, max, fenêtre)](../server/utils/rateLimit.ts) compte les appels en base, dans la table `rate_limits`, et répond **429** au-delà du maximum. Le compteur tient donc entre les instances Vercel. `consumeQuota()` compte de la même façon mais ne répond rien : c'est l'appelant qui décide, par exemple ne pas envoyer un mail sans le signaler.
 
 | Clé | Maximum |
 |---|---|
 | `login:ip:*` | 20 / 15 min |
 | `login:email:*` | 10 / 15 min |
 | `register:ip:*` | 10 / heure |
+| `register:email:*` | 3 mails / heure, sans erreur visible (`consumeQuota`) |
+| `register-confirm:ip:*` | 10 / 15 min |
 | `reset-request:ip:*` | 5 / 15 min |
 | `reset:ip:*` | 10 / 15 min |
 | `delete:<id>` | 5 / 15 min |
 | `settings:<id>` | 60 / min |
 
-L'IP vient de `X-Forwarded-For`, fourni par Vercel ([clientIp](../server/utils/rateLimit.ts)).
+[clientIp](../server/utils/rateLimit.ts) lit l'IP dans `x-vercel-forwarded-for`, sinon dans le **dernier** élément de `x-forwarded-for`, le seul ajouté par le proxy. Le premier élément vient du client et peut être inventé : s'y fier permettrait de repartir à zéro sur tous les compteurs à chaque requête. En dev, sans proxy, c'est l'IP de la connexion.
+
+## Requêtes venues d'un autre site (CSRF)
+
+Le cookie de session est en `SameSite=Lax` : il ne part pas avec un `PATCH` ou un `DELETE` lancé depuis un autre site, mais il part avec un formulaire `POST` posé sur un autre site. Sans protection, une page piégée pourrait connecter le visiteur dans un compte choisi par l'attaquant, ou déclencher des mails.
+
+[server/middleware/csrf.ts](../server/middleware/csrf.ts) refuse en **403** toute requête `POST`, `PATCH` ou `DELETE` vers `/api/*` dont l'en-tête `Origin` n'est pas autorisé. Sont autorisés :
+- l'adresse par laquelle le site a été appelé, ce qui couvre les déploiements de préversion ;
+- `NUXT_SITE_URL` ;
+- les origines de `NUXT_TRUSTED_ORIGINS`, séparées par des virgules. Prévu pour l'empaquetage Capacitor (`capacitor://localhost`).
+
+Un navigateur pose toujours `Origin` sur ces requêtes, et aucun site ne peut le falsifier. Une requête sans `Origin` est refusée.
 
 ## Autres protections
 
 - Mots de passe hachés en scrypt, jetons de réinitialisation stockés sous forme d'empreinte SHA-256 : voir [authentification.md](authentification.md).
-- Messages de connexion et de mot de passe oublié identiques que l'email existe ou non.
+- Messages de connexion, d'inscription et de mot de passe oublié identiques que l'email existe ou non.
+- Adresse email prouvée avant toute création de compte par mot de passe : voir [api.md](api.md#post-apiauthregister).
+- Sessions fermées après 90 jours d'inactivité, et révocables sur tous les appareils : voir [authentification.md](authentification.md#durée-de-la-session).
 - Redirections après connexion limitées aux chemins internes (`isSafeRedirect`).
 - Les données saisies par l'utilisateur sont échappées avant d'être insérées dans un mail HTML.
 - Requêtes SQL paramétrées, voir [base-de-donnees.md](base-de-donnees.md).
@@ -57,5 +72,5 @@ Règle pour toute nouvelle donnée stockée : l'ajouter à l'export ([export.get
 |---|---|---|
 | Hébergeur PostgreSQL | stockage | toutes les données du compte. À héberger dans l'UE |
 | Vercel | hébergement de l'app | requêtes HTTP. Choisir une région UE pour les fonctions |
-| Brevo (France) | mails | email, prénom, lien de réinitialisation |
+| Brevo (France) | mails | email, prénom, lien de confirmation d'inscription ou de réinitialisation |
 | Google | connexion facultative | seulement si l'utilisateur choisit « Continuer avec Google » |

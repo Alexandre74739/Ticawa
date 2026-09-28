@@ -30,13 +30,14 @@ Nuxt lit les variables préfixées `NUXT_` et les range dans `runtimeConfig` ([n
 | Variable | Obligatoire | Rôle |
 |---|---|---|
 | `NUXT_DATABASE_URL` | oui | chaîne de connexion PostgreSQL |
-| `NUXT_SESSION_PASSWORD` | oui en prod | clé de chiffrement des cookies de session, 32 caractères minimum. En dev, nuxt-auth-utils la génère dans `.env` si elle manque |
+| `NUXT_SESSION_PASSWORD` | oui en prod | clé de chiffrement des cookies de session et des liens d'inscription, 32 caractères minimum. La changer déconnecte tout le monde et invalide les liens d'inscription en attente. En dev, nuxt-auth-utils la génère dans `.env` si elle manque |
 | `NUXT_OAUTH_GOOGLE_CLIENT_ID` | pour Google | identifiant OAuth de « Continuer avec Google » |
 | `NUXT_OAUTH_GOOGLE_CLIENT_SECRET` | pour Google | secret OAuth associé |
-| `NUXT_BREVO_API_KEY` | pour les mails | clé API Brevo (mails de mot de passe) |
+| `NUXT_BREVO_API_KEY` | pour les mails | clé API Brevo (mails d'inscription et de mot de passe) |
 | `NUXT_MAIL_FROM_EMAIL` | pour les mails | adresse d'expédition, validée dans Brevo |
 | `NUXT_MAIL_FROM_NAME` | non | nom d'expéditeur, `Ticawa` par défaut |
-| `NUXT_SITE_URL` | oui en prod | URL publique, utilisée dans les liens des mails. `http://localhost:3000` en dev si vide |
+| `NUXT_SITE_URL` | oui en prod | URL publique, utilisée dans les liens des mails et autorisée par la protection CSRF. `http://localhost:3000` en dev si vide |
+| `NUXT_TRUSTED_ORIGINS` | non | origines supplémentaires autorisées à écrire sur l'API, séparées par des virgules. Prévu pour Capacitor (`capacitor://localhost`) |
 
 Le dépôt ne contient pas encore de `.env.example` : il reste à créer à partir de ce tableau.
 
