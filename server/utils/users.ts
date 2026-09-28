@@ -40,6 +40,7 @@ export async function createUser(data: {
   nom?: string | null;
   passwordHash?: string | null;
   googleId?: string | null;
+  emailVerified?: boolean;
 }) {
   const [user] = await useDb()<UserRow[]>`
     insert into users (email, prenom, nom, password_hash, google_id, email_verified)
@@ -49,7 +50,7 @@ export async function createUser(data: {
       ${data.nom ?? null},
       ${data.passwordHash ?? null},
       ${data.googleId ?? null},
-      ${Boolean(data.googleId)}
+      ${data.emailVerified ?? Boolean(data.googleId)}
     )
     returning *
   `;

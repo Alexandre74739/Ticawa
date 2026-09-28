@@ -1,7 +1,11 @@
-export function useAuthForm(endpoint: string) {
+export function useAuthForm(
+  endpoint: string,
+  options: { redirect?: boolean } = {},
+) {
   const route = useRoute();
   const { fetch: refreshSession } = useUserSession();
   const pending = ref(false);
+  const done = ref(false);
   const error = ref(
     route.query.erreur === "google"
       ? "La connexion avec Google n'a pas abouti. Réessayez."
@@ -13,6 +17,9 @@ export function useAuthForm(endpoint: string) {
     error.value = "";
     try {
       await $fetch(endpoint, { method: "POST", body });
+      done.value = true;
+      if (options.redirect === false) return;
+
       await refreshSession();
       const redirect = route.query.redirect;
       await navigateTo(isSafeRedirect(redirect) ? redirect : "/dashboard");
@@ -25,5 +32,5 @@ export function useAuthForm(endpoint: string) {
     }
   }
 
-  return { pending, error, submit };
+  return { pending, error, done, submit };
 }

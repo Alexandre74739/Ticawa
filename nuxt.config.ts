@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     mailFromName: "Ticawa",
     // Obligatoire en prod (liens des mails) ; localhost en dev si vide.
     siteUrl: "",
+    trustedOrigins: "",
   },
   routeRules: {
     "/**": { headers: securityHeaders },

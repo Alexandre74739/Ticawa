@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
 
-export async function rateLimit(key: string, max: number, windowSeconds: number) {
+async function bump(key: string, windowSeconds: number) {
   const resetAt = new Date(Date.now() + windowSeconds * 1000);
   const [row] = await useDb()<{ count: number }[]>`
     insert into rate_limits (key, count, reset_at)
@@ -14,13 +14,34 @@ export async function rateLimit(key: string, max: number, windowSeconds: number)
   if (Math.random() < 0.01)
     await useDb()`delete from rate_limits where reset_at < now()`;
 
-  if (row!.count > max)
+  return row!.count;
+}
+
+export async function consumeQuota(
+  key: string,
+  max: number,
+  windowSeconds: number,
+) {
+  return (await bump(key, windowSeconds)) <= max;
+}
+
+export async function rateLimit(key: string, max: number, windowSeconds: number) {
+  if (!(await consumeQuota(key, max, windowSeconds)))
     throw createError({
       statusCode: 429,
       message: "Trop de tentatives. Réessayez dans quelques minutes.",
     });
 }
 
+function lastHop(header: string | undefined) {
+  return header?.split(",").pop()?.trim() || undefined;
+}
+
 export function clientIp(event: H3Event) {
-  return getRequestIP(event, { xForwardedFor: true }) ?? "inconnue";
+  const proxied = import.meta.dev
+    ? undefined
+    : lastHop(getRequestHeader(event, "x-vercel-forwarded-for")) ??
+      lastHop(getRequestHeader(event, "x-forwarded-for"));
+
+  return proxied ?? getRequestIP(event) ?? "inconnue";
 }

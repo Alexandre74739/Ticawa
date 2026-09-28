@@ -19,27 +19,31 @@ export default defineEventHandler(async (event) => {
 
   await rateLimit(`register:ip:${clientIp(event)}`, 10, 60 * 60);
 
-  const existing = await findUserByEmail(email);
-  if (existing)
-    throw createError({
-      statusCode: 409,
-      message: existing.password_hash
-        ? "Un compte existe déjà avec cet email. Connectez-vous."
-        : "Un compte Google existe déjà avec cet email. Utilisez « Continuer avec Google ».",
-    });
+  const send = async () => {
+    if (
+      !(await consumeQuota(
+        `register:email:${email}`,
+        REGISTRATION_MAX_PER_HOUR,
+        60 * 60,
+      ))
+    )
+      return;
 
-  try {
-    const user = await createUser({
+    const existing = await findUserByEmail(email);
+    if (existing) return sendAccountExistsMail(existing);
+
+    const pending = {
       email,
       prenom,
       nom,
       passwordHash: await hashPassword(password),
-    });
-    await startSession(event, user);
-    return { ok: true };
-  } catch (error) {
-    if (isUniqueViolation(error))
-      throw createError({ statusCode: 409, message: "Un compte existe déjà avec cet email." });
-    throw error;
-  }
+    };
+    await sendRegistrationMail(pending, await sealRegistration(pending));
+  };
+
+  if (import.meta.dev) await send();
+  else
+    event.waitUntil(send().catch((error) => console.error("[register]", error)));
+
+  return { ok: true };
 });
