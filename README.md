@@ -11,6 +11,8 @@ Stack : Nuxt 4 (Vue 3, TypeScript), Tailwind CSS 4, PostgreSQL, nuxt-auth-utils,
 Prérequis : Node.js 22.19 ou plus (exigé par Nuxt 4.5), et une base PostgreSQL avec le schéma décrit dans [docs/base-de-donnees.md](docs/base-de-donnees.md).
 
 ```bash
+git clone https://github.com/Alexandre74739/Ticawa.git
+cd Ticawa
 npm install
 cp .env.example .env   # puis remplir les variables ci-dessous
 npm run dev            # http://localhost:3000
@@ -38,8 +40,6 @@ Nuxt lit les variables préfixées `NUXT_` et les range dans `runtimeConfig` ([n
 | `NUXT_MAIL_FROM_NAME` | non | nom d'expéditeur, `Ticawa` par défaut |
 | `NUXT_SITE_URL` | oui en prod | URL publique, utilisée dans les liens des mails et autorisée par la protection CSRF. `http://localhost:3000` en dev si vide |
 | `NUXT_TRUSTED_ORIGINS` | non | origines supplémentaires autorisées à écrire sur l'API, séparées par des virgules. Prévu pour Capacitor (`capacitor://localhost`) |
-
-Le dépôt ne contient pas encore de `.env.example` : il reste à créer à partir de ce tableau.
 
 ## Documentation
 
