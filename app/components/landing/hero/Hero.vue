@@ -7,12 +7,6 @@
       <div
         class="absolute -top-72 left-1/2 size-224 -translate-x-1/2 rounded-full bg-lavender/10 blur-3xl"
       />
-      <div
-        class="absolute top-1/4 -left-64 size-128 rounded-full bg-terracotta/35 blur-3xl"
-      />
-      <div
-        class="absolute top-1/3 -right-56 size-112 rounded-full bg-ink/40 blur-3xl"
-      />
     </div>
 
     <LandingHeroContent
