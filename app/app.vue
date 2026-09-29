@@ -1,7 +1,13 @@
 <template>
   <div>
     <NuxtLayout>
-      <NuxtPage :page-key="(route) => route.path + pageKey" />
+      <NuxtPage
+        :page-key="
+          (route) =>
+            (route.matched.length > 1 ? route.matched[0]!.path : route.path) +
+            pageKey
+        "
+      />
     </NuxtLayout>
     <PwaInstallGuide />
   </div>
