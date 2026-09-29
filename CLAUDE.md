@@ -18,8 +18,9 @@ Slogan : « Perdez votre ticket, jamais vos droits ». Cible : 25-34 ans.
 - **Analytics** : solution européenne (Plausible ou Matomo), jamais Google Analytics.
 
 ## Contraintes
-- **Souveraineté FR/UE + RGPD by design** : données hébergées dans l'UE, aucun 
-  appel externe qui fuite l'IP des visiteurs (polices self-hosted), export et 
+- **Souveraineté + RGPD by design** : prestataires français en priorité, puis
+  européens, puis les autres seulement sans alternative ; données hébergées dans
+  l'UE, aucun appel externe qui fuite l'IP des visiteurs (polices self-hosted), export et 
   suppression du compte/données obligatoires.
 - **Coût 0 €** : outils gratuits / open-source uniquement.
 - **Mobile-first**, pensé pour un empaquetage futur vers les stores via 

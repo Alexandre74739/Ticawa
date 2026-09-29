@@ -70,7 +70,7 @@ Règle pour toute nouvelle donnée stockée : l'ajouter à l'export ([export.get
 
 | Service | Rôle | Données transmises |
 |---|---|---|
-| Hébergeur PostgreSQL | stockage | toutes les données du compte. À héberger dans l'UE |
-| Vercel | hébergement de l'app | requêtes HTTP. Choisir une région UE pour les fonctions |
+| Neon (US, serveurs à Francfort `eu-central-1`) | stockage PostgreSQL | toutes les données du compte |
+| Vercel (US, fonctions à Paris `cdg1`) | hébergement de l'app | requêtes HTTP. Région réglée dans le tableau de bord Vercel (Settings → Functions) |
 | Brevo (France) | mails | email, prénom, lien de confirmation d'inscription ou de réinitialisation |
 | Google | connexion facultative | seulement si l'utilisateur choisit « Continuer avec Google » |

@@ -53,12 +53,16 @@
           target="_blank"
           rel="noopener"
           >vercel.com</a
-        >).
+        >). Fonctions exécutées à Paris, France.
       </p>
       <h3>Données des comptes</h3>
       <p>
-        Hébergées dans l'Union européenne. Le prestataire concerné sera indiqué
-        ici dès son choix définitif.
+        <strong>Neon</strong> (<a
+          href="https://neon.com"
+          target="_blank"
+          rel="noopener"
+          >neon.com</a
+        >), serveurs situés à Francfort, Allemagne.
       </p>
     </LegalSection>
 

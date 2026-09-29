@@ -26,11 +26,24 @@
           pages consultées), enregistrées par l'hébergeur pour assurer le
           fonctionnement et la sécurité du site.
         </li>
-        <li>Une mesure d'audience anonyme, sans cookie.</li>
+        <li>
+          Aucune mesure d'audience pour le moment. Si elle est ajoutée, elle
+          sera anonyme, sans cookie, et cette page sera mise à jour.
+        </li>
       </ul>
       <h3>Quand vous créez et utilisez un compte</h3>
       <ul>
         <li>Votre adresse email et votre nom.</li>
+        <li>
+          Si vous choisissez « Continuer avec Google » : votre identifiant
+          Google, votre email, votre prénom et votre nom. Aucune autre donnée
+          de votre compte Google n'est lue.
+        </li>
+        <li>
+          Pour la sécurité : votre adresse IP et votre email, conservés
+          brièvement pour limiter les tentatives de connexion répétées, et
+          l'historique de vos demandes de changement de mot de passe.
+        </li>
         <li>Les photos de vos tickets de caisse et factures.</li>
         <li>
           Les informations sur vos produits (nom, marque, modèle, catégorie,
@@ -72,6 +85,10 @@
           le supprimez.
         </li>
         <li>
+          <strong>Compteurs anti-abus (IP, email) :</strong> remis à zéro après une
+          heure au plus, puis purgés régulièrement.
+        </li>
+        <li>
           <strong>Données techniques de connexion :</strong> conservées par
           l'hébergeur pour une durée limitée, nécessaire à la sécurité du site.
         </li>
@@ -82,31 +99,42 @@
       <p>
         Seul l'éditeur de Ticawa y a accès, ainsi que les prestataires
         techniques strictement nécessaires au service, dans la limite de leur
-        mission :
+        mission. Les acteurs français, puis européens, sont privilégiés dès
+        qu'une alternative existe.
       </p>
       <ul>
         <li>
-          <strong>Vercel Inc.</strong> (États-Unis) : hébergement du site.
+          <strong>Brevo</strong> (France) : envoi des emails de confirmation et
+          de mot de passe. Reçoit votre email et votre prénom.
         </li>
         <li>
-          Les prestataires de stockage des données, d'authentification, d'envoi
-          des alertes et de mesure d'audience, qui seront listés ici dès leur
-          choix définitif.
+          <strong>Vercel Inc.</strong> (États-Unis) : hébergement du site. Le
+          code qui traite vos données s'exécute à Paris.
+        </li>
+        <li>
+          <strong>Neon</strong> (États-Unis) : base de données, sur des
+          serveurs situés à Francfort (Allemagne). Stocke les données de votre
+          compte.
+        </li>
+        <li>
+          <strong>Google</strong> : uniquement si vous choisissez « Continuer
+          avec Google », pour vérifier votre identité.
         </li>
       </ul>
     </LegalSection>
 
     <LegalSection title="Transferts hors UE">
       <p>
-        Les données de votre compte (tickets, factures, produits) sont hébergées
-        dans l'Union européenne.
+        Les données de votre compte sont stockées et traitées dans l'Union
+        européenne : à Francfort pour la base de données, à Paris pour le code
+        du site.
       </p>
       <p>
-        L'hébergeur du site, Vercel Inc., est une société américaine : les
-        données techniques de connexion peuvent donc être traitées aux
-        États-Unis. Ce transfert est encadré par les garanties prévues par le
-        RGPD, notamment les clauses contractuelles types de la Commission
-        européenne.
+        Vercel et Neon sont toutefois des sociétés américaines, soumises au
+        droit des États-Unis, et les données techniques de connexion peuvent
+        être traitées aux États-Unis. Ces transferts sont encadrés par les
+        garanties prévues par le RGPD, notamment les clauses contractuelles
+        types de la Commission européenne.
       </p>
     </LegalSection>
 
@@ -115,10 +143,18 @@
         Ticawa n'utilise aucun cookie publicitaire ni de traçage : c'est
         pourquoi aucun bandeau de consentement ne s'affiche.
       </p>
-      <p>
-        Seuls des cookies strictement nécessaires au fonctionnement, comme celui
-        qui garde votre session connectée, peuvent être utilisés.
-      </p>
+      <p>Seuls deux cookies strictement nécessaires sont utilisés :</p>
+      <ul>
+        <li>
+          <strong>la session</strong>, chiffrée, qui vous garde connecté
+          jusqu'à 90 jours ;
+        </li>
+        <li>
+          <strong>la redirection Google</strong>, qui retient la page où vous
+          revenir pendant 10 minutes au plus, seulement si vous utilisez
+          « Continuer avec Google ».
+        </li>
+      </ul>
     </LegalSection>
 
     <LegalSection title="Vos droits">
