@@ -5,7 +5,6 @@
     description="Tico ne demande que le strict nécessaire. Voici ce que votre appareil lui autorise, et pourquoi il en a besoin."
     mascot="Interrogated.svg"
     :duration="4.8"
-    :delay="delay"
   >
     <p
       v-if="!ready"
@@ -31,8 +30,6 @@
 
 <script setup lang="ts">
 import { permissions, type PermissionInfo } from "~/data/permissions";
-
-defineProps<{ delay?: number }>();
 
 const { states, ready } = usePermissions();
 

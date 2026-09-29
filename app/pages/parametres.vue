@@ -1,7 +1,7 @@
 <template>
   <main class="px-3 pt-28 pb-24 md:px-6 md:pt-36 standalone:pt-6">
-    <div class="mx-auto mt-4 max-w-6xl space-y-6 standalone:mt-0">
-      <MotionReveal class="max-w-3xl pb-4">
+    <MotionReveal class="mx-auto mt-4 max-w-6xl space-y-6 standalone:mt-0">
+      <div class="max-w-3xl pb-4">
         <h1
           class="font-display text-3xl leading-[1.05] font-bold tracking-[-0.02em] text-ink md:text-5xl"
         >
@@ -16,17 +16,17 @@
           Choisissez comment Tico vous prévient, et gardez un œil sur ce que
           vous lui autorisez.
         </p>
-      </MotionReveal>
+      </div>
 
       <SettingsNotificationsCard />
 
-      <SettingsUpdatesCard :delay="0.08" />
+      <SettingsUpdatesCard />
 
       <!-- Les autorisations concernent l'appareil : téléphone uniquement. -->
       <ClientOnly>
-        <SettingsPermissionsCard v-if="!isDesktop" :delay="0.16" />
+        <SettingsPermissionsCard v-if="!isDesktop" />
       </ClientOnly>
-    </div>
+    </MotionReveal>
   </main>
 </template>
 

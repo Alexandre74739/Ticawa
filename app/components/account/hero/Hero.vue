@@ -1,11 +1,10 @@
 <template>
-  <MotionFadeUp
+  <div
     class="relative isolate flex items-center gap-4 overflow-hidden rounded-[2.5rem] bg-indigo px-5 py-7 text-paper shadow-2xl shadow-indigo/35 sm:gap-6 sm:px-8 md:gap-8 md:px-10 md:py-9"
   >
     <AccountHeroDecor />
 
-    <MotionPopIn
-      :delay="0.15"
+    <div
       class="relative grid hidden w-20 shrink-0 place-items-center sm:block sm:w-24 md:w-32"
     >
       <MotionLoop
@@ -23,7 +22,7 @@
       >
         <UiTicoLive mood="happy" dark-bg class="h-auto w-full" />
       </MotionLoop>
-    </MotionPopIn>
+    </div>
 
     <div class="min-w-0 shrink standalone:pr-12">
       <p
@@ -48,7 +47,7 @@
     >
       <LogOut aria-hidden="true" class="size-4.5" />
     </button>
-  </MotionFadeUp>
+  </div>
 </template>
 
 <script setup lang="ts">

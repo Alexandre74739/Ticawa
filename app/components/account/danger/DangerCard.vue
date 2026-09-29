@@ -1,6 +1,5 @@
 <template>
-  <MotionReveal
-    :delay="delay"
+  <div
     class="rounded-4xl bg-terracotta/10 p-6 shadow-lg shadow-terracotta/15 md:p-8"
     @mouseenter="worried = true"
     @mouseleave="worried = false"
@@ -43,13 +42,11 @@
     </div>
 
     <AccountDangerDeleteDialog ref="dialog" />
-  </MotionReveal>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { Trash2 } from "@lucide/vue";
-
-defineProps<{ delay?: number }>();
 
 const dialog = ref<{ open: () => void } | null>(null);
 const worried = ref(false);

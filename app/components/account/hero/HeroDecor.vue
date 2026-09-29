@@ -3,10 +3,9 @@
     aria-hidden="true"
     class="pointer-events-none absolute inset-0 -z-10 select-none"
   >
-    <MotionPopIn
+    <div
       v-for="(mascot, i) in mascots"
       :key="mascot.src"
-      :delay="0.5 + i * 0.15"
       class="absolute"
       :class="mascot.place"
     >
@@ -25,7 +24,7 @@
           :class="mascot.opacity"
         />
       </MotionLoop>
-    </MotionPopIn>
+    </div>
   </div>
 </template>
 

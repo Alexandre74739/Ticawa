@@ -5,7 +5,6 @@
     description="Tico range tout dans un seul fichier, lisible par n’importe quel éditeur de texte. Téléchargez-le quand vous voulez."
     mascot="Perfect.svg"
     :duration="4.6"
-    :delay="delay"
   >
     <div class="grid gap-4 lg:grid-cols-2 lg:gap-6">
       <div
@@ -47,8 +46,6 @@
 
 <script setup lang="ts">
 import { Download, FileJson } from "@lucide/vue";
-
-defineProps<{ delay?: number }>();
 
 const fileName = `ticawa-export-${new Date().toISOString().slice(0, 10)}.json`;
 </script>

@@ -1,6 +1,5 @@
 <template>
-  <MotionReveal
-    :delay="delay"
+  <div
     class="rounded-4xl bg-lavender p-5 shadow-lg shadow-indigo/15 md:p-7"
   >
     <div class="flex items-start gap-4">
@@ -26,7 +25,7 @@
     <div class="mt-5">
       <slot />
     </div>
-  </MotionReveal>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -35,7 +34,6 @@ defineProps<{
   description: string;
   mascot: string;
   accent?: string;
-  delay?: number;
   duration?: number;
 }>();
 </script>

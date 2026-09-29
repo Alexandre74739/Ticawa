@@ -4,7 +4,6 @@
     accent="Tico vous tient au courant"
     description="Avant qu’une garantie ne file à l’anglaise, Tico peut vous faire signe. À vous de choisir s’il le fait, et par où."
     mascot="Happy.svg"
-    :delay="delay"
   >
     <UiAlert v-if="loadError" tone="danger">
       Impossible de charger vos réglages. Rechargez la page.
@@ -42,8 +41,6 @@
 
 <script setup lang="ts">
 import { BellRing } from "@lucide/vue";
-
-defineProps<{ delay?: number }>();
 
 const { settings, loadError, saving, saveError, update } =
   await useNotificationSettings();

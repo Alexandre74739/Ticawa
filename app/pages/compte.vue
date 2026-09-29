@@ -1,7 +1,7 @@
 <template>
   <main class="px-3 pt-28 pb-24 md:px-6 md:pt-36 standalone:pt-6">
-    <div class="mx-auto mt-4 max-w-6xl space-y-6 standalone:mt-0">
-      <MotionReveal class="max-w-3xl pb-4">
+    <MotionReveal class="mx-auto mt-4 max-w-6xl space-y-6 standalone:mt-0">
+      <div class="max-w-3xl pb-4">
         <h1
           class="font-display text-3xl leading-[1.05] font-bold tracking-[-0.02em] text-ink md:text-5xl"
         >
@@ -15,7 +15,7 @@
         <p class="mt-5 text-base leading-relaxed text-ink/75 md:text-lg">
           Vos informations sont bien au chaud avec Tico. a vous d'en faire ce que vous voulez.
         </p>
-      </MotionReveal>
+      </div>
 
       <UiAlert v-if="error" tone="danger">
         Impossible de charger votre compte. Rechargez la page.
@@ -36,11 +36,11 @@
           :has-password="me.password"
         />
 
-        <AccountDataCard :delay="0.08" />
+        <AccountDataCard />
 
-        <AccountDangerCard :delay="0.16" />
+        <AccountDangerCard />
       </template>
-    </div>
+    </MotionReveal>
   </main>
 </template>
 

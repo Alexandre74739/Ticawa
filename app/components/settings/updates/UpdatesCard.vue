@@ -5,7 +5,6 @@
     description="Ticawa se met à jour tout seul, sans rien vous demander. Vous pouvez choisir d’être prévenu de ce qui change."
     mascot="Surprised.svg"
     :duration="4.3"
-    :delay="delay"
   >
     <div class="grid gap-4 lg:grid-cols-2 lg:gap-6">
       <div :class="panel">
@@ -41,8 +40,6 @@
 
 <script setup lang="ts">
 import { Eye, Sparkles } from "@lucide/vue";
-
-defineProps<{ delay?: number }>();
 
 const panel =
   "flex flex-col gap-3 rounded-2xl bg-paper p-4 shadow-sm shadow-indigo/10 md:p-5";
