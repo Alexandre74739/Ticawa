@@ -10,8 +10,8 @@ export function createFx(canvas: HTMLCanvasElement) {
 
   const resize = () => {
     const dpr = devicePixelRatio || 1;
-    canvas.width = innerWidth * dpr;
-    canvas.height = innerHeight * dpr;
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   };
 
@@ -59,7 +59,7 @@ export function createFx(canvas: HTMLCanvasElement) {
   };
 
   const draw = (ink: string, path: Point[], offset: number) => {
-    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
     drawLeash(ink, path, offset);
     drawPrints(ink, performance.now());
     return prints.length > 0;

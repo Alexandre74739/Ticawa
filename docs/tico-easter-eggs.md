@@ -22,3 +22,4 @@ Brouillé, Surpris et Content durent 2,5 s. Si plusieurs humeurs sont possibles 
 - Visages et déplacement des pupilles par humeur (`look`) : `app/data/ticoFaces.ts`
 - Animations des décors : `app/components/ui/tico/Tico.vue`
 - Parfait détecte les boutons grâce à l'attribut `data-button` posé par `app/components/ui/Button.vue`
+- Couleur : Tico passe en crème sur un fond `.bg-indigo` ou `.bg-ink`, sauf sur un bouton (`data-button`), où il garde la couleur du fond autour du bouton (`sample()` dans `app/composables/useCursor.ts`)

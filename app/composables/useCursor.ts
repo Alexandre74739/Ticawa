@@ -104,9 +104,10 @@ export function useCursor(
     const wake = () => (frame ||= requestAnimationFrame(tick));
     const sample = () => {
       const below = document.elementFromPoint(mouse.x, mouse.y);
-      onDark.value = !!below?.closest(DARK);
+      const button = below?.closest(BUTTON);
+      onDark.value = !!(button?.parentElement ?? below)?.closest(DARK);
       hovering.value = !!below?.closest(INTERACTIVE);
-      onButton.value = !!below?.closest(BUTTON);
+      onButton.value = !!button;
       wake();
     };
 
@@ -215,14 +216,15 @@ export function useCursor(
     };
 
     cursorShape.tico = ticoAt;
-    fx.resize();
+    // Suit aussi l'apparition de la barre de défilement, qui ne déclenche pas `resize`.
+    const sizer = new ResizeObserver(fx.resize);
+    sizer.observe(c);
     idleBlink();
     enabled.value = true;
     root.classList.add("custom-cursor");
     addEventListener("pointermove", onMove, { passive: true });
     addEventListener("pointerdown", onDown, { passive: true });
     addEventListener("scroll", sample, { passive: true });
-    addEventListener("resize", fx.resize);
     root.addEventListener("mouseleave", onLeave);
 
     cleanup = () => {
@@ -235,7 +237,7 @@ export function useCursor(
       removeEventListener("pointermove", onMove);
       removeEventListener("pointerdown", onDown);
       removeEventListener("scroll", sample);
-      removeEventListener("resize", fx.resize);
+      sizer.disconnect();
       root.removeEventListener("mouseleave", onLeave);
       cancelAnimationFrame(frame);
     };
