@@ -32,7 +32,7 @@
           :delay="0.2"
         />
         <span
-          class="block font-serif text-[1.12em] font-normal tracking-normal text-indigo italic"
+          class="block text-indigo"
         >
           <MotionRevealText
             :text="

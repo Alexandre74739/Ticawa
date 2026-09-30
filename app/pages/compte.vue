@@ -7,7 +7,7 @@
         >
           Mon compte,
           <span
-            class="block font-serif text-[1.1em] font-normal tracking-normal text-indigo italic"
+            class="block text-indigo"
           >
             vos données restent les vôtres
           </span>

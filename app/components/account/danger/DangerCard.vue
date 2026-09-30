@@ -19,7 +19,7 @@
         <h2 class="font-display text-xl leading-tight font-bold md:text-2xl">
           Supprimer mon compte
           <span
-            class="block font-serif text-[1.1em] font-normal text-terracotta italic"
+            class="block text-terracotta"
           >
             Tico en aurait gros sur le cœur
           </span>

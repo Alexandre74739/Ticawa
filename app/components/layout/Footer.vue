@@ -32,7 +32,7 @@
           >
             Perdez votre ticket,
             <span
-              class="block font-serif text-[1.1em] font-normal tracking-normal text-lavender italic"
+              class="block text-lavender"
             >
               jamais vos droits.
             </span>

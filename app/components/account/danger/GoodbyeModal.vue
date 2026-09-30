@@ -8,7 +8,7 @@
       >
         C’est fait
         <span
-          class="block font-serif text-[1.1em] font-normal text-indigo italic"
+          class="block text-indigo"
         >
           Tico vous dit au revoir
         </span>

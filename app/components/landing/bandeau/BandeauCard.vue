@@ -10,11 +10,6 @@
           class="font-display text-3xl leading-[1.05] font-extrabold tracking-[-0.02em] md:text-5xl"
         >
           {{ title }}
-          <span
-            class="block font-serif text-[1.1em] font-normal tracking-normal text-lavender italic"
-          >
-            {{ titleAccent }}
-          </span>
         </h2>
         <ul class="mt-6 hidden flex-wrap gap-2 md:flex">
           <li
@@ -56,7 +51,6 @@ import type { SectionLink } from "#shared/types/sections";
 
 defineProps<{
   title: string;
-  titleAccent: string;
   description: string;
   cta?: SectionLink;
 }>();

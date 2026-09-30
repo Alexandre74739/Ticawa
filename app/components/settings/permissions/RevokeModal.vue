@@ -9,7 +9,7 @@
         >
           Retirer l’accès
           <span
-            class="block font-serif text-[1.1em] font-normal text-indigo italic"
+            class="block text-indigo"
           >
             {{ info.revoke.title }}
           </span>

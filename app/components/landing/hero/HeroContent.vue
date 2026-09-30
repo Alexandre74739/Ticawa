@@ -7,7 +7,7 @@
     >
       <MotionRevealText :text="title" :delay="0.15" />
       <span
-        class="block font-serif text-[1.1em] font-normal tracking-normal text-lavender italic"
+        class="block text-lavender"
       >
         <MotionRevealText :text="titleAccent" :delay="0.5" />
       </span>

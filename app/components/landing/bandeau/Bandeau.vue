@@ -3,7 +3,6 @@
     <LandingBandeauRace class="block h-40 w-full md:h-56 lg:h-64" />
     <LandingBandeauCard
       :title="title"
-      :title-accent="titleAccent"
       :description="description"
       :cta="cta"
     />
@@ -15,7 +14,6 @@ import type { SectionLink } from "#shared/types/sections";
 
 defineProps<{
   title: string;
-  titleAccent: string;
   description: string;
   cta?: SectionLink;
 }>();

@@ -2,7 +2,7 @@
   <div>
     <LandingHero
       title="Perdez votre ticket,"
-      title-accent="jamais vos droits."
+      title-accent="jamais vos droits"
       description="Ticawa garde vos preuves d'achat, suit la durée de vos garanties et assurances, et vous prévient avant qu'elles n'expirent."
       :cta="{ label: 'Commencer avec Ticawa', to: '/connexion' }"
     />
@@ -13,7 +13,6 @@
     <LandingProduct :features="features" />
     <LandingBandeau
       title="Votre garantie expire bientôt ?"
-      title-accent="Vous le saurez avant."
       description="Ticawa vous envoie une notification avant la fin de chaque garantie et assurance. Assez tôt pour vérifier votre produit, retrouver la preuve d'achat et faire valoir vos droits si besoin. La démarche reste entre vos mains."
       :cta="{ label: 'Activer mes rappels', to: '/connexion' }"
     />
@@ -25,13 +24,12 @@
     />
     <LandingFaq
       title="Tout savoir sur vos garanties"
-      title-accent="et vos preuves d'achat."
+      title-accent="et vos preuves d'achat"
       description="Comment Ticawa conserve vos tickets de caisse, calcule la durée de chaque garantie et protège vos données personnelles : les réponses aux questions les plus posées."
       :items="faq"
     />
     <LandingCta
-      title="Une photo aujourd'hui,"
-      title-accent="vos droits deux ans plus tard."
+      title="Une photo aujourd'hui, vos droits deux ans plus tard."
       description="Ticawa garde la preuve d'achat, calcule la fin de chaque garantie et vous prévient avant l'échéance."
       :cta="{ label: 'Commencer avec Ticawa', to: '/connexion' }"
     />

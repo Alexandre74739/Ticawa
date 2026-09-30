@@ -9,7 +9,7 @@
           {{ title }}
           <span
             v-if="accent"
-            class="block font-serif text-[1.1em] font-normal text-indigo italic"
+            class="block text-indigo"
           >
             {{ accent }}
           </span>

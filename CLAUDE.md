@@ -38,7 +38,7 @@ Couleurs (Tailwind theme) :
 - actif : #3F7A5E · bientôt expiré : #8A5E12 · expiré/erreur : #B04A4A
 Règles : texte encre sur fond clair, texte papier (crème) sur aplats indigo.
 
-Typo : **Bricolage Grotesque** (titres + boutons, `font-display`, 700/800), **Instrument Serif** italique (accent, `font-serif`), **DM Sans** (corps, `font-sans`).
+Typo : **Bricolage Grotesque** (titres + boutons, `font-display`, 700/800) ; mot d'accent d'un titre = même police, en couleur (indigo, lavande ou terracotta), plus de police d'accent ; **DM Sans** (corps, `font-sans`).
 Style : très arrondi, doux, ludique. Rayons d'arrondi généreux, boutons pleins.
 Mascotte « Tico » : blob indigo à deux yeux, sur écrans vides et de succès.
 Curseur Tico et ses easter eggs (humeurs, déclencheurs, réglages) : voir `docs/tico-easter-eggs.md`.

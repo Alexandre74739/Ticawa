@@ -5,19 +5,14 @@
     >
       <LandingCtaDecor />
 
-      <div class="min-w-0">
+      <div class="min-w-0 max-w-xl">
         <h2
           class="font-display text-2xl leading-[1.05] font-extrabold tracking-[-0.02em] md:text-4xl"
         >
           {{ title }}
-          <span
-            class="block font-serif text-[1.1em] font-normal tracking-normal text-lavender italic"
-          >
-            {{ titleAccent }}
-          </span>
         </h2>
         <p
-          class="mt-4 max-w-xl text-base leading-relaxed text-paper/90 md:text-lg"
+          class="mt-4 text-base leading-relaxed text-paper/90 md:text-lg"
         >
           {{ description }}
         </p>
@@ -41,7 +36,6 @@ import type { SectionLink } from "#shared/types/sections";
 
 defineProps<{
   title: string;
-  titleAccent: string;
   description: string;
   cta: SectionLink;
 }>();

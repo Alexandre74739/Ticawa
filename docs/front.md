@@ -89,7 +89,6 @@ Un état de couverture s'affiche toujours avec sa couleur, une icône et un libe
 | Classe | Police | Usage |
 |---|---|---|
 | `font-display` | Bricolage Grotesque | titres et boutons |
-| `font-serif` | Instrument Serif, en italique | mot d'accent dans un titre |
 | `font-sans` | DM Sans | texte courant (par défaut) |
 
 Les polices sont servies par le site lui-même (@fontsource) : aucun appel à Google Fonts.
