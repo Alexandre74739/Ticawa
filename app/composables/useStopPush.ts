@@ -4,14 +4,12 @@ type Settings = {
   channelEmail: boolean;
 };
 
-// Ce que l'app peut couper elle-même : l'envoi des notifications sur ce téléphone.
 export function useStopPush() {
   const { data: settings } = useNuxtData<Settings>("settings");
+  const push = usePushSubscription();
 
   return useAction(async () => {
-    const registration = await navigator.serviceWorker?.getRegistration();
-    const subscription = await registration?.pushManager?.getSubscription();
-    await subscription?.unsubscribe();
+    await push.unsubscribe();
 
     if (!settings.value?.channelPush) return "";
     const alone = !settings.value.channelEmail;

@@ -5,6 +5,9 @@ export default defineEventHandler(async (event) => {
 
   const resets = await listPasswordResets(row.id);
   const settings = await findUserSettings(row.id);
+  const tickets = await listTicketsForExport(row.id);
+  const devices = await listPushSubscriptions(row.id);
+  const reminders = await listRemindersForExport(row.id);
   const now = new Date();
 
   setResponseHeaders(event, {
@@ -36,6 +39,12 @@ export default defineEventHandler(async (event) => {
         expireLe: r.expires_at,
         utiliseLe: r.used_at,
       })),
+      appareilsNotifies: devices.map((d) => ({
+        abonneLe: d.createdAt,
+        serviceDePush: new URL(d.endpoint).hostname,
+      })),
+      rappelsEnvoyes: reminders,
+      tickets,
     },
     null,
     2,

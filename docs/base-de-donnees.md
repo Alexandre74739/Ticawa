@@ -24,7 +24,7 @@ Le dépôt ne contient pas encore de fichier de migration. Le schéma ci-dessous
 | `nom` | texte, nullable | absent si Google ne le fournit pas |
 | `password_hash` | texte, nullable | `null` pour un compte Google seul |
 | `google_id` | texte, unique, nullable | identifiant `sub` de Google |
-| `role` | `user` ou `admin` | `admin` donne accès aux pages Utilisateurs et Statistiques du tableau de bord |
+| `role` | `user` ou `admin` | `admin` donne accès aux pages Utilisateurs et Historique du tableau de bord |
 | `email_verified` | booléen | vrai après Google ou après un lien reçu par mail |
 | `session_version` | entier | augmente pour déconnecter tous les appareils |
 | `created_at` | horodatage | date d'inscription |
@@ -103,3 +103,118 @@ create table rate_limits (
 ```
 
 Le `on delete cascade` est indispensable : `DELETE /api/me` supprime seulement la ligne `users` et compte sur la cascade pour effacer les réglages et les jetons.
+
+## Tickets
+
+| Table | Rôle |
+|---|---|
+| `tickets` | une ligne par ticket ou facture : nom donné par l'utilisateur (facultatif, remplace l'enseigne comme titre), magasin (enseigne, adresse, SIRET, TVA, téléphone), achat (date, heure, n° de ticket, caisse, total, moyen de paiement, 4 derniers chiffres de carte), mentions imprimées (délai d'échange en jours et texte, garantie), texte brut lu, `verified` (fiche relue par l'utilisateur) |
+| `ticket_items` | articles du ticket, dans l'ordre (`position`) : libellé, référence, quantité, prix unitaire, prix total |
+| `ticket_files` | la photo (JPEG) ou le PDF d'origine, en `bytea`, 4 Mo au plus. Table à part : la liste des tickets ne charge jamais les octets |
+
+Tout est en `on delete cascade` depuis `users`. Requêtes : [server/utils/tickets.ts](../server/utils/tickets.ts).
+
+### Garanties, assurance et rappels
+
+| Colonne de `tickets` | Rôle |
+|---|---|
+| `legal_warranty` | `new` (garantie légale de 2 ans suivie) ou `none` (courses, consommables, services), déduite des articles par [coverageInference.ts](../server/utils/coverageInference.ts) |
+| `warranty_months` | garantie du vendeur ou de la marque, en mois depuis l'achat |
+| `insurance_name`, `insurance_until` | assurance prise avec l'achat |
+
+```sql
+alter table tickets
+  add column legal_warranty text check (legal_warranty in ('new', 'used', 'none')),
+  add column warranty_months integer check (warranty_months between 1 and 120),
+  add column insurance_name text,
+  add column insurance_until date;
+
+create table push_subscriptions (
+  endpoint    text primary key,
+  user_id     uuid not null references users (id) on delete cascade,
+  p256dh      text not null,
+  auth        text not null,
+  created_at  timestamptz not null default now()
+);
+create index push_subscriptions_user_idx on push_subscriptions (user_id);
+
+create table reminder_log (
+  ticket_id    uuid not null references tickets (id) on delete cascade,
+  kind         text not null check (kind in ('return', 'legal', 'commercial', 'insurance')),
+  deadline     date not null,
+  days_before  integer not null,
+  sent_at      timestamptz not null default now(),
+  primary key (ticket_id, kind, deadline, days_before)
+);
+```
+
+Appliqué sur la base le 30/09/2026. Les dates de fin se calculent à la volée : `coverageRows()` en SQL ([tickets.ts](../server/utils/tickets.ts)) et `coverageEnds()` dans l'app ([coverage.ts](../shared/utils/coverage.ts)), à garder identiques. `push_subscriptions` garde un abonnement par appareil ; `reminder_log` les rappels envoyés (lignes effacées 60 jours après l'échéance).
+
+### Recherche et pagination
+
+La liste des tickets se charge par pages de 20, triées par date d'achat (les tickets sans date en dernier). La recherche porte sur le nom du ticket, l'enseigne et le nom des articles, sans tenir compte des majuscules ni des accents.
+
+```sql
+create extension if not exists pg_trgm;
+create extension if not exists unaccent;
+
+-- unaccent n'est pas « immutable » : l'enveloppe l'est, pour pouvoir l'indexer.
+create or replace function f_unaccent(text) returns text
+  language sql immutable parallel safe strict
+  as $$ select public.unaccent('public.unaccent'::regdictionary, lower($1)) $$;
+
+create index if not exists tickets_user_sort_idx
+  on tickets (user_id, coalesce(purchase_date, '-infinity'::date) desc, id desc);
+create index if not exists tickets_name_trgm
+  on tickets using gin (f_unaccent(name) gin_trgm_ops);
+create index if not exists tickets_merchant_trgm
+  on tickets using gin (f_unaccent(merchant) gin_trgm_ops);
+create index if not exists ticket_items_label_trgm
+  on ticket_items using gin (f_unaccent(label) gin_trgm_ops);
+```
+
+
+### Page Utilisateurs (admin)
+
+La liste des comptes se charge par pages de 20, les plus récents d'abord, sans les admins. La recherche porte sur le prénom, le nom et l'email, sans tenir compte des majuscules ni des accents. Requêtes : `listUsers` dans [server/utils/users.ts](../server/utils/users.ts).
+
+```sql
+create index if not exists users_role_created_idx
+  on users (role, created_at desc, id);
+create index if not exists users_prenom_trgm
+  on users using gin (f_unaccent(prenom) gin_trgm_ops);
+create index if not exists users_nom_trgm
+  on users using gin (f_unaccent(nom) gin_trgm_ops);
+create index if not exists users_email_trgm
+  on users using gin (email gin_trgm_ops);
+```
+
+Comptes de test (pagination) : emails en `@exemple.test` et `google_id` en `seed-test-N`, donc impossibles à utiliser pour se connecter. Pour les retirer :
+
+```sql
+delete from users where email like '%@exemple.test' and google_id like 'seed-test-%';
+```
+
+### Historique des actions admin
+
+Page Historique du tableau de bord (RGPD : traçabilité). Seules les actions d'un admin qui **modifient** les données d'un utilisateur sont notées : compte modifié, compte supprimé, ticket d'un autre compte modifié ou supprimé. `changes` garde chaque champ touché avec sa valeur avant et après (`[{ "field": "prenom", "before": "Léa", "after": "Lea" }]`) ; pour un ticket supprimé, son nom, son enseigne, sa date et son total, pour le reconnaître. Les emails sont copiés au moment de l'action pour rester lisibles après une suppression de compte. Aucune ligne ne peut être modifiée ni effacée depuis l'app ; les lignes de plus d'un an sont effacées au hasard, lors d'environ 1 écriture sur 100. Requêtes : [server/utils/adminLogs.ts](../server/utils/adminLogs.ts).
+
+```sql
+create table admin_logs (
+  id              bigint generated always as identity primary key,
+  admin_id        uuid references users (id) on delete set null,
+  admin_email     text not null,
+  action          text not null check (action in ('user.update', 'user.delete', 'ticket.update', 'ticket.delete')),
+  target_user_id  uuid,  -- sans clé étrangère : la ligne survit au compte supprimé
+  target_email    text not null,
+  ticket_id       uuid,
+  changes         jsonb not null default '[]',
+  created_at      timestamptz not null default now()
+);
+-- Pagination : les plus récentes d'abord, avec ou sans le filtre Modifications / Suppressions.
+create index admin_logs_created_idx on admin_logs (created_at desc, id desc);
+create index admin_logs_action_created_idx on admin_logs (action, created_at desc, id desc);
+-- Recherche par email de l'admin ou de l'utilisateur.
+create index admin_logs_admin_email_trgm on admin_logs using gin (admin_email gin_trgm_ops);
+create index admin_logs_target_email_trgm on admin_logs using gin (target_email gin_trgm_ops);
+```

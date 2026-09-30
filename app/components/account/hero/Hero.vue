@@ -5,7 +5,7 @@
     <AccountHeroDecor />
 
     <div
-      class="relative grid hidden w-20 shrink-0 place-items-center sm:block sm:w-24 md:w-32"
+      class="relative hidden w-20 shrink-0 place-items-center sm:grid sm:w-24 md:w-32"
     >
       <MotionLoop
         v-for="(ring, i) in rings"

@@ -10,7 +10,7 @@
 | `/mot-de-passe` | `mot-de-passe.vue` | tous | sans `?token` : demander un lien. Avec : choisir le mot de passe |
 | `/dashboard` | `dashboard.vue` + `dashboard/index.vue` | connecté | cadre du tableau de bord (menu latéral repliable ; sur téléphone, menu caché qui s'ouvre d'un balayage vers la droite ou par une languette sur le bord) et vue d'ensemble |
 | `/dashboard/tickets`, `/dashboard/echeances` | `dashboard/*.vue` | connecté | historique des tickets (photo, modification), garanties par date de fin. Encore vides |
-| `/dashboard/utilisateurs`, `/dashboard/statistiques` | `dashboard/*.vue` | admin (middleware `admin`) | gestion des profils utilisateurs (hors admins), usage de la plateforme. Encore vides. Dans le menu, groupe « Administration » visible des seuls admins ([data/dashboard.ts](../app/data/dashboard.ts), `adminLinks`) |
+| `/dashboard/utilisateurs` | `dashboard/utilisateurs/*.vue` | admin (middleware `admin`) | gestion des profils utilisateurs (hors admins). Dans le menu, groupe « Administration » visible des seuls admins ([data/dashboard.ts](../app/data/dashboard.ts), `adminLinks`) |
 | `/dashboard/scanner` | `dashboard/scanner.vue` | connecté | scan d'un ticket, dans l'app installée seulement. Dans le navigateur : explication et bouton d'installation |
 | `/compte` | `compte.vue` | connecté | profil (lecture seule), mot de passe, export des données, suppression du compte |
 | `/parametres` | `parametres.vue` | connecté | notifications, nouveautés, autorisations de l'appareil |

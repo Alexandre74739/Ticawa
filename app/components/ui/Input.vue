@@ -4,7 +4,17 @@
       label
     }}</label>
     <div class="relative mt-1">
+      <textarea
+        v-if="type === 'textarea'"
+        :id="id"
+        v-model="model"
+        rows="3"
+        :placeholder="placeholder"
+        :required="!optional"
+        :class="[field, 'resize-y']"
+      />
       <input
+        v-else
         :id="id"
         v-model="model"
         :type="
@@ -12,10 +22,11 @@
         "
         :autocomplete="autocomplete"
         :minlength="minlength"
+        :inputmode="inputmode"
+        :placeholder="placeholder"
         :aria-describedby="hint ? `${id}-hint` : undefined"
-        required
-        class="w-full rounded-xl border border-ink/15 bg-white px-3.5 py-2.5 text-base 2xl:px-4 2xl:py-3 text-ink transition-colors placeholder:text-ink/40 focus:border-indigo focus:outline-none focus:ring-2 focus:ring-indigo/30"
-        :class="{ 'pr-12': isPassword }"
+        :required="!optional"
+        :class="[field, { 'pr-12': isPassword }]"
       />
       <button
         v-if="isPassword"
@@ -48,16 +59,22 @@ import { Eye, EyeOff } from "@lucide/vue";
 const props = withDefaults(
   defineProps<{
     label: string;
-    type?: "text" | "email" | "password";
+    type?: "text" | "email" | "password" | "date" | "time" | "textarea";
     autocomplete?: string;
     minlength?: number;
     hint?: string;
+    inputmode?: "decimal" | "numeric" | "tel";
+    placeholder?: string;
+    optional?: boolean;
   }>(),
-  { type: "text" },
+  { type: "text", autocomplete: undefined, inputmode: undefined },
 );
 
 const model = defineModel<string>({ required: true });
 const id = useId();
 const revealed = ref(false);
 const isPassword = computed(() => props.type === "password");
+
+const field =
+  "w-full rounded-xl border border-ink/15 bg-white px-3.5 py-2.5 text-base 2xl:px-4 2xl:py-3 text-ink transition-colors placeholder:text-ink/40 focus:border-indigo focus:outline-none focus:ring-2 focus:ring-indigo/30";
 </script>

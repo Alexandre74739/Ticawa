@@ -11,8 +11,8 @@ Slogan : « Perdez votre ticket, jamais vos droits ». Cible : 25-34 ans.
 ## Stack technique
 - **Nuxt** (Vue 3, TypeScript) en **PWA** — mobile uniquement (pas de version desktop de l'app ; seule la landing est responsive PC/mobile).
 - **Tailwind CSS** pour le style (tokens ci-dessous).
-- **Baserow** comme base de données + back-office (hébergement UE).
-- **Authentification** : couche dédiée EU/open-source (Baserow ne gère pas l'auth des utilisateurs finaux).
+- **PostgreSQL** hébergé chez **Neon** (serveurs à Francfort, UE), interrogé avec le client `postgres` ; back-office = pages admin du tableau de bord.
+- **Authentification** : `nuxt-auth-utils` (session chiffrée en cookie), mot de passe ou « Continuer avec Google ».
 - **Polices** : @fontsource (self-hosted, pas de CDN externe).
 - **Déploiement** : Vercel.
 - **Analytics** : solution européenne (Plausible ou Matomo), jamais Google Analytics.
@@ -44,5 +44,5 @@ Mascotte « Tico » : blob indigo à deux yeux, sur écrans vides et de succès.
 Curseur Tico et ses easter eggs (humeurs, déclencheurs, réglages) : voir `docs/tico-easter-eggs.md`.
 Icônes : outline arrondies (Lucide ou Phosphor).
 
-## Modèle de données (Baserow)
-- **Produits** : nom, marque, modèle, catégorie, date d'achat, prix, n° de
+## Modèle de données (PostgreSQL)
+Tables `users`, `user_settings`, `tickets` (+ `ticket_items`, `ticket_files`), `push_subscriptions`, `reminder_log`, `admin_logs`, `password_resets`, `rate_limits`. Schéma complet : `docs/base-de-donnees.md`.

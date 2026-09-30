@@ -1,0 +1,401 @@
+import type { TransactionSql } from "postgres";
+import type { FieldChange } from "#shared/types/adminLog";
+import type {
+  CoverageKind,
+  Deadline,
+  Overview,
+  Ticket,
+  TicketFields,
+  TicketItem,
+  TicketPage,
+  TicketSource,
+  TicketSummary,
+} from "#shared/types/ticket";
+
+function fieldColumns() {
+  return useDb()`
+    t.name, t.merchant, t.merchant_address as "merchantAddress",
+    t.merchant_siret as "merchantSiret", t.merchant_vat as "merchantVat",
+    t.merchant_phone as "merchantPhone", t.purchase_date::text as "purchaseDate",
+    to_char(t.purchase_time, 'HH24:MI') as "purchaseTime",
+    t.ticket_number as "ticketNumber", t.register_number as "registerNumber",
+    t.total_amount::text as "totalAmount", t.currency,
+    t.payment_method as "paymentMethod", t.card_last4 as "cardLast4",
+    t.return_days as "returnDays", t.return_policy as "returnPolicy",
+    t.warranty_note as "warrantyNote", t.legal_warranty as "legalWarranty",
+    t.warranty_months as "warrantyMonths", t.insurance_name as "insuranceName",
+    t.insurance_until::text as "insuranceUntil"
+  `;
+}
+
+type Row<T> = Omit<T, "totalAmount" | "createdAt"> & {
+  totalAmount: string | null;
+  createdAt: Date;
+};
+
+interface TicketRow extends Row<Omit<Ticket, "items" | "file" | "updatedAt">> {
+  fileType: string | null;
+  fileSize: number | null;
+  updatedAt: Date;
+}
+
+interface ItemRow {
+  label: string;
+  reference: string | null;
+  quantity: string;
+  unitPrice: string | null;
+  totalPrice: string | null;
+}
+
+const num = (value: string | null) => (value === null ? null : Number(value));
+
+function toItem(row: ItemRow): TicketItem {
+  return {
+    ...row,
+    quantity: Number(row.quantity),
+    unitPrice: num(row.unitPrice),
+    totalPrice: num(row.totalPrice),
+  };
+}
+
+function summaryColumns() {
+  return useDb()`
+    t.id, t.source, t.verified, t.name, t.merchant, t.currency,
+    t.return_days as "returnDays", t.purchase_date::text as "purchaseDate",
+    t.legal_warranty as "legalWarranty", t.warranty_months as "warrantyMonths",
+    t.insurance_until::text as "insuranceUntil",
+    t.total_amount::text as "totalAmount", t.created_at as "createdAt",
+    (select count(*)::int from ticket_items i where i.ticket_id = t.id) as "itemCount"
+  `;
+}
+
+function toSummary(row: Row<TicketSummary>): TicketSummary {
+  return {
+    ...row,
+    totalAmount: num(row.totalAmount),
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+type Fragment = ReturnType<typeof summaryColumns>;
+
+// Fins de couverture du ticket `t`, une ligne (kind, date) par couverture.
+// Même calcul que coverageEnds() (shared/utils/coverage.ts).
+export function coverageRows() {
+  return useDb()`(values
+    ('return', t.purchase_date + t.return_days),
+    ('legal', case when t.legal_warranty = 'new'
+      then (t.purchase_date + interval '24 months')::date end),
+    ('commercial', (t.purchase_date + t.warranty_months * interval '1 month')::date),
+    ('insurance', t.insurance_until)
+  ) as c(kind, date)`;
+}
+
+// Vrai quand toutes les couvertures connues du ticket sont terminées.
+function expired() {
+  return useDb()`coalesce(
+    (select max(c.date) from ${coverageRows()}) < current_date, false
+  )`;
+}
+
+const PAGE_SIZE = 20;
+
+export type TicketStatus = "active" | "expired";
+
+function statusFilter(status: TicketStatus | null) {
+  const sql = useDb();
+  if (status === "expired") return sql`and ${expired()}`;
+  if (status === "active") return sql`and not ${expired()}`;
+  return sql``;
+}
+
+function searchFilter(search: string) {
+  const sql = useDb();
+  if (!search) return sql``;
+  const pattern = `%${search.replace(/[\\%_]/g, "\\$&")}%`;
+  return sql`and (
+    f_unaccent(t.name) like f_unaccent(${pattern})
+    or f_unaccent(t.merchant) like f_unaccent(${pattern})
+    or exists (
+      select 1 from ticket_items i
+      where i.ticket_id = t.id and f_unaccent(i.label) like f_unaccent(${pattern})
+    )
+  )`;
+}
+
+export async function listTickets(
+  userId: string,
+  search: string,
+  page: number,
+  status: TicketStatus | null,
+): Promise<TicketPage> {
+  const sql = useDb();
+  const [rows, [counts]] = await Promise.all([
+    sql<Row<TicketSummary>[]>`
+      select ${summaryColumns()}
+      from tickets t
+      where t.user_id = ${userId} ${searchFilter(search)} ${statusFilter(status)}
+      order by coalesce(t.purchase_date, '-infinity'::date) desc, t.id desc
+      limit ${PAGE_SIZE} offset ${(page - 1) * PAGE_SIZE}
+    `,
+    sql<{ total: number }[]>`
+      select count(*)::int as total
+      from tickets t where t.user_id = ${userId} ${searchFilter(search)} ${statusFilter(status)}
+    `,
+  ]);
+
+  return {
+    items: rows.map(toSummary),
+    total: counts!.total,
+    pages: Math.max(1, Math.ceil(counts!.total / PAGE_SIZE)),
+  };
+}
+
+type DeadlineRow = Row<TicketSummary> & { kind: CoverageKind; date: string };
+
+function toDeadline({ kind, date, ...ticket }: DeadlineRow): Deadline {
+  return { kind, date, ticket: toSummary(ticket) };
+}
+
+function selectDeadlines(userId: string, upcoming: boolean, limit?: number) {
+  const sql = useDb();
+  return sql<DeadlineRow[]>`
+    select c.kind, c.date::text as date, ${summaryColumns()}
+    from tickets t cross join lateral ${coverageRows()}
+    where t.user_id = ${userId} and c.date is not null
+      ${upcoming ? sql`and c.date >= current_date` : sql``}
+    order by c.date, t.id, c.kind
+    ${limit ? sql`limit ${limit}` : sql``}
+  `;
+}
+
+export async function listDeadlines(userId: string): Promise<Deadline[]> {
+  return (await selectDeadlines(userId, false)).map(toDeadline);
+}
+
+function listSummaries(userId: string, filter: Fragment, order: Fragment, limit: number) {
+  return useDb()<Row<TicketSummary>[]>`
+    select ${summaryColumns()}
+    from tickets t
+    where t.user_id = ${userId} and ${filter}
+    order by ${order}, t.id
+    limit ${limit}
+  `;
+}
+
+export async function getOverview(userId: string): Promise<Overview> {
+  const sql = useDb();
+  const ongoing = () => sql`not ${expired()}`;
+  // Complet : fiche relue et date d'achat connue (Tico déduit le reste).
+  const tracked = () => sql`t.verified and t.purchase_date is not null`;
+  const [[stats], deadlines, recent, incomplete] = await Promise.all([
+    sql<{ total: number; ongoing: number; tracked: number }[]>`
+      select count(*)::int as total,
+        count(*) filter (where ${ongoing()})::int as ongoing,
+        count(*) filter (where ${ongoing()} and ${tracked()})::int as tracked
+      from tickets t where t.user_id = ${userId}
+    `,
+    selectDeadlines(userId, true, 3),
+    listSummaries(userId, sql`true`, sql`t.created_at desc`, 3),
+    listSummaries(
+      userId,
+      sql`${ongoing()} and not (${tracked()})`,
+      sql`t.created_at desc`,
+      1,
+    ),
+  ]);
+
+  return {
+    ...stats!,
+    deadlines: deadlines.map(toDeadline),
+    recent: recent.map(toSummary),
+    incomplete: incomplete[0] ? toSummary(incomplete[0]) : null,
+  };
+}
+
+function ownedBy(userId: string) {
+  return useDb()`(t.user_id = ${userId} or exists (
+    select 1 from users a where a.id = ${userId} and a.role = 'admin'
+  ))`;
+}
+
+export async function findTicket(userId: string, id: string): Promise<Ticket | undefined> {
+  const sql = useDb();
+  const [row] = await sql<TicketRow[]>`
+    select t.id, t.source, t.verified, t.raw_text as "rawText",
+      t.created_at as "createdAt", t.updated_at as "updatedAt",
+      f.mime_type as "fileType", f.size as "fileSize", ${fieldColumns()}
+    from tickets t left join ticket_files f on f.ticket_id = t.id
+    where t.id = ${id} and ${ownedBy(userId)}
+  `;
+  if (!row) return undefined;
+
+  const items = await sql<ItemRow[]>`
+    select label, reference, quantity::text as quantity,
+      unit_price::text as "unitPrice", total_price::text as "totalPrice"
+    from ticket_items where ticket_id = ${id} order by position
+  `;
+  const { fileType, fileSize, ...ticket } = row;
+  return {
+    ...ticket,
+    totalAmount: num(row.totalAmount),
+    items: items.map(toItem),
+    file: fileType ? { type: fileType, size: fileSize ?? 0 } : null,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
+function columns({ items: _items, ...fields }: TicketFields) {
+  return {
+    name: fields.name,
+    merchant: fields.merchant,
+    merchant_address: fields.merchantAddress,
+    merchant_siret: fields.merchantSiret,
+    merchant_vat: fields.merchantVat,
+    merchant_phone: fields.merchantPhone,
+    purchase_date: fields.purchaseDate,
+    purchase_time: fields.purchaseTime,
+    ticket_number: fields.ticketNumber,
+    register_number: fields.registerNumber,
+    total_amount: fields.totalAmount,
+    currency: fields.currency,
+    payment_method: fields.paymentMethod,
+    card_last4: fields.cardLast4,
+    return_days: fields.returnDays,
+    return_policy: fields.returnPolicy,
+    warranty_note: fields.warrantyNote,
+    legal_warranty: fields.legalWarranty,
+    warranty_months: fields.warrantyMonths,
+    insurance_name: fields.insuranceName,
+    insurance_until: fields.insuranceUntil,
+  };
+}
+
+async function insertItems(tx: TransactionSql, ticketId: string, items: TicketItem[]) {
+  if (!items.length) return;
+  const rows = items.map((item, position) => ({
+    ticket_id: ticketId,
+    position,
+    label: item.label,
+    reference: item.reference,
+    quantity: item.quantity,
+    unit_price: item.unitPrice,
+    total_price: item.totalPrice,
+  }));
+  await tx`insert into ticket_items ${tx(rows)}`;
+}
+
+interface TicketUpload {
+  source: TicketSource;
+  fields: TicketFields;
+  rawText: string | null;
+  file: { type: string; data: Uint8Array };
+}
+
+export async function createTicket(userId: string, upload: TicketUpload) {
+  return useDb().begin(async (tx) => {
+    const row = {
+      user_id: userId,
+      source: upload.source,
+      raw_text: upload.rawText,
+      ...columns(upload.fields),
+    };
+    const [ticket] = await tx<{ id: string }[]>`
+      insert into tickets ${tx(row)} returning id
+    `;
+    await insertItems(tx, ticket!.id, upload.fields.items);
+    await tx`
+      insert into ticket_files (ticket_id, mime_type, size, content)
+      values (${ticket!.id}, ${upload.file.type}, ${upload.file.data.length}, ${upload.file.data})
+    `;
+    return ticket!.id;
+  });
+}
+
+function ticketChanges(before: Record<string, unknown>, after: TicketFields): FieldChange[] {
+  const text = (value: unknown) => (value === null || value === "" ? null : String(value));
+  const labels = (items: { label: string }[]) => text(items.map((i) => i.label).join(", "));
+  const { items, ...fields } = after;
+  const changes = Object.entries(fields).map(([field, value]) => ({
+    field,
+    before: text(before[field]),
+    after: text(value),
+  }));
+  changes.push({ field: "items", before: labels(before.items as ItemRow[]), after: labels(items) });
+  return changes.filter((c) =>
+    c.field === "totalAmount" ? Number(c.before) !== Number(c.after) : c.before !== c.after,
+  );
+}
+
+export async function updateTicket(userId: string, id: string, fields: TicketFields) {
+  const result = await useDb().begin(async (tx) => {
+    const [before] = await tx<(Record<string, unknown> & { userId: string })[]>`
+      select t.user_id as "userId", ${fieldColumns()},
+        coalesce((
+          select json_agg(json_build_object('label', i.label) order by i.position)
+          from ticket_items i where i.ticket_id = t.id
+        ), '[]') as items
+      from tickets t where t.id = ${id} and ${ownedBy(userId)}
+      for update
+    `;
+    if (!before) return null;
+    await tx`
+      update tickets t set ${tx(columns(fields))}, verified = true, updated_at = now()
+      where t.id = ${id}
+    `;
+    await tx`delete from ticket_items where ticket_id = ${id}`;
+    await insertItems(tx, id, fields.items);
+    return before;
+  });
+  if (!result) return false;
+  if (result.userId !== userId) {
+    const changes = ticketChanges(result, fields);
+    if (changes.length)
+      await logAdminAction(userId, "ticket.update", result.userId, { ticketId: id, changes });
+  }
+  return true;
+}
+
+export async function deleteTicket(userId: string, id: string) {
+  const [deleted] = await useDb()<{ userId: string; name: string | null; merchant: string | null; purchaseDate: string | null; totalAmount: string | null }[]>`
+    delete from tickets t where t.id = ${id} and ${ownedBy(userId)}
+    returning t.user_id as "userId", t.name, t.merchant,
+      t.purchase_date::text as "purchaseDate", t.total_amount::text as "totalAmount"
+  `;
+  if (!deleted) return false;
+  if (deleted.userId !== userId) {
+    const { userId: ownerId, ...ticket } = deleted;
+    const changes = Object.entries(ticket)
+      .filter(([, value]) => value !== null)
+      .map(([field, value]) => ({ field, before: value, after: null }));
+    await logAdminAction(userId, "ticket.delete", ownerId, { ticketId: id, changes });
+  }
+  return true;
+}
+
+export async function findTicketFile(userId: string, id: string) {
+  const [row] = await useDb()<{ mimeType: string; content: Uint8Array; source: TicketSource; createdAt: Date }[]>`
+    select f.mime_type as "mimeType", f.content, t.source, t.created_at as "createdAt"
+    from ticket_files f join tickets t on t.id = f.ticket_id
+    where t.id = ${id} and ${ownedBy(userId)}
+  `;
+  return row;
+}
+
+export function listTicketsForExport(userId: string) {
+  return useDb()`
+    select t.id, t.source, t.verified, ${fieldColumns()},
+      t.raw_text as "rawText", t.created_at as "createdAt",
+      t.updated_at as "updatedAt",
+      coalesce((
+        select json_agg(json_build_object(
+          'label', i.label, 'reference', i.reference, 'quantity', i.quantity,
+          'unitPrice', i.unit_price, 'totalPrice', i.total_price
+        ) order by i.position)
+        from ticket_items i where i.ticket_id = t.id
+      ), '[]') as items
+    from tickets t where t.user_id = ${userId}
+    order by t.created_at
+  `;
+}
