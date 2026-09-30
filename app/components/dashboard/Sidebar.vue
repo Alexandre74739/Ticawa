@@ -1,11 +1,11 @@
 <template>
   <aside
-    class="sticky top-26 hidden shrink-0 self-start transition-[width] duration-300 ease-out md:block standalone:top-6"
+    class="sticky top-40 hidden shrink-0 self-start transition-[width] duration-300 ease-out md:block standalone:top-6"
     :class="width"
   >
     <nav
       aria-label="Navigation du tableau de bord"
-      class="flex max-h-[calc(100dvh-8.5rem)] flex-col gap-2 overflow-x-hidden overflow-y-auto rounded-3xl bg-lavender p-2 [scrollbar-width:thin] standalone:max-h-[calc(100dvh-7.5rem)]"
+      class="flex max-h-[calc(100dvh-11.5rem)] flex-col gap-2 overflow-x-hidden overflow-y-auto rounded-3xl bg-lavender p-2 [scrollbar-width:thin] standalone:max-h-[calc(100dvh-7.5rem)]"
     >
       <DashboardNavList :label-class="label" />
       <DashboardSidebarToggle
