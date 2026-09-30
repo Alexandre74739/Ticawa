@@ -1,4 +1,5 @@
 import type { TransactionSql } from "postgres";
+import type { FieldChange } from "#shared/types/adminLog";
 import type {
   Overview,
   Ticket,
@@ -276,7 +277,6 @@ export async function createTicket(userId: string, upload: TicketUpload) {
   });
 }
 
-// Pour l'historique admin : chaque champ changé, avec sa valeur avant et après.
 function ticketChanges(before: Record<string, unknown>, after: TicketFields): FieldChange[] {
   const text = (value: unknown) => (value === null || value === "" ? null : String(value));
   const labels = (items: { label: string }[]) => text(items.map((i) => i.label).join(", "));
@@ -287,7 +287,6 @@ function ticketChanges(before: Record<string, unknown>, after: TicketFields): Fi
     after: text(value),
   }));
   changes.push({ field: "items", before: labels(before.items as ItemRow[]), after: labels(items) });
-  // Montant en texte côté base (« 89.90 ») : comparé en nombre.
   return changes.filter((c) =>
     c.field === "totalAmount" ? Number(c.before) !== Number(c.after) : c.before !== c.after,
   );
@@ -314,7 +313,6 @@ export async function updateTicket(userId: string, id: string, fields: TicketFie
     return before;
   });
   if (!result) return false;
-  // Ticket d'un autre compte : c'est un admin, l'action va dans l'historique.
   if (result.userId !== userId) {
     const changes = ticketChanges(result, fields);
     if (changes.length)
@@ -330,7 +328,6 @@ export async function deleteTicket(userId: string, id: string) {
       t.purchase_date::text as "purchaseDate", t.total_amount::text as "totalAmount"
   `;
   if (!deleted) return false;
-  // Pour l'historique : de quoi reconnaître le ticket effacé.
   if (deleted.userId !== userId) {
     const { userId: ownerId, ...ticket } = deleted;
     const changes = Object.entries(ticket)

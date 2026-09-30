@@ -1,3 +1,5 @@
+import type { FieldChange } from "#shared/types/adminLog";
+
 export default defineEventHandler(async (event) => {
   const admin = await requireAdmin(event);
   const user = await findSupportUser(getRouterParam(event, "id"));
