@@ -132,7 +132,7 @@ const USERS_PAGE_SIZE = 20;
 
 export async function listUsers(search: string, page: number) {
   const sql = useDb();
-  const pattern = `%${search.replace(/[\%_]/g, "\$&")}%`;
+  const pattern = `%${search.replace(/[\\%_]/g, "\\$&")}%`;
   const filter = search
     ? sql`and (
         f_unaccent(u.prenom) like f_unaccent(${pattern})

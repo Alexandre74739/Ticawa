@@ -158,3 +158,27 @@ Comptes de test (pagination) : emails en `@exemple.test` et `google_id` en `seed
 ```sql
 delete from users where email like '%@exemple.test' and google_id like 'seed-test-%';
 ```
+
+### Historique des actions admin
+
+Page Historique du tableau de bord (RGPD : traçabilité). Seules les actions d'un admin qui **modifient** les données d'un utilisateur sont notées : compte modifié, compte supprimé, ticket d'un autre compte modifié ou supprimé. `changes` garde chaque champ touché avec sa valeur avant et après (`[{ "field": "prenom", "before": "Léa", "after": "Lea" }]`) ; pour un ticket supprimé, son nom, son enseigne, sa date et son total, pour le reconnaître. Les emails sont copiés au moment de l'action pour rester lisibles après une suppression de compte. Aucune ligne ne peut être modifiée ni effacée depuis l'app ; les lignes de plus d'un an sont effacées au hasard, lors d'environ 1 écriture sur 100. Requêtes : [server/utils/adminLogs.ts](../server/utils/adminLogs.ts).
+
+```sql
+create table admin_logs (
+  id              bigint generated always as identity primary key,
+  admin_id        uuid references users (id) on delete set null,
+  admin_email     text not null,
+  action          text not null check (action in ('user.update', 'user.delete', 'ticket.update', 'ticket.delete')),
+  target_user_id  uuid,  -- sans clé étrangère : la ligne survit au compte supprimé
+  target_email    text not null,
+  ticket_id       uuid,
+  changes         jsonb not null default '[]',
+  created_at      timestamptz not null default now()
+);
+-- Pagination : les plus récentes d'abord, avec ou sans le filtre Modifications / Suppressions.
+create index admin_logs_created_idx on admin_logs (created_at desc, id desc);
+create index admin_logs_action_created_idx on admin_logs (action, created_at desc, id desc);
+-- Recherche par email de l'admin ou de l'utilisateur.
+create index admin_logs_admin_email_trgm on admin_logs using gin (admin_email gin_trgm_ops);
+create index admin_logs_target_email_trgm on admin_logs using gin (target_email gin_trgm_ops);
+```

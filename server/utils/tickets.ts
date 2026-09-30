@@ -276,25 +276,69 @@ export async function createTicket(userId: string, upload: TicketUpload) {
   });
 }
 
+// Pour l'historique admin : chaque champ changé, avec sa valeur avant et après.
+function ticketChanges(before: Record<string, unknown>, after: TicketFields): FieldChange[] {
+  const text = (value: unknown) => (value === null || value === "" ? null : String(value));
+  const labels = (items: { label: string }[]) => text(items.map((i) => i.label).join(", "));
+  const { items, ...fields } = after;
+  const changes = Object.entries(fields).map(([field, value]) => ({
+    field,
+    before: text(before[field]),
+    after: text(value),
+  }));
+  changes.push({ field: "items", before: labels(before.items as ItemRow[]), after: labels(items) });
+  // Montant en texte côté base (« 89.90 ») : comparé en nombre.
+  return changes.filter((c) =>
+    c.field === "totalAmount" ? Number(c.before) !== Number(c.after) : c.before !== c.after,
+  );
+}
+
 export async function updateTicket(userId: string, id: string, fields: TicketFields) {
-  return useDb().begin(async (tx) => {
-    const updated = await tx`
-      update tickets t set ${tx(columns(fields))}, verified = true, updated_at = now()
-      where t.id = ${id} and ${ownedBy(userId)}
-      returning id
+  const result = await useDb().begin(async (tx) => {
+    const [before] = await tx<(Record<string, unknown> & { userId: string })[]>`
+      select t.user_id as "userId", ${fieldColumns()},
+        coalesce((
+          select json_agg(json_build_object('label', i.label) order by i.position)
+          from ticket_items i where i.ticket_id = t.id
+        ), '[]') as items
+      from tickets t where t.id = ${id} and ${ownedBy(userId)}
+      for update
     `;
-    if (!updated.length) return false;
+    if (!before) return null;
+    await tx`
+      update tickets t set ${tx(columns(fields))}, verified = true, updated_at = now()
+      where t.id = ${id}
+    `;
     await tx`delete from ticket_items where ticket_id = ${id}`;
     await insertItems(tx, id, fields.items);
-    return true;
+    return before;
   });
+  if (!result) return false;
+  // Ticket d'un autre compte : c'est un admin, l'action va dans l'historique.
+  if (result.userId !== userId) {
+    const changes = ticketChanges(result, fields);
+    if (changes.length)
+      await logAdminAction(userId, "ticket.update", result.userId, { ticketId: id, changes });
+  }
+  return true;
 }
 
 export async function deleteTicket(userId: string, id: string) {
-  const rows = await useDb()`
-    delete from tickets t where t.id = ${id} and ${ownedBy(userId)} returning t.id
+  const [deleted] = await useDb()<{ userId: string; name: string | null; merchant: string | null; purchaseDate: string | null; totalAmount: string | null }[]>`
+    delete from tickets t where t.id = ${id} and ${ownedBy(userId)}
+    returning t.user_id as "userId", t.name, t.merchant,
+      t.purchase_date::text as "purchaseDate", t.total_amount::text as "totalAmount"
   `;
-  return rows.length > 0;
+  if (!deleted) return false;
+  // Pour l'historique : de quoi reconnaître le ticket effacé.
+  if (deleted.userId !== userId) {
+    const { userId: ownerId, ...ticket } = deleted;
+    const changes = Object.entries(ticket)
+      .filter(([, value]) => value !== null)
+      .map(([field, value]) => ({ field, before: value, after: null }));
+    await logAdminAction(userId, "ticket.delete", ownerId, { ticketId: id, changes });
+  }
+  return true;
 }
 
 export async function findTicketFile(userId: string, id: string) {

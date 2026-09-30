@@ -3,10 +3,7 @@
     <DashboardHeading
       title="Utilisateurs,"
       accent="les comptes de la plateforme"
-    >
-      Retrouvez un compte et ses tickets pour aider son propriétaire en cas de
-      difficulté. Les comptes admin ne sont pas listés.
-    </DashboardHeading>
+    />
 
     <UiAlert v-if="error" tone="danger">
       Impossible de charger les utilisateurs. Réessayez dans un instant.
