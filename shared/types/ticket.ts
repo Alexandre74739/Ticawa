@@ -58,3 +58,12 @@ export interface TicketPage {
   total: number;
   pages: number;
 }
+
+export interface Overview {
+  total: number;
+  ongoing: number;
+  tracked: number;
+  deadlines: TicketSummary[];
+  recent: TicketSummary[];
+  incomplete: TicketSummary | null;
+}

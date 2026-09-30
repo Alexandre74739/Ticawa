@@ -1,5 +1,6 @@
 import type { TransactionSql } from "postgres";
 import type {
+  Overview,
   Ticket,
   TicketFields,
   TicketItem,
@@ -52,6 +53,25 @@ function toItem(row: ItemRow): TicketItem {
   };
 }
 
+function summaryColumns() {
+  return useDb()`
+    t.id, t.source, t.verified, t.name, t.merchant, t.currency,
+    t.return_days as "returnDays", t.purchase_date::text as "purchaseDate",
+    t.total_amount::text as "totalAmount", t.created_at as "createdAt",
+    (select count(*)::int from ticket_items i where i.ticket_id = t.id) as "itemCount"
+  `;
+}
+
+function toSummary(row: Row<TicketSummary>): TicketSummary {
+  return {
+    ...row,
+    totalAmount: num(row.totalAmount),
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+type Fragment = ReturnType<typeof summaryColumns>;
+
 const PAGE_SIZE = 20;
 
 export type TicketStatus = "active" | "expired";
@@ -87,10 +107,7 @@ export async function listTickets(
   const sql = useDb();
   const [rows, [counts]] = await Promise.all([
     sql<Row<TicketSummary>[]>`
-      select t.id, t.source, t.verified, t.name, t.merchant, t.currency,
-        t.return_days as "returnDays", t.purchase_date::text as "purchaseDate",
-        t.total_amount::text as "totalAmount", t.created_at as "createdAt",
-        (select count(*)::int from ticket_items i where i.ticket_id = t.id) as "itemCount"
+      select ${summaryColumns()}
       from tickets t
       where t.user_id = ${userId} ${searchFilter(search)} ${statusFilter(status)}
       order by coalesce(t.purchase_date, '-infinity'::date) desc, t.id desc
@@ -103,11 +120,7 @@ export async function listTickets(
   ]);
 
   return {
-    items: rows.map((r) => ({
-      ...r,
-      totalAmount: num(r.totalAmount),
-      createdAt: r.createdAt.toISOString(),
-    })),
+    items: rows.map(toSummary),
     total: counts!.total,
     pages: Math.max(1, Math.ceil(counts!.total / PAGE_SIZE)),
   };
@@ -115,19 +128,56 @@ export async function listTickets(
 
 export async function listDeadlines(userId: string): Promise<TicketSummary[]> {
   const rows = await useDb()<Row<TicketSummary>[]>`
-    select t.id, t.source, t.verified, t.name, t.merchant, t.currency,
-      t.return_days as "returnDays", t.purchase_date::text as "purchaseDate",
-      t.total_amount::text as "totalAmount", t.created_at as "createdAt",
-      (select count(*)::int from ticket_items i where i.ticket_id = t.id) as "itemCount"
+    select ${summaryColumns()}
     from tickets t
     where t.user_id = ${userId} and t.purchase_date is not null and t.return_days > 0
     order by t.purchase_date + t.return_days, t.id
   `;
-  return rows.map((r) => ({
-    ...r,
-    totalAmount: num(r.totalAmount),
-    createdAt: r.createdAt.toISOString(),
-  }));
+  return rows.map(toSummary);
+}
+
+const running = () =>
+  useDb()`t.return_days > 0 and t.purchase_date + t.return_days >= current_date`;
+
+function listSummaries(userId: string, filter: Fragment, order: Fragment, limit: number) {
+  return useDb()<Row<TicketSummary>[]>`
+    select ${summaryColumns()}
+    from tickets t
+    where t.user_id = ${userId} and ${filter}
+    order by ${order}, t.id
+    limit ${limit}
+  `;
+}
+
+export async function getOverview(userId: string): Promise<Overview> {
+  const sql = useDb();
+  const ongoing = () =>
+    sql`not coalesce(t.purchase_date + t.return_days < current_date, false)`;
+  const tracked = () =>
+    sql`t.verified and t.purchase_date is not null and t.return_days is not null`;
+  const [[stats], deadlines, recent, incomplete] = await Promise.all([
+    sql<{ total: number; ongoing: number; tracked: number }[]>`
+      select count(*)::int as total,
+        count(*) filter (where ${ongoing()})::int as ongoing,
+        count(*) filter (where ${ongoing()} and ${tracked()})::int as tracked
+      from tickets t where t.user_id = ${userId}
+    `,
+    listSummaries(userId, running(), sql`t.purchase_date + t.return_days`, 3),
+    listSummaries(userId, sql`true`, sql`t.created_at desc`, 3),
+    listSummaries(
+      userId,
+      sql`${ongoing()} and not (${tracked()})`,
+      sql`t.created_at desc`,
+      1,
+    ),
+  ]);
+
+  return {
+    ...stats!,
+    deadlines: deadlines.map(toSummary),
+    recent: recent.map(toSummary),
+    incomplete: incomplete[0] ? toSummary(incomplete[0]) : null,
+  };
 }
 
 export async function findTicket(userId: string, id: string): Promise<Ticket | undefined> {
