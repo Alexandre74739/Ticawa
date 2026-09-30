@@ -24,7 +24,7 @@
           <DeadlineDay
             v-if="iso"
             :iso="iso"
-            :tickets="byDate[iso] ?? []"
+            :deadlines="byDate[iso] ?? []"
             @select="emit('select', byDate[iso] ?? [])"
           />
           <span v-else />
@@ -38,10 +38,10 @@
 
 <script setup lang="ts">
 import { ChevronLeft, ChevronRight } from "@lucide/vue";
-import type { TicketSummary } from "#shared/types/ticket";
+import type { Deadline } from "#shared/types/ticket";
 
-const props = defineProps<{ tickets: TicketSummary[] }>();
-const emit = defineEmits<{ select: [tickets: TicketSummary[]] }>();
+const props = defineProps<{ deadlines: Deadline[] }>();
+const emit = defineEmits<{ select: [deadlines: Deadline[]] }>();
 
 const { title, cells, shift } = useMonthGrid();
 const weekDays = ["L", "M", "M", "J", "V", "S", "D"];
@@ -49,11 +49,9 @@ const nav =
   "grid size-8 place-items-center rounded-full bg-paper shadow-sm shadow-indigo/10 text-indigo transition-colors hover:bg-indigo hover:text-paper focus-visible:ring-2 focus-visible:ring-indigo focus-visible:outline-none";
 
 const byDate = computed(() => {
-  const groups: Record<string, TicketSummary[]> = {};
-  for (const ticket of props.tickets) {
-    const iso = returnWindow(ticket)?.iso;
-    if (iso) (groups[iso] ??= []).push(ticket);
-  }
+  const groups: Record<string, Deadline[]> = {};
+  for (const deadline of props.deadlines)
+    (groups[deadline.date] ??= []).push(deadline);
   return groups;
 });
 </script>

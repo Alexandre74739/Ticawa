@@ -5,6 +5,10 @@
       accent="voici vos droits"
     />
 
+    <ClientOnly>
+      <PwaPushPrompt class="mb-4 md:mb-6" />
+    </ClientOnly>
+
     <UiAlert v-if="error" tone="danger">
       Impossible de charger votre vue d'ensemble. Réessayez dans un instant.
     </UiAlert>

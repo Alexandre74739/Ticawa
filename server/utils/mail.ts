@@ -180,6 +180,51 @@ export async function sendPasswordResetMail(user: UserRow, token: string) {
   });
 }
 
+const ITEM =
+  'style="background:#FBF9F5;border-radius:16px;padding:12px 16px;margin:0 0 8px;font-size:14px;line-height:1.5"';
+
+export async function sendReminderMail(user: { email: string; prenom: string }, items: ReminderItem[]) {
+  const url = link(items.length === 1 ? `/dashboard/tickets/${items[0]!.ticketId}` : "/dashboard/echeances");
+  const settings = link("/parametres");
+  const groups = Object.entries(Object.groupBy(items, (item) => item.kind)) as [ReminderItem["kind"], ReminderItem[]][];
+
+  await sendMail({
+    to: user.email,
+    subject:
+      items.length === 1
+        ? `${items[0]!.title} : ${coverageLabels[items[0]!.kind].toLowerCase()} ${until(items[0]!)}`
+        : `${items.length} échéances approchent`,
+    text: [
+      `Bonjour ${user.prenom},`,
+      ...groups.flatMap(([kind, list]) => [
+        "",
+        `${coverageLabels[kind]} :`,
+        ...list.map((item) => `- ${item.title}, ${until(item)}`),
+        ADVICE[kind],
+      ]),
+      "",
+      `Vos preuves d'achat sont dans Ticawa : ${url}`,
+      `Ne plus recevoir ces rappels par e-mail : ${settings}`,
+      "",
+      "Tico, pour l'équipe Ticawa",
+    ].join("\n"),
+    html: shell(`
+        <p ${HEADING}>Bonjour ${escapeHtml(user.prenom)},</p>
+        ${groups
+          .map(
+            ([kind, list]) => `<p style="font-size:16px;font-weight:700;margin:20px 0 8px">${coverageLabels[kind]}</p>
+        ${list.map((item) => `<p ${ITEM}><strong>${escapeHtml(item.title)}</strong><br>${until(item)}</p>`).join("")}
+        <p style="font-size:14px;line-height:1.5;margin:0">${ADVICE[kind]}</p>`,
+          )
+          .join("")}
+        <p style="margin:24px 0 0"><a href="${url}" ${BUTTON}>Voir dans Ticawa</a></p>
+        <p ${NOTE}>
+          Tico vous prévient, la démarche reste la vôtre.
+          <a href="${settings}" style="color:#5A67B8">Ne plus recevoir ces rappels par e-mail</a>.
+        </p>`),
+  });
+}
+
 const HTML_ESCAPES: Record<string, string> = {
   "&": "&amp;",
   "<": "&lt;",

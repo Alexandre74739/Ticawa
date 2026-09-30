@@ -39,6 +39,9 @@ Nuxt lit les variables préfixées `NUXT_` et les range dans `runtimeConfig` ([n
 | `NUXT_MAIL_FROM_EMAIL` | pour les mails | adresse d'expédition, validée dans Brevo |
 | `NUXT_MAIL_FROM_NAME` | non | nom d'expéditeur, `Ticawa` par défaut |
 | `NUXT_SITE_URL` | oui en prod | URL publique, utilisée dans les liens des mails et autorisée par la protection CSRF. `http://localhost:3000` en dev si vide |
+| `NUXT_PUBLIC_VAPID_PUBLIC_KEY` | pour le push | clé publique des notifications push, générée par `node scripts/vapid-keys.mjs` |
+| `NUXT_VAPID_PRIVATE_KEY` | pour le push | clé privée associée. Ne jamais la changer après la mise en ligne : les abonnements existants deviendraient inutilisables |
+| `CRON_SECRET` | oui en prod | secret de la tâche quotidienne des rappels ([vercel.json](vercel.json)). Nom imposé par Vercel, qui l'envoie seul à `/api/cron/reminders` |
 | `NUXT_TRUSTED_ORIGINS` | non | origines supplémentaires autorisées à écrire sur l'API, séparées par des virgules. Prévu pour Capacitor (`capacitor://localhost`) |
 
 ## Documentation

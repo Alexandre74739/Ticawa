@@ -7,6 +7,7 @@
       :disabled="pushDisabled"
       @update:model-value="togglePush"
     />
+    <UiAlert v-if="pushError" tone="danger">{{ pushError }}</UiAlert>
     <hr class="border-ink/10" />
     <UiToggle
       :model-value="settings.channelEmail"
@@ -33,10 +34,19 @@ const { platform, isDesktop } = useDevice();
 
 const pushGranted = () => states.notifications === "granted";
 
+const push = usePushSubscription();
+const pushError = ref("");
+
 async function togglePush(on: boolean) {
   if (on && !pushGranted()) {
     await request("notifications");
     if (!pushGranted()) return;
+  }
+  try {
+    await (on ? push.subscribe() : push.unsubscribe());
+  } catch (error) {
+    pushError.value = (error as Error).message;
+    return;
   }
   emit("update", { channelPush: on });
 }

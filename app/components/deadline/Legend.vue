@@ -2,8 +2,9 @@
   <div class="mt-2 border-t border-indigo/10 pt-3">
     <p class="text-sm text-ink/75">
       Chaque Tico marque le
-      <strong class="font-semibold text-ink">dernier jour pour échanger</strong>
-      un achat. Touchez-le pour voir les tickets.
+      <strong class="font-semibold text-ink">dernier jour couvert</strong>
+      d'un achat : échange, garantie ou assurance. Touchez-le pour voir les
+      tickets.
     </p>
     <ul
       class="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-ink/70 sm:grid-cols-4 md:grid-cols-2"
@@ -42,6 +43,6 @@ const items = [
   { mascot: "Neutre", label: "Il reste du temps" },
   { mascot: "Surprised", label: "Moins de 15 jours" },
   { mascot: "Neutre", faded: true, label: "Délai dépassé" },
-  { mascot: "Neutre", badge: true, label: "Plusieurs tickets" },
+  { mascot: "Neutre", badge: true, label: "Plusieurs échéances" },
 ];
 </script>

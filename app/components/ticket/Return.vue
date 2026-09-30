@@ -46,7 +46,7 @@ import { coverageStatus, withdrawalSource } from "~/data/ticketFields";
 
 const props = defineProps<{ ticket: Ticket }>();
 
-const deadline = computed(() => returnWindow(props.ticket));
+const deadline = computed(() => coverages(props.ticket).find((c) => c.kind === "return"));
 
 const headline = computed(() => {
   const days = deadline.value?.daysLeft ?? 0;

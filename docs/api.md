@@ -89,17 +89,29 @@ Corps : une partie des trois champs, en booléens. Les champs absents gardent le
 
 Erreurs : **400** « Réglage invalide. » si une valeur n'est pas un booléen, **400** « Gardez au moins un canal… » si les alertes sont actives sans aucun canal, **429** plus de 60 modifications par minute.
 
+### `POST` et `DELETE /api/me/push` — session
+
+Enregistre (corps : `PushSubscription.toJSON()`) ou oublie (corps : `{ endpoint }`) l'abonnement push de l'appareil. L'`endpoint` doit être chez un service de push connu (Google, Mozilla, Apple, Microsoft). **400** abonnement invalide, **503** clés VAPID absentes.
+
+## Rappels
+
+`GET /api/cron/reminders`, appelée chaque jour à 7 h UTC par Vercel Cron ([vercel.json](../vercel.json)) avec `Authorization: Bearer <CRON_SECRET>`. Envoie un message par compte (e-mail et/ou push) pour chaque échéance à J-3 et J-1 (échange) ou J-30 et J-7 (garanties, assurance), puis le note dans `reminder_log`. Pas de rappel pour des courses, pour une garantie sous 20 €, ni pour une garantie relayée par une plus longue ([reminders.ts](../server/utils/reminders.ts)).
+
+`GET /api/deadlines` et les échéances de `GET /api/overview` renvoient `[{ kind, date, ticket }]`, `kind` valant `return`, `legal`, `commercial` ou `insurance`.
+
 ## Tickets (`/api/tickets`) — session
 
 La lecture du ticket (OCR, PDF) se fait sur le téléphone ; le serveur valide ([ticketInput.ts](../server/utils/ticketInput.ts)) et range. Un utilisateur n'accède qu'à ses propres tickets (404 sinon).
 
 | Route | Rôle |
 |---|---|
-| `GET /api/tickets` | une page de 20 tickets, du plus récent achat au plus ancien. `page` : numéro de page (1 par défaut). `q` : recherche dans le nom du ticket, l'enseigne et les articles. `status` : `active` ou `expired` (délai d'échange imprimé dépassé), absent pour tous. Réponse `{ items, total, pages }` |
+| `GET /api/tickets` | une page de 20 tickets, du plus récent achat au plus ancien. `page` : numéro de page (1 par défaut). `q` : recherche dans le nom du ticket, l'enseigne et les articles. `status` : `active` ou `expired` (plus aucune couverture en cours), absent pour tous. Réponse `{ items, total, pages }` |
 | `POST /api/tickets` | multipart : `file` (JPEG, PNG, WebP ou PDF, 4 Mo max, type vérifié sur les octets) et `data` (JSON `{ fields, rawText }`). Réponse **201** `{ id }`. **429** au-delà de 60 par heure |
 | `GET /api/tickets/:id` | fiche complète avec articles |
 | `PATCH /api/tickets/:id` | corps : tous les champs de la fiche. Remplace les articles et passe le ticket en « vérifié ». **429** au-delà de 60 par minute |
 | `DELETE /api/tickets/:id` | supprime le ticket, ses articles et son fichier |
 | `GET /api/tickets/:id/file` | la photo ou le PDF ; `?download=1` pour le télécharger |
 
-`GET /api/me/export` inclut désormais les tickets et leurs articles (sans les fichiers, téléchargeables un par un).
+`GET /api/me/export` inclut désormais les tickets et leurs articles (sans les fichiers, téléchargeables un par un), les appareils abonnés aux notifications et les rappels envoyés.
+
+`legalWarranty` (`new` ou `none`) n'est jamais envoyé par l'app : le serveur le déduit des articles à chaque création et modification ([coverageInference.ts](../server/utils/coverageInference.ts)).

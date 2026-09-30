@@ -11,7 +11,9 @@
         class="flex items-baseline justify-between gap-4 py-2.5 first:pt-0 last:pb-0"
       >
         <span class="min-w-0">
-          <span class="block font-medium wrap-break-word">{{ item.label }}</span>
+          <span class="block font-medium wrap-break-word">{{
+            item.label
+          }}</span>
           <span v-if="itemNote(item)" class="block text-xs text-ink/55">
             {{ itemNote(item) }}
           </span>
@@ -31,7 +33,10 @@
       :title="group.title"
     >
       <dl class="grid gap-3">
-        <div v-for="field in group.fields.filter((f) => !f.formOnly)" :key="field.key">
+        <div
+          v-for="field in group.fields.filter((f) => !f.formOnly)"
+          :key="field.key"
+        >
           <dt class="text-xs font-semibold tracking-wide text-ink/55 uppercase">
             {{ field.label.replace(/ \(.*\)$/, "") }}
           </dt>

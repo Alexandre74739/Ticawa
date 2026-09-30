@@ -6,6 +6,7 @@ import {
   PencilLine,
   Receipt,
   RefreshCcw,
+  ShieldCheck,
   Store,
 } from "@lucide/vue";
 import type { Component } from "vue";
@@ -13,12 +14,13 @@ import type { TicketFields } from "#shared/types/ticket";
 import type { BadgeStatus } from "~/components/ui/Badge.vue";
 import { formatDate, formatMoney, type CoverageState } from "~/utils/ticket";
 
-export type TicketFieldKey = Exclude<keyof TicketFields, "items" | "currency">;
+export type TicketFieldKey = Exclude<keyof TicketFields, "items" | "currency" | "legalWarranty">;
 
 export interface TicketFieldDef {
   key: TicketFieldKey;
   label: string;
   type?: "text" | "date" | "time" | "textarea";
+  hint?: string;
   inputmode?: "decimal" | "numeric" | "tel";
   placeholder?: string;
   show?: (fields: TicketFields) => string | null;
@@ -58,12 +60,22 @@ export const ticketGroups: TicketFieldGroup[] = [
     ],
   },
   {
-    title: "Échange et garantie",
+    title: "Échange",
     icon: RefreshCcw,
     fields: [
       { key: "returnDays", label: "Délai d'échange imprimé (jours)", inputmode: "numeric", placeholder: "30", show: (f) => (f.returnDays ? `${f.returnDays} jours` : null) },
       { key: "returnPolicy", label: "Conditions d'échange", type: "textarea" },
-      { key: "warrantyNote", label: "Mention de garantie", type: "textarea" },
+    ],
+  },
+  {
+    title: "Garanties et assurance",
+    icon: ShieldCheck,
+    // La garantie légale n'est pas demandée : Tico la déduit des articles.
+    fields: [
+      { key: "warrantyMonths", label: "Garantie promise par le vendeur ou la marque (mois)", inputmode: "numeric", placeholder: "36", hint: "Seulement si le ticket, la boîte ou le vendeur l'indique. Laissez vide sinon : Tico s'occupe du reste.", show: (f) => (f.warrantyMonths ? `${f.warrantyMonths} mois` : null) },
+      { key: "warrantyNote", label: "Mention de garantie lue sur le ticket", type: "textarea" },
+      { key: "insuranceName", label: "Assurance prise avec l'achat", placeholder: "Ex. : assurance casse" },
+      { key: "insuranceUntil", label: "Fin de l'assurance", type: "date", show: (f) => formatDate(f.insuranceUntil) },
     ],
   },
 ];
@@ -78,6 +90,11 @@ export const reviewStatus = (verified: boolean): BadgeStatus =>
   verified
     ? { label: "Vérifié", icon: BadgeCheck, class: "bg-indigo/10 text-indigo" }
     : { label: "À vérifier", icon: PencilLine, class: "bg-ink/10 text-ink" };
+
+export const legalWarrantySource = {
+  label: "Service-public.gouv.fr : garantie légale de conformité",
+  href: "https://www.service-public.gouv.fr/particuliers/vosdroits/F11094",
+};
 
 export const withdrawalSource = {
   label: "Service-public.gouv.fr : achat à distance",

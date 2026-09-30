@@ -38,7 +38,12 @@ export default defineNuxtConfig({
     // Obligatoire en prod (liens des mails) ; localhost en dev si vide.
     siteUrl: "",
     trustedOrigins: "",
+    // Notifications push : paire générée par `node scripts/vapid-keys.mjs`.
+    vapidPrivateKey: "",
     session: { sessionHeader: false, cookie: { maxAge: 60 * 60 * 24 * 90 } },
+    public: {
+      vapidPublicKey: "",
+    },
   },
   routeRules: {
     "/**": { headers: securityHeaders },
@@ -100,6 +105,8 @@ export default defineNuxtConfig({
       navigateFallback: null,
       globPatterns: ["**/*.{js,css,svg,png,woff2}"],
       globIgnores: ["ocr/**"],
+      // Affichage des notifications push et clic dessus.
+      importScripts: ["/push-sw.js"],
       runtimeCaching: [
         {
           urlPattern: ({ url }) => url.pathname.startsWith("/ocr/"),

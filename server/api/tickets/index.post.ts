@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
 
   const id = await createTicket(user.id, {
     source: type === "application/pdf" ? "pdf" : "photo",
-    fields: readTicketFields(payload.fields),
+    fields: withInferredCoverage(readTicketFields(payload.fields)),
     rawText: readRawText(payload.rawText),
     file: { type, data: file.data },
   });

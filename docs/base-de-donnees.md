@@ -114,6 +114,42 @@ Le `on delete cascade` est indispensable : `DELETE /api/me` supprime seulement l
 
 Tout est en `on delete cascade` depuis `users`. Requêtes : [server/utils/tickets.ts](../server/utils/tickets.ts).
 
+### Garanties, assurance et rappels
+
+| Colonne de `tickets` | Rôle |
+|---|---|
+| `legal_warranty` | `new` (garantie légale de 2 ans suivie) ou `none` (courses, consommables, services), déduite des articles par [coverageInference.ts](../server/utils/coverageInference.ts) |
+| `warranty_months` | garantie du vendeur ou de la marque, en mois depuis l'achat |
+| `insurance_name`, `insurance_until` | assurance prise avec l'achat |
+
+```sql
+alter table tickets
+  add column legal_warranty text check (legal_warranty in ('new', 'used', 'none')),
+  add column warranty_months integer check (warranty_months between 1 and 120),
+  add column insurance_name text,
+  add column insurance_until date;
+
+create table push_subscriptions (
+  endpoint    text primary key,
+  user_id     uuid not null references users (id) on delete cascade,
+  p256dh      text not null,
+  auth        text not null,
+  created_at  timestamptz not null default now()
+);
+create index push_subscriptions_user_idx on push_subscriptions (user_id);
+
+create table reminder_log (
+  ticket_id    uuid not null references tickets (id) on delete cascade,
+  kind         text not null check (kind in ('return', 'legal', 'commercial', 'insurance')),
+  deadline     date not null,
+  days_before  integer not null,
+  sent_at      timestamptz not null default now(),
+  primary key (ticket_id, kind, deadline, days_before)
+);
+```
+
+Appliqué sur la base le 30/09/2026. Les dates de fin se calculent à la volée : `coverageRows()` en SQL ([tickets.ts](../server/utils/tickets.ts)) et `coverageEnds()` dans l'app ([coverage.ts](../shared/utils/coverage.ts)), à garder identiques. `push_subscriptions` garde un abonnement par appareil ; `reminder_log` les rappels envoyés (lignes effacées 60 jours après l'échéance).
+
 ### Recherche et pagination
 
 La liste des tickets se charge par pages de 20, triées par date d'achat (les tickets sans date en dernier). La recherche porte sur le nom du ticket, l'enseigne et le nom des articles, sans tenir compte des majuscules ni des accents.

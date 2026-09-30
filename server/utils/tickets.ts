@@ -1,6 +1,8 @@
 import type { TransactionSql } from "postgres";
 import type { FieldChange } from "#shared/types/adminLog";
 import type {
+  CoverageKind,
+  Deadline,
   Overview,
   Ticket,
   TicketFields,
@@ -20,7 +22,9 @@ function fieldColumns() {
     t.total_amount::text as "totalAmount", t.currency,
     t.payment_method as "paymentMethod", t.card_last4 as "cardLast4",
     t.return_days as "returnDays", t.return_policy as "returnPolicy",
-    t.warranty_note as "warrantyNote"
+    t.warranty_note as "warrantyNote", t.legal_warranty as "legalWarranty",
+    t.warranty_months as "warrantyMonths", t.insurance_name as "insuranceName",
+    t.insurance_until::text as "insuranceUntil"
   `;
 }
 
@@ -58,6 +62,8 @@ function summaryColumns() {
   return useDb()`
     t.id, t.source, t.verified, t.name, t.merchant, t.currency,
     t.return_days as "returnDays", t.purchase_date::text as "purchaseDate",
+    t.legal_warranty as "legalWarranty", t.warranty_months as "warrantyMonths",
+    t.insurance_until::text as "insuranceUntil",
     t.total_amount::text as "totalAmount", t.created_at as "createdAt",
     (select count(*)::int from ticket_items i where i.ticket_id = t.id) as "itemCount"
   `;
@@ -73,15 +79,33 @@ function toSummary(row: Row<TicketSummary>): TicketSummary {
 
 type Fragment = ReturnType<typeof summaryColumns>;
 
+// Fins de couverture du ticket `t`, une ligne (kind, date) par couverture.
+// Même calcul que coverageEnds() (shared/utils/coverage.ts).
+export function coverageRows() {
+  return useDb()`(values
+    ('return', t.purchase_date + t.return_days),
+    ('legal', case when t.legal_warranty = 'new'
+      then (t.purchase_date + interval '24 months')::date end),
+    ('commercial', (t.purchase_date + t.warranty_months * interval '1 month')::date),
+    ('insurance', t.insurance_until)
+  ) as c(kind, date)`;
+}
+
+// Vrai quand toutes les couvertures connues du ticket sont terminées.
+function expired() {
+  return useDb()`coalesce(
+    (select max(c.date) from ${coverageRows()}) < current_date, false
+  )`;
+}
+
 const PAGE_SIZE = 20;
 
 export type TicketStatus = "active" | "expired";
 
 function statusFilter(status: TicketStatus | null) {
   const sql = useDb();
-  const expired = sql`coalesce(t.purchase_date + t.return_days < current_date, false)`;
-  if (status === "expired") return sql`and ${expired}`;
-  if (status === "active") return sql`and not ${expired}`;
+  if (status === "expired") return sql`and ${expired()}`;
+  if (status === "active") return sql`and not ${expired()}`;
   return sql``;
 }
 
@@ -127,18 +151,27 @@ export async function listTickets(
   };
 }
 
-export async function listDeadlines(userId: string): Promise<TicketSummary[]> {
-  const rows = await useDb()<Row<TicketSummary>[]>`
-    select ${summaryColumns()}
-    from tickets t
-    where t.user_id = ${userId} and t.purchase_date is not null and t.return_days > 0
-    order by t.purchase_date + t.return_days, t.id
-  `;
-  return rows.map(toSummary);
+type DeadlineRow = Row<TicketSummary> & { kind: CoverageKind; date: string };
+
+function toDeadline({ kind, date, ...ticket }: DeadlineRow): Deadline {
+  return { kind, date, ticket: toSummary(ticket) };
 }
 
-const running = () =>
-  useDb()`t.return_days > 0 and t.purchase_date + t.return_days >= current_date`;
+function selectDeadlines(userId: string, upcoming: boolean, limit?: number) {
+  const sql = useDb();
+  return sql<DeadlineRow[]>`
+    select c.kind, c.date::text as date, ${summaryColumns()}
+    from tickets t cross join lateral ${coverageRows()}
+    where t.user_id = ${userId} and c.date is not null
+      ${upcoming ? sql`and c.date >= current_date` : sql``}
+    order by c.date, t.id, c.kind
+    ${limit ? sql`limit ${limit}` : sql``}
+  `;
+}
+
+export async function listDeadlines(userId: string): Promise<Deadline[]> {
+  return (await selectDeadlines(userId, false)).map(toDeadline);
+}
 
 function listSummaries(userId: string, filter: Fragment, order: Fragment, limit: number) {
   return useDb()<Row<TicketSummary>[]>`
@@ -152,10 +185,9 @@ function listSummaries(userId: string, filter: Fragment, order: Fragment, limit:
 
 export async function getOverview(userId: string): Promise<Overview> {
   const sql = useDb();
-  const ongoing = () =>
-    sql`not coalesce(t.purchase_date + t.return_days < current_date, false)`;
-  const tracked = () =>
-    sql`t.verified and t.purchase_date is not null and t.return_days is not null`;
+  const ongoing = () => sql`not ${expired()}`;
+  // Complet : fiche relue et date d'achat connue (Tico déduit le reste).
+  const tracked = () => sql`t.verified and t.purchase_date is not null`;
   const [[stats], deadlines, recent, incomplete] = await Promise.all([
     sql<{ total: number; ongoing: number; tracked: number }[]>`
       select count(*)::int as total,
@@ -163,7 +195,7 @@ export async function getOverview(userId: string): Promise<Overview> {
         count(*) filter (where ${ongoing()} and ${tracked()})::int as tracked
       from tickets t where t.user_id = ${userId}
     `,
-    listSummaries(userId, running(), sql`t.purchase_date + t.return_days`, 3),
+    selectDeadlines(userId, true, 3),
     listSummaries(userId, sql`true`, sql`t.created_at desc`, 3),
     listSummaries(
       userId,
@@ -175,7 +207,7 @@ export async function getOverview(userId: string): Promise<Overview> {
 
   return {
     ...stats!,
-    deadlines: deadlines.map(toSummary),
+    deadlines: deadlines.map(toDeadline),
     recent: recent.map(toSummary),
     incomplete: incomplete[0] ? toSummary(incomplete[0]) : null,
   };
@@ -233,6 +265,10 @@ function columns({ items: _items, ...fields }: TicketFields) {
     return_days: fields.returnDays,
     return_policy: fields.returnPolicy,
     warranty_note: fields.warrantyNote,
+    legal_warranty: fields.legalWarranty,
+    warranty_months: fields.warrantyMonths,
+    insurance_name: fields.insuranceName,
+    insurance_until: fields.insuranceUntil,
   };
 }
 

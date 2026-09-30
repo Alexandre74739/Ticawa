@@ -1,8 +1,5 @@
-import type { TicketFields } from "#shared/types/ticket";
-
 export type CoverageState = "active" | "soon" | "expired";
 
-const SOON_DAYS = 7;
 const DAY = 86_400_000;
 
 export const isoDate = (date: Date) =>
@@ -32,18 +29,14 @@ export function formatMoney(value: number | null, currency = "EUR") {
   return value.toLocaleString("fr-FR", { style: "currency", currency });
 }
 
-export function returnWindow(
-  ticket: Pick<TicketFields, "purchaseDate" | "returnDays">,
-) {
-  if (!ticket.purchaseDate || !ticket.returnDays) return null;
-  const deadline = localDate(ticket.purchaseDate);
-  deadline.setDate(deadline.getDate() + ticket.returnDays);
-
+// Jours restants jusqu'à une date de fin (ISO), et l'état à afficher.
+export function countdown(iso: string, soonDays = 7) {
+  const deadline = localDate(iso);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const daysLeft = Math.round((deadline.getTime() - today.getTime()) / DAY);
   const state: CoverageState =
-    daysLeft < 0 ? "expired" : daysLeft <= SOON_DAYS ? "soon" : "active";
+    daysLeft < 0 ? "expired" : daysLeft <= soonDays ? "soon" : "active";
 
   return {
     iso: isoDate(deadline),
@@ -56,3 +49,13 @@ export function returnWindow(
     state,
   };
 }
+
+// Toutes les couvertures connues d'un ticket, triées par date de fin.
+export const coverages = (ticket: Parameters<typeof coverageEnds>[0]) =>
+  coverageEnds(ticket)
+    .map(({ kind, date }) => ({
+      kind,
+      label: coverageLabels[kind],
+      ...countdown(date, kind === "return" ? 7 : 30),
+    }))
+    .sort((a, b) => a.iso.localeCompare(b.iso));

@@ -28,7 +28,7 @@
       class="flex flex-col"
       :class="indigo ? 'mt-6 border-t border-paper/15 pt-4' : 'mt-4'"
     >
-      <li v-for="row in rows" :key="row.id">
+      <li v-for="row in rows" :key="row.key ?? row.id">
         <NuxtLink
           :to="`/dashboard/tickets/${row.id}`"
           class="-mx-3 flex items-center gap-3 rounded-2xl px-3 py-2.5 transition-colors duration-300 focus-visible:ring-2 focus-visible:outline-none"

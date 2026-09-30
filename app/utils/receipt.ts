@@ -400,6 +400,11 @@ export function parseReceipt(raw: string): TicketFields {
     returnDays: policy.days,
     returnPolicy: policy.text,
     warrantyNote: findWarranty(lines),
+    // Jamais déduits du ticket : c'est l'utilisateur qui les confirme.
+    legalWarranty: null,
+    warrantyMonths: null,
+    insuranceName: null,
+    insuranceUntil: null,
     items: findItems(lines.slice(3)),
   };
 }

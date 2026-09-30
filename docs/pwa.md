@@ -46,6 +46,15 @@ Les états sont relus chaque fois que l'app revient au premier plan, pour tenir 
 
 Une app web ne peut pas retirer elle-même une autorisation. `RevokeModal` explique comment faire dans les réglages d'iPhone ou d'Android. Pour les notifications, `useStopPush` coupe tout de suite l'envoi de son côté.
 
+## Notifications push
+
+- **Clés VAPID** : générées une seule fois par `node scripts/vapid-keys.mjs` (en changer rend les abonnements inutilisables).
+- **Activation** : la carte [PushPrompt](../app/components/pwa/PushPrompt.vue) de la vue d'ensemble, ou « Sur ce téléphone » dans les paramètres. Sur iPhone, seulement dans l'app installée.
+- **Suivi** : à chaque ouverture, l'app renvoie son abonnement au serveur ([pwa.client.ts](../app/plugins/pwa.client.ts)), le navigateur pouvant le renouveler.
+- **Réception** : [push-sw.js](../public/push-sw.js), chargé par le service worker. **Envoi** : [push.ts](../server/utils/push.ts), sans dépendance.
+
+Le service worker n'existe qu'en production : en dev, l'activation échoue.
+
 ## Capacitor
 
 L'app doit rester empaquetable plus tard avec Capacitor pour les stores. Éviter tout ce qui suppose un navigateur classique sans alternative : les API web utilisées ici (notifications, caméra, stockage) ont des équivalents Capacitor.

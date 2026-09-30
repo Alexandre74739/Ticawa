@@ -55,6 +55,7 @@ Un navigateur pose toujours `Origin` sur ces requêtes, et aucun site ne peut le
 - Redirections après connexion limitées aux chemins internes (`isSafeRedirect`).
 - Les données saisies par l'utilisateur sont échappées avant d'être insérées dans un mail HTML.
 - Requêtes SQL paramétrées, voir [base-de-donnees.md](base-de-donnees.md).
+- Push : envoi seulement vers un service de push connu ([push.ts](../server/utils/push.ts)) ; la route des rappels exige `CRON_SECRET`.
 
 ## Droits RGPD
 
@@ -72,5 +73,6 @@ Règle pour toute nouvelle donnée stockée : l'ajouter à l'export ([export.get
 |---|---|---|
 | Neon (US, serveurs à Francfort `eu-central-1`) | stockage PostgreSQL | toutes les données du compte |
 | Vercel (US, fonctions à Paris `cdg1`) | hébergement de l'app | requêtes HTTP. Région réglée dans le tableau de bord Vercel (Settings → Functions) |
-| Brevo (France) | mails | email, prénom, lien de confirmation d'inscription ou de réinitialisation |
+| Brevo (France) | mails | email, prénom, lien de confirmation d'inscription ou de réinitialisation ; pour un rappel, nom de l'achat et date de fin |
+| Service de push du navigateur (Google FCM, Apple, Mozilla, Microsoft) | notifications sur téléphone | seulement si l'utilisateur les active : un message chiffré de bout en bout (RFC 8291), illisible par le service |
 | Google | connexion facultative | seulement si l'utilisateur choisit « Continuer avec Google » |

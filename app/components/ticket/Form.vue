@@ -7,15 +7,20 @@
       :title="group.title"
     >
       <div class="grid gap-3 sm:grid-cols-2">
-        <UiInput optional
+        <UiInput
           v-for="field in group.fields"
           :key="field.key"
           v-model="values[field.key]"
+          optional
           :label="field.label"
           :type="field.type"
           :inputmode="field.inputmode"
           :placeholder="field.placeholder"
-          :class="{ 'sm:col-span-2': field.type === 'textarea' || field.key === 'name' }"
+          :hint="field.hint"
+          :class="{
+            'sm:col-span-2':
+              field.type === 'textarea' || field.key === 'name' || field.hint,
+          }"
         />
       </div>
     </SettingsPanel>

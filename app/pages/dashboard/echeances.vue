@@ -8,10 +8,10 @@
 
     <ClientOnly v-else-if="data">
       <div class="md:grid md:grid-cols-[20rem_1fr] md:gap-4">
-        <DeadlineAside :tickets="data" class="hidden md:flex" />
-        <DeadlineCalendar :tickets="data" @select="show" />
+        <DeadlineAside :deadlines="data" class="hidden md:flex" />
+        <DeadlineCalendar :deadlines="data" @select="show" />
       </div>
-      <DeadlineDayDialog v-model="open" :tickets="selected" />
+      <DeadlineDayDialog v-model="open" :deadlines="selected" />
       <template #fallback>
         <div class="h-96 rounded-3xl bg-lavender" />
       </template>
@@ -20,17 +20,17 @@
 </template>
 
 <script setup lang="ts">
-import type { TicketSummary } from "#shared/types/ticket";
+import type { Deadline } from "#shared/types/ticket";
 
 useHead({ title: "Échéances" });
 
-const { data, error } = await useFetch<TicketSummary[]>("/api/deadlines");
+const { data, error } = await useFetch<Deadline[]>("/api/deadlines");
 
 const open = ref(false);
-const selected = ref<TicketSummary[]>([]);
+const selected = ref<Deadline[]>([]);
 
-function show(tickets: TicketSummary[]) {
-  selected.value = tickets;
+function show(deadlines: Deadline[]) {
+  selected.value = deadlines;
   open.value = true;
 }
 </script>

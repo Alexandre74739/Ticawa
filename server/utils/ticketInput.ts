@@ -27,13 +27,19 @@ function amount(value: unknown, label: string, min = -1e7) {
   return Math.round(value * 100) / 100;
 }
 
-function date(value: unknown) {
-  const result = matching(value, "Date d'achat", /^\d{4}-\d{2}-\d{2}$/);
+function date(value: unknown, label = "Date d'achat") {
+  const result = matching(value, label, /^\d{4}-\d{2}-\d{2}$/);
   if (!result) return null;
   const parsed = new Date(`${result}T00:00:00Z`);
   if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== result)
-    invalid("Date d'achat");
+    invalid(label);
   return result;
+}
+
+function integer(value: unknown, label: string, max: number) {
+  if (value === null || value === undefined) return null;
+  if (!Number.isInteger(value) || (value as number) < 1 || (value as number) > max) invalid(label);
+  return value as number;
 }
 
 function item(value: unknown): TicketItem {
@@ -57,10 +63,6 @@ export function readTicketFields(value: unknown): TicketFields {
   const items = raw.items ?? [];
   if (!Array.isArray(items) || items.length > MAX_ITEMS) invalid("Liste d'articles");
 
-  const returnDays = raw.returnDays ?? null;
-  if (returnDays !== null && (!Number.isInteger(returnDays) || (returnDays as number) < 1 || (returnDays as number) > 365))
-    invalid("Délai d'échange");
-
   return {
     name: text(raw.name, "Nom du ticket", 80),
     merchant: text(raw.merchant, "Magasin", 120),
@@ -76,9 +78,14 @@ export function readTicketFields(value: unknown): TicketFields {
     currency: matching(raw.currency, "Devise", /^[A-Z]{3}$/) ?? "EUR",
     paymentMethod: text(raw.paymentMethod, "Moyen de paiement", 60),
     cardLast4: matching(raw.cardLast4, "Carte", /^\d{4}$/),
-    returnDays: returnDays as number | null,
+    returnDays: integer(raw.returnDays, "Délai d'échange", 365),
     returnPolicy: text(raw.returnPolicy, "Conditions d'échange", 500),
     warrantyNote: text(raw.warrantyNote, "Mention de garantie", 500),
+    // Jamais fournie par l'app : Tico la déduit des articles (coverageInference.ts).
+    legalWarranty: null,
+    warrantyMonths: integer(raw.warrantyMonths, "Garantie commerciale", 120),
+    insuranceName: text(raw.insuranceName, "Assurance", 120),
+    insuranceUntil: date(raw.insuranceUntil, "Fin de l'assurance"),
     items: items.map(item),
   };
 }

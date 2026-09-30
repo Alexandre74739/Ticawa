@@ -8,23 +8,32 @@
       {{ fromUser ? "Fiche utilisateur" : "Mes tickets" }}
     </NuxtLink>
 
-    <DashboardSoon v-if="!ticket" title="Ce ticket est introuvable" mascot="Brouille.svg">
+    <DashboardSoon
+      v-if="!ticket"
+      title="Ce ticket est introuvable"
+      mascot="Brouille.svg"
+    >
       Il a peut-être été supprimé.
     </DashboardSoon>
 
     <template v-else>
       <DashboardHeading :title="ticket.name ?? ticket.merchant ?? 'Ticket'" />
 
-      <TicketForm v-if="editing" :ticket="ticket" @cancel="editing = false" @saved="onSaved" />
+      <TicketForm
+        v-if="editing"
+        :ticket="ticket"
+        @cancel="editing = false"
+        @saved="onSaved"
+      />
       <div v-else class="flex flex-col gap-4">
         <UiLabelCard v-if="fresh">
           <p>
-          {{
-            ticket.rawText
-              ? "Ticket rangé ! Vérifiez ce que Tico a lu, puis validez la fiche."
-              : "Ticket rangé, mais Tico n'a rien pu lire : la photo est gardée comme preuve, complétez la fiche."
-          }}
-        </p>
+            {{
+              ticket.rawText
+                ? "Ticket rangé ! Vérifiez ce que Tico a lu, puis validez la fiche."
+                : "Ticket rangé, mais Tico n'a rien pu lire : la photo est gardée comme preuve, complétez la fiche."
+            }}
+          </p>
         </UiLabelCard>
         <div class="flex flex-wrap items-center gap-2">
           <UiBadge :status="reviewStatus(ticket.verified)" />
@@ -34,8 +43,14 @@
           </UiButton>
         </div>
         <TicketReturn :ticket="ticket" />
+        <TicketCoverage :ticket="ticket" />
         <TicketDetails :ticket="ticket" />
-        <TicketProof v-if="ticket.file" :id="ticket.id" :file="ticket.file" :raw-text="ticket.rawText" />
+        <TicketProof
+          v-if="ticket.file"
+          :id="ticket.id"
+          :file="ticket.file"
+          :raw-text="ticket.rawText"
+        />
         <UiButton variant="ghost" class="self-center" @click="remove?.open()">
           <Trash2 aria-hidden="true" class="size-4" /> Supprimer ce ticket
         </UiButton>
@@ -55,11 +70,16 @@ const route = useRoute();
 // Ticket ouvert par un admin depuis une fiche utilisateur : on y retourne.
 const previous = useRouter().options.history.state.back;
 const fromUser =
-  typeof previous === "string" && previous.startsWith("/dashboard/utilisateurs/");
+  typeof previous === "string" &&
+  previous.startsWith("/dashboard/utilisateurs/");
 const back = fromUser ? (previous as string) : "/dashboard/tickets";
-const { data: ticket } = await useFetch<Ticket>(`/api/tickets/${route.params.id}`);
+const { data: ticket } = await useFetch<Ticket>(
+  `/api/tickets/${route.params.id}`,
+);
 
-useHead({ title: () => ticket.value?.name ?? ticket.value?.merchant ?? "Ticket" });
+useHead({
+  title: () => ticket.value?.name ?? ticket.value?.merchant ?? "Ticket",
+});
 
 const fresh = ref(route.query.nouveau === "1");
 const editing = ref(false);

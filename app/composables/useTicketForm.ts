@@ -37,12 +37,15 @@ export function useTicketForm(ticket: Ticket) {
 
   function toFields(): TicketFields {
     const days = num(values.returnDays);
+    const months = num(values.warrantyMonths);
     return {
       ...(Object.fromEntries(KEYS.map((key) => [key, blank(values[key])])) as Record<TicketFieldKey, string | null>),
       merchantSiret: blank(values.merchantSiret.replace(/\s/g, "")),
       merchantVat: blank(values.merchantVat.replace(/\s/g, "").toUpperCase()),
       totalAmount: num(values.totalAmount),
       returnDays: days === null ? null : Math.round(days),
+      warrantyMonths: months === null ? null : Math.round(months),
+      legalWarranty: ticket.legalWarranty,
       currency: ticket.currency,
       items: items.value
         .filter((item) => item.label.trim())

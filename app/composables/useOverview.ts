@@ -1,4 +1,4 @@
-import type { Overview, TicketSummary } from "#shared/types/ticket";
+import type { Deadline, Overview, TicketSummary } from "#shared/types/ticket";
 import { rightTips } from "~/data/dashboard";
 
 export interface OverviewAction {
@@ -9,6 +9,7 @@ export interface OverviewAction {
 
 export interface OverviewRow {
   id: string;
+  key?: string;
   title: string;
   meta: string;
   value: string;
@@ -29,24 +30,25 @@ function hero({ ongoing, tracked, incomplete }: Overview) {
     return {
       percent,
       title: "Tico veille sur tous vos tickets",
-      text: "Dates d'achat et délais d'échange sont connus : vous serez prévenu avant chaque date limite.",
+      text: "Dates d'achat, délais d'échange et garanties sont connus : vous serez prévenu avant chaque date limite.",
       actions: addTicket,
     };
   }
   return {
     percent,
     title: "Aide Tico à veiller sur tes tickets",
-    text: "Ajoutez la date d'achat ou le délai d'échange, ou validez ce que Tico a lu : il vous préviendra avant chaque date limite.",
+    text: "Ajoutez la date d'achat ou validez ce que Tico a lu : il calcule vos garanties et vous prévient avant chaque date limite.",
     actions: [{ label: "Compléter un ticket", to: `/dashboard/tickets/${incomplete.id}` }],
   };
 }
 
-function deadlineRow(ticket: TicketSummary): OverviewRow {
-  const { iso, daysLeft } = returnWindow(ticket)!;
+function deadlineRow({ ticket, kind, date }: Deadline): OverviewRow {
+  const { iso, daysLeft } = countdown(date);
   return {
     id: ticket.id,
+    key: `${ticket.id}-${kind}`,
     title: ticketName(ticket),
-    meta: `Retour jusqu'au ${formatDate(iso, "short")}`,
+    meta: `${coverageLabels[kind]} · ${formatDate(iso, "short")}`,
     value: daysLeft ? `dans ${daysLeft} j` : "aujourd'hui",
     mascot: daysLeft < 15 ? "Surprised" : "Neutre",
   };
@@ -77,7 +79,7 @@ export async function useOverview() {
       {
         title: "Échéances",
         rows: data.value.deadlines.map(deadlineRow),
-        empty: "Aucun délai de retour en cours. Tico vous préviendra dès qu'un achat approche de sa date limite.",
+        empty: "Aucune échéance en cours. Tico vous préviendra dès qu'un achat approche de sa date limite.",
         actions: [{ label: "Voir le calendrier", to: "/dashboard/echeances" }],
       },
       {

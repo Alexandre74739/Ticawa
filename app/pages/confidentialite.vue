@@ -36,8 +36,8 @@
         <li>Votre adresse email et votre nom.</li>
         <li>
           Si vous choisissez « Continuer avec Google » : votre identifiant
-          Google, votre email, votre prénom et votre nom. Aucune autre donnée
-          de votre compte Google n'est lue.
+          Google, votre email, votre prénom et votre nom. Aucune autre donnée de
+          votre compte Google n'est lue.
         </li>
         <li>
           Pour la sécurité : votre adresse IP et votre email, conservés
@@ -49,7 +49,14 @@
           Les informations sur vos produits (nom, marque, modèle, catégorie,
           date d'achat, prix) et sur leurs garanties et assurances.
         </li>
-        <li>Vos préférences de rappel.</li>
+        <li>
+          Vos préférences de rappel, et la liste des rappels déjà envoyés (pour
+          ne jamais vous prévenir deux fois de la même échéance).
+        </li>
+        <li>
+          Si vous activez les notifications sur un téléphone : l'adresse
+          d'abonnement que votre navigateur fournit pour cet appareil.
+        </li>
       </ul>
       <UiLabelCard tone="trust">
         <p>Ticawa ne vous demande jamais de données bancaires.</p>
@@ -66,10 +73,10 @@
       </p>
       <h3>Vous aider en cas de difficulté</h3>
       <p>
-        Pour vous dépanner, l'éditeur peut consulter votre compte et vos
-        tickets et, si nécessaire, les corriger ou les supprimer : corriger une
-        adresse email mal saisie, confirmer votre email, déconnecter vos
-        appareils, rectifier ou retirer un ticket, ou supprimer le compte.
+        Pour vous dépanner, l'éditeur peut consulter votre compte et vos tickets
+        et, si nécessaire, les corriger ou les supprimer : corriger une adresse
+        email mal saisie, confirmer votre email, déconnecter vos appareils,
+        rectifier ou retirer un ticket, ou supprimer le compte.
         <strong>Base légale :</strong> l'exécution des conditions d'utilisation
         que vous acceptez.
       </p>
@@ -79,8 +86,8 @@
         est enregistrée dans un historique : qui l'a faite, quand, sur quel
         compte, et la valeur de chaque champ avant et après. La simple
         consultation n'y figure pas. <strong>Base légale :</strong> l'intérêt
-        légitime de l'éditeur à sécuriser vos données et à pouvoir rendre
-        compte de ses interventions.
+        légitime de l'éditeur à sécuriser vos données et à pouvoir rendre compte
+        de ses interventions.
       </p>
       <h3>Sécurité et mesure d'audience</h3>
       <p>
@@ -109,8 +116,14 @@
           traçables.
         </li>
         <li>
-          <strong>Compteurs anti-abus (IP, email) :</strong> remis à zéro après une
-          heure au plus, puis purgés régulièrement.
+          <strong>Rappels envoyés :</strong> effacés 60 jours après la date de
+          fin concernée. <strong>Abonnement aux notifications :</strong> effacé
+          dès que vous les coupez sur l'appareil, ou quand le navigateur le
+          déclare expiré.
+        </li>
+        <li>
+          <strong>Compteurs anti-abus (IP, email) :</strong> remis à zéro après
+          une heure au plus, puis purgés régulièrement.
         </li>
         <li>
           <strong>Données techniques de connexion :</strong> conservées par
@@ -123,22 +136,29 @@
       <p>
         Seul l'éditeur de Ticawa y a accès, pour vous aider en cas de
         difficulté, ainsi que les prestataires techniques strictement
-        nécessaires au service, dans la limite de leur mission. Les acteurs français, puis européens, sont privilégiés dès
-        qu'une alternative existe.
+        nécessaires au service, dans la limite de leur mission. Les acteurs
+        français, puis européens, sont privilégiés dès qu'une alternative
+        existe.
       </p>
       <ul>
         <li>
-          <strong>Brevo</strong> (France) : envoi des emails de confirmation et
-          de mot de passe. Reçoit votre email et votre prénom.
+          <strong>Brevo</strong> (France) : envoi des emails de confirmation, de
+          mot de passe et des rappels d'échéance. Reçoit votre email, votre
+          prénom et, pour un rappel, le nom de l'achat et sa date de fin.
+        </li>
+        <li>
+          <strong>Le service de notifications de votre téléphone</strong>
+          (Google, Apple ou Mozilla selon l'appareil) : uniquement si vous
+          activez les notifications. Il achemine un message chiffré qu'il ne
+          peut pas lire.
         </li>
         <li>
           <strong>Vercel Inc.</strong> (États-Unis) : hébergement du site. Le
           code qui traite vos données s'exécute à Paris.
         </li>
         <li>
-          <strong>Neon</strong> (États-Unis) : base de données, sur des
-          serveurs situés à Francfort (Allemagne). Stocke les données de votre
-          compte.
+          <strong>Neon</strong> (États-Unis) : base de données, sur des serveurs
+          situés à Francfort (Allemagne). Stocke les données de votre compte.
         </li>
         <li>
           <strong>Google</strong> : uniquement si vous choisissez « Continuer
@@ -170,13 +190,13 @@
       <p>Seuls deux cookies strictement nécessaires sont utilisés :</p>
       <ul>
         <li>
-          <strong>la session</strong>, chiffrée, qui vous garde connecté
-          jusqu'à 90 jours ;
+          <strong>la session</strong>, chiffrée, qui vous garde connecté jusqu'à
+          90 jours ;
         </li>
         <li>
           <strong>la redirection Google</strong>, qui retient la page où vous
-          revenir pendant 10 minutes au plus, seulement si vous utilisez
-          « Continuer avec Google ».
+          revenir pendant 10 minutes au plus, seulement si vous utilisez «
+          Continuer avec Google ».
         </li>
       </ul>
     </LegalSection>

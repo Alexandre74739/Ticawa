@@ -1,5 +1,10 @@
 export type TicketSource = "photo" | "pdf";
 
+// Garantie légale déduite par Tico des articles : 'none' pour des consommables.
+export type LegalWarranty = "new" | "none";
+
+export type CoverageKind = "return" | "legal" | "commercial" | "insurance";
+
 export interface TicketItem {
   label: string;
   reference: string | null;
@@ -26,6 +31,10 @@ export interface TicketFields {
   returnDays: number | null;
   returnPolicy: string | null;
   warrantyNote: string | null;
+  legalWarranty: LegalWarranty | null;
+  warrantyMonths: number | null;
+  insuranceName: string | null;
+  insuranceUntil: string | null;
   items: TicketItem[];
 }
 
@@ -39,6 +48,9 @@ export interface TicketSummary {
   totalAmount: number | null;
   currency: string;
   returnDays: number | null;
+  legalWarranty: LegalWarranty | null;
+  warrantyMonths: number | null;
+  insuranceUntil: string | null;
   itemCount: number;
   createdAt: string;
 }
@@ -59,11 +71,18 @@ export interface TicketPage {
   pages: number;
 }
 
+// Une date de fin de couverture d'un ticket : échange, garantie ou assurance.
+export interface Deadline {
+  kind: CoverageKind;
+  date: string;
+  ticket: TicketSummary;
+}
+
 export interface Overview {
   total: number;
   ongoing: number;
   tracked: number;
-  deadlines: TicketSummary[];
+  deadlines: Deadline[];
   recent: TicketSummary[];
   incomplete: TicketSummary | null;
 }

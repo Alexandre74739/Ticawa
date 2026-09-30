@@ -15,14 +15,15 @@
           <UiToggle
             :model-value="settings.notifications"
             label="Me prévenir avant qu’une garantie expire"
-            description="Un rappel quand une garantie ou une assurance arrive à son terme."
+            description="Un rappel quand un délai d’échange, une garantie ou une assurance arrive à son terme."
             :disabled="saving"
             @update:model-value="update({ notifications: $event })"
           />
           <UiLabelCard class="mt-auto">
             <p class="text-sm">
-              Tico retient vos choix dès maintenant. L’envoi des rappels arrive
-              très bientôt dans l’app.
+              Tico vous fait signe 30 puis 7 jours avant la fin d’une garantie
+              ou d’une assurance, 3 jours puis la veille pour un échange. Les
+              rappels partent chaque matin.
             </p>
           </UiLabelCard>
         </SettingsPanel>
