@@ -21,7 +21,9 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ id: string }>();
+const props = withDefaults(defineProps<{ id: string; back?: string }>(), {
+  back: "/dashboard/tickets",
+});
 
 const open = ref(false);
 const titleId = useId();
@@ -29,7 +31,7 @@ const titleId = useId();
 const { pending, error, execute } = useAction(async () => {
   await $fetch(`/api/tickets/${props.id}`, { method: "DELETE" });
   open.value = false;
-  await navigateTo("/dashboard/tickets");
+  await navigateTo(props.back);
 });
 
 defineExpose({ open: () => (open.value = true) });

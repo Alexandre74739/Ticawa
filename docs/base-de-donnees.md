@@ -137,3 +137,24 @@ create index if not exists ticket_items_label_trgm
   on ticket_items using gin (f_unaccent(label) gin_trgm_ops);
 ```
 
+
+### Page Utilisateurs (admin)
+
+La liste des comptes se charge par pages de 20, les plus récents d'abord, sans les admins. La recherche porte sur le prénom, le nom et l'email, sans tenir compte des majuscules ni des accents. Requêtes : `listUsers` dans [server/utils/users.ts](../server/utils/users.ts).
+
+```sql
+create index if not exists users_role_created_idx
+  on users (role, created_at desc, id);
+create index if not exists users_prenom_trgm
+  on users using gin (f_unaccent(prenom) gin_trgm_ops);
+create index if not exists users_nom_trgm
+  on users using gin (f_unaccent(nom) gin_trgm_ops);
+create index if not exists users_email_trgm
+  on users using gin (email gin_trgm_ops);
+```
+
+Comptes de test (pagination) : emails en `@exemple.test` et `google_id` en `seed-test-N`, donc impossibles à utiliser pour se connecter. Pour les retirer :
+
+```sql
+delete from users where email like '%@exemple.test' and google_id like 'seed-test-%';
+```

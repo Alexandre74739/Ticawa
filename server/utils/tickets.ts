@@ -180,6 +180,12 @@ export async function getOverview(userId: string): Promise<Overview> {
   };
 }
 
+function ownedBy(userId: string) {
+  return useDb()`(t.user_id = ${userId} or exists (
+    select 1 from users a where a.id = ${userId} and a.role = 'admin'
+  ))`;
+}
+
 export async function findTicket(userId: string, id: string): Promise<Ticket | undefined> {
   const sql = useDb();
   const [row] = await sql<TicketRow[]>`
@@ -187,7 +193,7 @@ export async function findTicket(userId: string, id: string): Promise<Ticket | u
       t.created_at as "createdAt", t.updated_at as "updatedAt",
       f.mime_type as "fileType", f.size as "fileSize", ${fieldColumns()}
     from tickets t left join ticket_files f on f.ticket_id = t.id
-    where t.id = ${id} and t.user_id = ${userId}
+    where t.id = ${id} and ${ownedBy(userId)}
   `;
   if (!row) return undefined;
 
@@ -273,8 +279,8 @@ export async function createTicket(userId: string, upload: TicketUpload) {
 export async function updateTicket(userId: string, id: string, fields: TicketFields) {
   return useDb().begin(async (tx) => {
     const updated = await tx`
-      update tickets set ${tx(columns(fields))}, verified = true, updated_at = now()
-      where id = ${id} and user_id = ${userId}
+      update tickets t set ${tx(columns(fields))}, verified = true, updated_at = now()
+      where t.id = ${id} and ${ownedBy(userId)}
       returning id
     `;
     if (!updated.length) return false;
@@ -286,7 +292,7 @@ export async function updateTicket(userId: string, id: string, fields: TicketFie
 
 export async function deleteTicket(userId: string, id: string) {
   const rows = await useDb()`
-    delete from tickets where id = ${id} and user_id = ${userId} returning id
+    delete from tickets t where t.id = ${id} and ${ownedBy(userId)} returning t.id
   `;
   return rows.length > 0;
 }
@@ -295,7 +301,7 @@ export async function findTicketFile(userId: string, id: string) {
   const [row] = await useDb()<{ mimeType: string; content: Uint8Array; source: TicketSource; createdAt: Date }[]>`
     select f.mime_type as "mimeType", f.content, t.source, t.created_at as "createdAt"
     from ticket_files f join tickets t on t.id = f.ticket_id
-    where t.id = ${id} and t.user_id = ${userId}
+    where t.id = ${id} and ${ownedBy(userId)}
   `;
   return row;
 }

@@ -38,29 +38,12 @@
         Aucun ticket ne correspond{{ search ? ` à « ${search} »` : "" }}.
       </p>
 
-      <nav
-        v-if="data.pages > 1"
-        aria-label="Pages de tickets"
-        class="flex items-center justify-between gap-3"
-      >
-        <UiButton variant="ghost" :disabled="page <= 1" @click="go(page - 1)">
-          <ChevronLeft aria-hidden="true" class="size-4" /> Précédent
-        </UiButton>
-        <p class="text-sm font-medium">Page {{ page }} sur {{ data.pages }}</p>
-        <UiButton
-          variant="ghost"
-          :disabled="page >= data.pages"
-          @click="go(page + 1)"
-        >
-          Suivant <ChevronRight aria-hidden="true" class="size-4" />
-        </UiButton>
-      </nav>
+      <UiPagination :page="page" :pages="data.pages" label="Pages de tickets" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ChevronLeft, ChevronRight } from "@lucide/vue";
 import type { TicketPage } from "#shared/types/ticket";
 
 useHead({ title: "Mes tickets" });
@@ -85,13 +68,6 @@ const { data, error } = await useFetch<TicketPage>("/api/tickets", {
   query: { q: search, page, status },
 });
 
-function go(target: number, scroll = true) {
-  navigateTo({
-    query: { ...route.query, page: target > 1 ? target : undefined },
-  });
-  if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
 function setStatus(value: TicketFilter | undefined) {
   navigateTo({ query: { ...route.query, status: value, page: undefined } });
 }
@@ -101,7 +77,7 @@ watch(query, (value) => {
   clearTimeout(timer);
   timer = setTimeout(() => {
     search.value = value.trim();
-    go(1, false);
+    navigateTo({ query: { ...route.query, page: undefined } });
   }, 300);
 });
 onBeforeUnmount(() => clearTimeout(timer));

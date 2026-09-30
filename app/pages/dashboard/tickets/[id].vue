@@ -1,10 +1,11 @@
 <template>
   <div>
     <NuxtLink
-      to="/dashboard/tickets"
+      :to="back"
       class="mb-4 inline-flex items-center gap-1.5 rounded-xl py-1 font-display text-sm font-semibold text-indigo hover:underline focus-visible:ring-2 focus-visible:ring-indigo focus-visible:outline-none"
     >
-      <ArrowLeft aria-hidden="true" class="size-4" /> Mes tickets
+      <ArrowLeft aria-hidden="true" class="size-4" />
+      {{ fromUser ? "Fiche utilisateur" : "Mes tickets" }}
     </NuxtLink>
 
     <DashboardSoon v-if="!ticket" title="Ce ticket est introuvable" mascot="Brouille.svg">
@@ -39,7 +40,7 @@
           <Trash2 aria-hidden="true" class="size-4" /> Supprimer ce ticket
         </UiButton>
       </div>
-      <TicketDeleteDialog :id="ticket.id" ref="remove" />
+      <TicketDeleteDialog :id="ticket.id" ref="remove" :back="back" />
     </template>
   </div>
 </template>
@@ -50,6 +51,12 @@ import type { Ticket } from "#shared/types/ticket";
 import { reviewStatus } from "~/data/ticketFields";
 
 const route = useRoute();
+
+// Ticket ouvert par un admin depuis une fiche utilisateur : on y retourne.
+const previous = useRouter().options.history.state.back;
+const fromUser =
+  typeof previous === "string" && previous.startsWith("/dashboard/utilisateurs/");
+const back = fromUser ? (previous as string) : "/dashboard/tickets";
 const { data: ticket } = await useFetch<Ticket>(`/api/tickets/${route.params.id}`);
 
 useHead({ title: () => ticket.value?.name ?? ticket.value?.merchant ?? "Ticket" });

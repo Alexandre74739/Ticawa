@@ -9,11 +9,17 @@
         :id="titleId"
         class="mt-4 font-display text-xl font-extrabold md:text-2xl"
       >
-        Vous partez déjà ?
+        {{ user ? `Supprimer le compte de ${user.prenom} ?` : "Vous partez déjà ?" }}
       </h2>
       <p class="mt-2.5 text-sm leading-relaxed text-ink/70 md:text-base">
-        Tico va tout oublier : vos tickets, vos garanties, vos alertes. Il ne
-        pourra plus veiller sur vos droits, et rien ne pourra être récupéré.
+        <template v-if="user">
+          Tico va tout oublier : ses tickets, ses garanties, ses alertes. Rien
+          ne pourra être récupéré.
+        </template>
+        <template v-else>
+          Tico va tout oublier : vos tickets, vos garanties, vos alertes. Il ne
+          pourra plus veiller sur vos droits, et rien ne pourra être récupéré.
+        </template>
       </p>
     </div>
 
@@ -54,7 +60,7 @@
           class="max-sm:w-full"
           :disabled="pending || !ready"
         >
-          {{ pending ? "Suppression…" : "Supprimer mon compte" }}
+          {{ pending ? "Suppression…" : user ? "Supprimer ce compte" : "Supprimer mon compte" }}
         </UiButton>
       </div>
     </form>
@@ -62,6 +68,10 @@
 </template>
 
 <script setup lang="ts">
+// Sans `user` : l'utilisateur supprime son propre compte. Avec : un admin
+// supprime ce compte depuis la page Utilisateurs.
+const props = defineProps<{ user?: { id: string; prenom: string } }>();
+
 const DELETE_WORD = "SUPPRIMER";
 
 const open = ref(false);
@@ -76,6 +86,11 @@ const { fetch: refreshSession } = useUserSession();
 // Partagé avec AccountDangerGoodbyeModal via la clé useState.
 const accountDeleted = useState<boolean>("account-deleted", () => false);
 const { pending, error, execute } = useAction(async () => {
+  if (props.user) {
+    await $fetch(`/api/admin/users/${props.user.id}`, { method: "DELETE" });
+    open.value = false;
+    return navigateTo("/dashboard/utilisateurs");
+  }
   await $fetch("/api/me", {
     method: "DELETE",
     body: { confirmation: confirmation.value.trim() },
