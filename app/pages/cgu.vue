@@ -61,7 +61,14 @@
       </p>
       <p>
         Vous pouvez supprimer votre compte à tout moment depuis l'application.
-        Toutes vos données sont alors supprimées définitivement.
+        Toutes vos données sont alors supprimées définitivement, à l'exception
+        de l'historique des interventions de l'éditeur, conservé un an.
+      </p>
+      <p>
+        Pour vous aider en cas de difficulté, l'éditeur peut consulter votre
+        compte et vos tickets et, si nécessaire, les corriger ou les supprimer.
+        Chacune de ces modifications est enregistrée. Le détail figure dans la
+        <NuxtLink to="/confidentialite">politique de confidentialité</NuxtLink>.
       </p>
     </LegalSection>
 

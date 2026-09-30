@@ -64,6 +64,24 @@
         <strong>Base légale :</strong> l'exécution des conditions d'utilisation
         que vous acceptez.
       </p>
+      <h3>Vous aider en cas de difficulté</h3>
+      <p>
+        Pour vous dépanner, l'éditeur peut consulter votre compte et vos
+        tickets et, si nécessaire, les corriger ou les supprimer : corriger une
+        adresse email mal saisie, confirmer votre email, déconnecter vos
+        appareils, rectifier ou retirer un ticket, ou supprimer le compte.
+        <strong>Base légale :</strong> l'exécution des conditions d'utilisation
+        que vous acceptez.
+      </p>
+      <h3>Garder une trace de ces interventions</h3>
+      <p>
+        Chaque modification ou suppression faite par l'éditeur sur vos données
+        est enregistrée dans un historique : qui l'a faite, quand, sur quel
+        compte, et la valeur de chaque champ avant et après. La simple
+        consultation n'y figure pas. <strong>Base légale :</strong> l'intérêt
+        légitime de l'éditeur à sécuriser vos données et à pouvoir rendre
+        compte de ses interventions.
+      </p>
       <h3>Sécurité et mesure d'audience</h3>
       <p>
         Assurer le bon fonctionnement du site et mesurer son audience de façon
@@ -82,7 +100,13 @@
         <li>
           <strong>Données du compte :</strong> conservées tant que votre compte
           existe, puis supprimées automatiquement et définitivement quand vous
-          le supprimez.
+          le supprimez (ou quand l'éditeur le supprime à votre demande).
+        </li>
+        <li>
+          <strong>Historique des interventions de l'éditeur :</strong> conservé
+          un an, puis effacé automatiquement. Il est gardé même si votre compte
+          est supprimé entre-temps, pour que ces interventions restent
+          traçables.
         </li>
         <li>
           <strong>Compteurs anti-abus (IP, email) :</strong> remis à zéro après une
@@ -97,9 +121,9 @@
 
     <LegalSection title="Qui a accès à vos données">
       <p>
-        Seul l'éditeur de Ticawa y a accès, ainsi que les prestataires
-        techniques strictement nécessaires au service, dans la limite de leur
-        mission. Les acteurs français, puis européens, sont privilégiés dès
+        Seul l'éditeur de Ticawa y a accès, pour vous aider en cas de
+        difficulté, ainsi que les prestataires techniques strictement
+        nécessaires au service, dans la limite de leur mission. Les acteurs français, puis européens, sont privilégiés dès
         qu'une alternative existe.
       </p>
       <ul>
@@ -194,6 +218,11 @@
       <p>
         Les échanges avec le site sont chiffrés (HTTPS) et l'accès aux données
         est limité à ce qui est nécessaire au service.
+      </p>
+      <p>
+        Toute modification ou suppression de vos données par l'éditeur est
+        enregistrée dans un historique que personne ne peut modifier ni effacer
+        depuis l'application. Vous pouvez en demander une copie par email.
       </p>
     </LegalSection>
 
