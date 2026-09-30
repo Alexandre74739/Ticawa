@@ -5,12 +5,20 @@ export type CoverageState = "active" | "soon" | "expired";
 const SOON_DAYS = 7;
 const DAY = 86_400_000;
 
-const localDate = (iso: string) => {
+export const isoDate = (date: Date) =>
+  [date.getFullYear(), date.getMonth() + 1, date.getDate()]
+    .map((n) => String(n).padStart(2, "0"))
+    .join("-");
+
+export const localDate = (iso: string) => {
   const [y, m, d] = iso.split("-").map(Number);
   return new Date(y!, m! - 1, d!);
 };
 
-export function formatDate(iso: string | null, style: "long" | "short" = "long") {
+export function formatDate(
+  iso: string | null,
+  style: "long" | "short" = "long",
+) {
   if (!iso) return null;
   return localDate(iso).toLocaleDateString("fr-FR", {
     day: "numeric",
@@ -24,7 +32,9 @@ export function formatMoney(value: number | null, currency = "EUR") {
   return value.toLocaleString("fr-FR", { style: "currency", currency });
 }
 
-export function returnWindow(ticket: Pick<TicketFields, "purchaseDate" | "returnDays">) {
+export function returnWindow(
+  ticket: Pick<TicketFields, "purchaseDate" | "returnDays">,
+) {
   if (!ticket.purchaseDate || !ticket.returnDays) return null;
   const deadline = localDate(ticket.purchaseDate);
   deadline.setDate(deadline.getDate() + ticket.returnDays);
@@ -36,7 +46,12 @@ export function returnWindow(ticket: Pick<TicketFields, "purchaseDate" | "return
     daysLeft < 0 ? "expired" : daysLeft <= SOON_DAYS ? "soon" : "active";
 
   return {
-    deadline: deadline.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }),
+    iso: isoDate(deadline),
+    deadline: deadline.toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }),
     daysLeft,
     state,
   };

@@ -113,6 +113,23 @@ export async function listTickets(
   };
 }
 
+export async function listDeadlines(userId: string): Promise<TicketSummary[]> {
+  const rows = await useDb()<Row<TicketSummary>[]>`
+    select t.id, t.source, t.verified, t.name, t.merchant, t.currency,
+      t.return_days as "returnDays", t.purchase_date::text as "purchaseDate",
+      t.total_amount::text as "totalAmount", t.created_at as "createdAt",
+      (select count(*)::int from ticket_items i where i.ticket_id = t.id) as "itemCount"
+    from tickets t
+    where t.user_id = ${userId} and t.purchase_date is not null and t.return_days > 0
+    order by t.purchase_date + t.return_days, t.id
+  `;
+  return rows.map((r) => ({
+    ...r,
+    totalAmount: num(r.totalAmount),
+    createdAt: r.createdAt.toISOString(),
+  }));
+}
+
 export async function findTicket(userId: string, id: string): Promise<Ticket | undefined> {
   const sql = useDb();
   const [row] = await sql<TicketRow[]>`
