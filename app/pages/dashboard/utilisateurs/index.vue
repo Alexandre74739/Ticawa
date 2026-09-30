@@ -20,6 +20,18 @@
     </DashboardSoon>
 
     <div v-else-if="data" class="flex flex-col gap-4">
+      <UiLabelCard tone="trust">
+        <p>
+          RGPD : chaque consultation ou modification d'un compte par un admin
+          doit rester traçable.
+        </p>
+        <NuxtLink
+          to="/dashboard/historique"
+          class="inline-flex rounded font-display font-semibold text-indigo hover:underline focus-visible:ring-2 focus-visible:ring-indigo focus-visible:outline-none"
+        >
+          Voir l'historique des actions admin
+        </NuxtLink>
+      </UiLabelCard>
       <UiInput
         v-model="query"
         label="Rechercher un prénom, un nom ou un email"

@@ -1,6 +1,7 @@
 import {
   CalendarClock,
   ChartColumn,
+  History,
   LayoutDashboard,
   ReceiptText,
   ScanLine,
@@ -39,6 +40,7 @@ export const dashboardLinks: DashboardLink[] = [
 export const adminLinks: DashboardLink[] = [
   { label: "Utilisateurs", to: "/dashboard/utilisateurs", icon: UsersRound },
   { label: "Statistiques", to: "/dashboard/statistiques", icon: ChartColumn },
+  { label: "Historique", to: "/dashboard/historique", icon: History },
 ];
 
 export interface RightTip {
