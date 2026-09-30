@@ -69,6 +69,4 @@ Si le HTML serveur et le premier rendu client diffèrent, Vue signale une erreur
 
 ## Écarts avec le cahier des charges
 
-[CLAUDE.md](../CLAUDE.md) prévoit Baserow comme base de données. Le code utilise aujourd'hui PostgreSQL directement, via le client `postgres` ([server/utils/db.ts](../server/utils/db.ts)). Le choix de l'hébergeur doit respecter la contrainte d'hébergement dans l'UE.
-
 Les analytics européennes (Plausible ou Matomo) ne sont pas encore branchées.

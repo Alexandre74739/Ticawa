@@ -34,6 +34,7 @@
           :nom="me.nom"
           :email="me.email"
           :has-password="me.password"
+          @saved="Object.assign(me, $event)"
         />
 
         <AccountDataCard />

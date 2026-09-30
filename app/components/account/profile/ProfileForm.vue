@@ -6,37 +6,36 @@
     mascot="Neutre.svg"
   >
     <div class="grid gap-4 lg:grid-cols-2 lg:gap-6">
-      <div :class="panel">
+      <form :class="panel" @submit.prevent="execute">
         <h3 class="flex items-center gap-2.5 font-display text-lg font-bold">
           <UserRound aria-hidden="true" class="size-5 text-indigo" />
           Identité
         </h3>
 
-        <dl class="grid flex-1 gap-3 sm:grid-cols-2 sm:grid-rows-[auto_1fr]">
-          <div
-            v-for="field in fields"
-            :key="field.label"
-            :class="[
-              field.wide && 'sm:col-span-2',
-              'min-w-0 rounded-xl bg-lavender/60 px-3.5 py-3',
-            ]"
-          >
-            <dt
-              class="flex items-center gap-1.5 text-xs text-ink/55 md:text-sm"
-            >
+        <div class="grid gap-3 sm:grid-cols-2">
+          <UiInput v-model="prenom" label="Prénom" autocomplete="given-name" />
+          <UiInput v-model="nom" label="Nom" autocomplete="family-name" optional />
+          <div class="min-w-0 rounded-xl bg-lavender/60 px-3.5 py-3 sm:col-span-2">
+            <p class="flex items-center gap-1.5 text-xs text-ink/55 md:text-sm">
               <Lock aria-hidden="true" class="size-3.5 shrink-0" />
-              {{ field.label }}
-            </dt>
-            <dd class="mt-0.5 truncate font-medium">{{ field.value }}</dd>
-            <dd
-              v-if="field.hint"
-              class="mt-1 text-xs leading-relaxed text-ink/60 md:text-sm"
-            >
-              {{ field.hint }}
-            </dd>
+              Email
+            </p>
+            <p class="mt-0.5 truncate font-medium">{{ email }}</p>
+            <p class="mt-1 text-xs leading-relaxed text-ink/60 md:text-sm">
+              C’est grâce à lui que Tico vous prévient avant qu’une garantie
+              expire. Il reste le même, pour ne jamais perdre le fil.
+            </p>
           </div>
-        </dl>
-      </div>
+        </div>
+
+        <UiAlert v-if="error" tone="danger">{{ error }}</UiAlert>
+        <p v-else-if="done && !changed" class="text-sm text-ink/70" role="status">
+          C’est enregistré.
+        </p>
+        <UiButton v-if="changed" type="submit" class="self-start" :disabled="pending">
+          {{ pending ? "Enregistrement…" : "Enregistrer" }}
+        </UiButton>
+      </form>
 
       <AccountProfilePasswordPanel
         :class="panel"
@@ -56,18 +55,24 @@ const props = defineProps<{
   email: string;
   hasPassword: boolean;
 }>();
+const emit = defineEmits<{ saved: [profile: { prenom: string; nom: string | null }] }>();
+
+const prenom = ref(props.prenom);
+const nom = ref(props.nom ?? "");
+const changed = computed(
+  () => prenom.value.trim() !== props.prenom || nom.value.trim() !== (props.nom ?? ""),
+);
+
+const { fetch: refreshSession } = useUserSession();
+const { pending, error, done, execute } = useAction(async () => {
+  const saved = await $fetch<{ prenom: string; nom: string | null }>("/api/me", {
+    method: "PATCH",
+    body: { prenom: prenom.value, nom: nom.value },
+  });
+  emit("saved", saved);
+  await refreshSession();
+});
 
 const panel =
   "flex flex-col gap-3 rounded-2xl bg-paper p-4 shadow-sm shadow-indigo/10 md:p-5";
-
-const fields = computed(() => [
-  { label: "Prénom", value: props.prenom },
-  { label: "Nom", value: props.nom || "Non renseigné" },
-  {
-    label: "Email",
-    value: props.email,
-    hint: "C’est grâce à lui que Tico vous prévient avant qu’une garantie expire. Il reste le même, pour ne jamais perdre le fil.",
-    wide: true,
-  },
-]);
 </script>

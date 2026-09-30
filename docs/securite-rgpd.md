@@ -62,7 +62,7 @@ Un navigateur pose toujours `Origin` sur ces requêtes, et aucun site ne peut le
 | Droit | Où | Comment |
 |---|---|---|
 | Accès et portabilité | `/compte`, carte Données | `GET /api/me/export` télécharge un JSON lisible avec tout ce qui concerne le compte |
-| Rectification | `/compte`, carte Profil | **incomplet** : le profil s'affiche en lecture seule, seul le mot de passe se change. Il manque une route pour corriger le prénom et le nom |
+| Rectification | `/compte`, carte Mes informations | prénom et nom modifiables (`PATCH /api/me`) ; l'email, lié à la connexion, se corrige sur demande à l'éditeur |
 | Effacement | `/compte`, zone de danger | l'utilisateur tape « SUPPRIMER », puis `DELETE /api/me` efface le compte et, par cascade, ses réglages et ses jetons |
 
 Règle pour toute nouvelle donnée stockée : l'ajouter à l'export ([export.get.ts](../server/api/me/export.get.ts)), et vérifier qu'elle disparaît à la suppression du compte (clé étrangère `on delete cascade` vers `users`).

@@ -90,6 +90,13 @@ export async function getSessionVersion(id: string) {
   return row?.session_version;
 }
 
+export async function updateProfile(id: string, data: { prenom: string; nom: string | null }) {
+  const [user] = await useDb()<UserRow[]>`
+    update users set prenom = ${data.prenom}, nom = ${data.nom} where id = ${id} returning *
+  `;
+  return user;
+}
+
 export async function updatePasswordHash(id: string, passwordHash: string) {
   await useDb()`update users set password_hash = ${passwordHash} where id = ${id}`;
 }

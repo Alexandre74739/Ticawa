@@ -65,6 +65,10 @@ Redirection vers Google, puis retour vers `?redirect=` (ou `/dashboard`). En cas
 
 `password` indique si le compte a un mot de passe (un compte créé avec Google n'en a pas).
 
+### `PATCH /api/me` — session
+
+Corps : `{ prenom, nom }` (nom facultatif, 100 caractères au plus). Met aussi à jour la session. Réponse : `{ prenom, nom }`. **400** prénom ou nom invalide, **429** plus de 20 par heure.
+
 ### `DELETE /api/me` — session
 
 Corps : `{ confirmation: "SUPPRIMER" }`, sans tenir compte de la casse. Supprime le compte et ferme la session.
