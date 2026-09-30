@@ -5,6 +5,7 @@ export default defineEventHandler(async (event) => {
 
   const resets = await listPasswordResets(row.id);
   const settings = await findUserSettings(row.id);
+  const tickets = await listTicketsForExport(row.id);
   const now = new Date();
 
   setResponseHeaders(event, {
@@ -36,6 +37,7 @@ export default defineEventHandler(async (event) => {
         expireLe: r.expires_at,
         utiliseLe: r.used_at,
       })),
+      tickets,
     },
     null,
     2,

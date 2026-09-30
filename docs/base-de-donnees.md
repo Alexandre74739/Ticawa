@@ -103,3 +103,37 @@ create table rate_limits (
 ```
 
 Le `on delete cascade` est indispensable : `DELETE /api/me` supprime seulement la ligne `users` et compte sur la cascade pour effacer les réglages et les jetons.
+
+## Tickets
+
+| Table | Rôle |
+|---|---|
+| `tickets` | une ligne par ticket ou facture : nom donné par l'utilisateur (facultatif, remplace l'enseigne comme titre), magasin (enseigne, adresse, SIRET, TVA, téléphone), achat (date, heure, n° de ticket, caisse, total, moyen de paiement, 4 derniers chiffres de carte), mentions imprimées (délai d'échange en jours et texte, garantie), texte brut lu, `verified` (fiche relue par l'utilisateur) |
+| `ticket_items` | articles du ticket, dans l'ordre (`position`) : libellé, référence, quantité, prix unitaire, prix total |
+| `ticket_files` | la photo (JPEG) ou le PDF d'origine, en `bytea`, 4 Mo au plus. Table à part : la liste des tickets ne charge jamais les octets |
+
+Tout est en `on delete cascade` depuis `users`. Requêtes : [server/utils/tickets.ts](../server/utils/tickets.ts).
+
+### Recherche et pagination
+
+La liste des tickets se charge par pages de 20, triées par date d'achat (les tickets sans date en dernier). La recherche porte sur le nom du ticket, l'enseigne et le nom des articles, sans tenir compte des majuscules ni des accents.
+
+```sql
+create extension if not exists pg_trgm;
+create extension if not exists unaccent;
+
+-- unaccent n'est pas « immutable » : l'enveloppe l'est, pour pouvoir l'indexer.
+create or replace function f_unaccent(text) returns text
+  language sql immutable parallel safe strict
+  as $$ select public.unaccent('public.unaccent'::regdictionary, lower($1)) $$;
+
+create index if not exists tickets_user_sort_idx
+  on tickets (user_id, coalesce(purchase_date, '-infinity'::date) desc, id desc);
+create index if not exists tickets_name_trgm
+  on tickets using gin (f_unaccent(name) gin_trgm_ops);
+create index if not exists tickets_merchant_trgm
+  on tickets using gin (f_unaccent(merchant) gin_trgm_ops);
+create index if not exists ticket_items_label_trgm
+  on ticket_items using gin (f_unaccent(label) gin_trgm_ops);
+```
+

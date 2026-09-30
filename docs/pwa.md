@@ -49,3 +49,23 @@ Une app web ne peut pas retirer elle-même une autorisation. `RevokeModal` expli
 ## Capacitor
 
 L'app doit rester empaquetable plus tard avec Capacitor pour les stores. Éviter tout ce qui suppose un navigateur classique sans alternative : les API web utilisées ici (notifications, caméra, stockage) ont des équivalents Capacitor.
+
+## Scan des tickets
+
+Le scan n'est proposé que dans l'app installée. La lecture se fait **sur l'appareil** :
+- **photo** : [Tesseract.js](https://github.com/naptha/tesseract.js) (OCR open source, WebAssembly). Ses fichiers (moteur, modèle français) sont copiés dans `public/ocr/` par [scripts/ocr-assets.mjs](../scripts/ocr-assets.mjs) à chaque `npm install`, pour ne jamais passer par un CDN. Ils sont hors du pré-cache (~5 Mo) et mis en cache au premier scan ;
+- **PDF** : [pdf.js](https://mozilla.github.io/pdf.js/) extrait le texte ; un PDF scanné (sans texte) passe par l'OCR.
+
+Le texte est ensuite découpé en champs par [app/utils/receipt.ts](../app/utils/receipt.ts). Si la lecture échoue, le ticket est enregistré quand même, avec une fiche à compléter.
+
+## Tester la version installée depuis un PC
+
+Le mode installé dépend de `display-mode: standalone`, que le serveur de dev ne reproduit pas. Deux méthodes, sans toucher au code :
+
+**Sur le PC (Chrome ou Edge)** : l'installation n'est pas proposée sur ordinateur. Pour installer une fois l'app de dev, activer **temporairement** :
+- dans [pwa.client.ts](../app/plugins/pwa.client.ts), la condition `if (useDevice().isDesktop.value && !import.meta.dev) return;` ;
+- dans [nuxt.config.ts](../nuxt.config.ts), `pwa.devOptions: { enabled: true, suppressWarnings: true, type: "module", navigateFallbackAllowlist: [/^$/] }` (l'allowlist vide empêche de servir une page depuis le cache).
+
+Lancer `npm run dev`, ouvrir `http://localhost:3000`, installer via l'icône de la barre d'adresse (ou ⋮ → « Caster, enregistrer et partager » → « Installer la page en tant qu'application »), puis retirer les deux réglages. L'app reste installée : elle s'ouvre dans sa fenêtre, en mode installé, avec le rechargement à chaud ; `Ctrl+Maj+I` y ouvre les DevTools. Désinstaller : ⋮ dans la fenêtre de l'app → « Désinstaller ».
+
+**Sur un vrai téléphone Android** : activer le débogage USB, brancher le téléphone, ouvrir `chrome://inspect/#devices` dans Chrome sur Windows, « Port forwarding » : `3000` → `localhost:3000`. Sur le téléphone, ouvrir `http://localhost:3000` dans Chrome (contexte sécurisé : caméra autorisée), installer l'app, puis l'inspecter depuis `chrome://inspect` (elle y apparaît avec sa console et son réseau).

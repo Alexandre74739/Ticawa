@@ -13,13 +13,7 @@
         <h3 class="font-display text-lg leading-tight font-bold">
           {{ info.title }}
         </h3>
-        <p
-          class="mt-1 inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold md:text-sm"
-          :class="status.class"
-        >
-          <component :is="status.icon" aria-hidden="true" class="size-3.5" />
-          {{ status.label }}
-        </p>
+        <UiBadge :status="status" class="mt-1" />
       </div>
     </div>
 

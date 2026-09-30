@@ -88,3 +88,18 @@ Sans réglage enregistré, renvoie ces valeurs par défaut.
 Corps : une partie des trois champs, en booléens. Les champs absents gardent leur valeur. Réponse : les réglages complets après enregistrement.
 
 Erreurs : **400** « Réglage invalide. » si une valeur n'est pas un booléen, **400** « Gardez au moins un canal… » si les alertes sont actives sans aucun canal, **429** plus de 60 modifications par minute.
+
+## Tickets (`/api/tickets`) — session
+
+La lecture du ticket (OCR, PDF) se fait sur le téléphone ; le serveur valide ([ticketInput.ts](../server/utils/ticketInput.ts)) et range. Un utilisateur n'accède qu'à ses propres tickets (404 sinon).
+
+| Route | Rôle |
+|---|---|
+| `GET /api/tickets` | une page de 20 tickets, du plus récent achat au plus ancien. `page` : numéro de page (1 par défaut). `q` : recherche dans le nom du ticket, l'enseigne et les articles. `status` : `active` ou `expired` (délai d'échange imprimé dépassé), absent pour tous. Réponse `{ items, total, pages }` |
+| `POST /api/tickets` | multipart : `file` (JPEG, PNG, WebP ou PDF, 4 Mo max, type vérifié sur les octets) et `data` (JSON `{ fields, rawText }`). Réponse **201** `{ id }`. **429** au-delà de 60 par heure |
+| `GET /api/tickets/:id` | fiche complète avec articles |
+| `PATCH /api/tickets/:id` | corps : tous les champs de la fiche. Remplace les articles et passe le ticket en « vérifié ». **429** au-delà de 60 par minute |
+| `DELETE /api/tickets/:id` | supprime le ticket, ses articles et son fichier |
+| `GET /api/tickets/:id/file` | la photo ou le PDF ; `?download=1` pour le télécharger |
+
+`GET /api/me/export` inclut désormais les tickets et leurs articles (sans les fichiers, téléchargeables un par un).

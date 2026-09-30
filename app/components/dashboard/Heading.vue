@@ -4,9 +4,7 @@
       class="font-display text-3xl leading-[1.05] font-extrabold tracking-[-0.02em] md:text-4xl 2xl:text-5xl"
     >
       {{ title }}
-      <span
-        class="block text-indigo"
-      >
+      <span v-if="accent" class="block text-indigo">
         {{ accent }}
       </span>
     </h1>
@@ -17,5 +15,5 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ title: string; accent: string }>();
+defineProps<{ title: string; accent?: string }>();
 </script>
