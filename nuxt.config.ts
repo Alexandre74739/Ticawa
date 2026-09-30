@@ -40,6 +40,8 @@ export default defineNuxtConfig({
     trustedOrigins: "",
     // Notifications push : paire générée par `node scripts/vapid-keys.mjs`.
     vapidPrivateKey: "",
+    // Même valeur que CRON_SECRET, que Vercel envoie à la tâche des rappels.
+    cronSecret: "",
     session: { sessionHeader: false, cookie: { maxAge: 60 * 60 * 24 * 90 } },
     public: {
       vapidPublicKey: "",
