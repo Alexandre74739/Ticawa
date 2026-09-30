@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DashboardHeading title="Scanner," accent="un ticket en un instant." />
+    <DashboardHeading title="Scanner," accent="un ticket en un instant" />
 
     <div class="hidden standalone:block">
       <DashboardSoon>

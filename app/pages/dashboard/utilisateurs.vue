@@ -2,7 +2,7 @@
   <div>
     <DashboardHeading
       title="Utilisateurs,"
-      accent="les comptes de la plateforme."
+      accent="les comptes de la plateforme"
     />
     <DashboardSoon>
       Consultez et gérez le profil des utilisateurs (les comptes admin ne sont

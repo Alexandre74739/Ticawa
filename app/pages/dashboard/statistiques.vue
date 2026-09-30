@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DashboardHeading title="Statistiques," accent="l'usage de Ticawa." />
+    <DashboardHeading title="Statistiques," accent="l'usage de Ticawa" />
     <DashboardSoon>
       Les chiffres d'usage de la plateforme, sans donnée personnelle.
     </DashboardSoon>

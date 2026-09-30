@@ -2,7 +2,7 @@
   <div>
     <DashboardHeading
       title="Mes tickets,"
-      accent="toutes vos preuves d'achat."
+      accent="toutes vos preuves d'achat"
     />
     <DashboardSoon>
       L'historique de vos tickets : revoyez la photo et corrigez leurs
