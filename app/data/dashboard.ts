@@ -1,6 +1,5 @@
 import {
   CalendarClock,
-  ChartColumn,
   History,
   LayoutDashboard,
   ReceiptText,
@@ -39,7 +38,6 @@ export const dashboardLinks: DashboardLink[] = [
 
 export const adminLinks: DashboardLink[] = [
   { label: "Utilisateurs", to: "/dashboard/utilisateurs", icon: UsersRound },
-  { label: "Statistiques", to: "/dashboard/statistiques", icon: ChartColumn },
   { label: "Historique", to: "/dashboard/historique", icon: History },
 ];
 

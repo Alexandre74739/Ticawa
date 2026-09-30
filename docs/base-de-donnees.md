@@ -24,7 +24,7 @@ Le dépôt ne contient pas encore de fichier de migration. Le schéma ci-dessous
 | `nom` | texte, nullable | absent si Google ne le fournit pas |
 | `password_hash` | texte, nullable | `null` pour un compte Google seul |
 | `google_id` | texte, unique, nullable | identifiant `sub` de Google |
-| `role` | `user` ou `admin` | `admin` donne accès aux pages Utilisateurs et Statistiques du tableau de bord |
+| `role` | `user` ou `admin` | `admin` donne accès aux pages Utilisateurs et Historique du tableau de bord |
 | `email_verified` | booléen | vrai après Google ou après un lien reçu par mail |
 | `session_version` | entier | augmente pour déconnecter tous les appareils |
 | `created_at` | horodatage | date d'inscription |
