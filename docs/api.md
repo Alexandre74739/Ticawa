@@ -69,6 +69,10 @@ Redirection vers Google, puis retour vers `?redirect=` (ou `/dashboard`). En cas
 
 Corps : `{ prenom, nom }` (nom facultatif, 100 caractères au plus). Met aussi à jour la session. Réponse : `{ prenom, nom }`. **400** prénom ou nom invalide, **429** plus de 20 par heure.
 
+### `POST /api/me/email` puis `POST /api/me/email/confirm` — session
+
+Changement d'email en deux temps : la demande (`{ email }`) envoie un lien `/compte?email=<jeton>` à la nouvelle adresse ; l'ouverture du lien confirme (`{ token }`), met à jour le compte et la session, et prévient l'ancienne adresse. Jeton signé, valable 1 h, invalide dès que l'email a changé. **409** adresse déjà utilisée, **429** plus de 3 demandes par heure.
+
 ### `DELETE /api/me` — session
 
 Corps : `{ confirmation: "SUPPRIMER" }`, sans tenir compte de la casse. Supprime le compte et ferme la session.

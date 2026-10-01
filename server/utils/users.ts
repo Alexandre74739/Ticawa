@@ -97,6 +97,13 @@ export async function updateProfile(id: string, data: { prenom: string; nom: str
   return user;
 }
 
+export async function updateEmail(id: string, email: string) {
+  const [user] = await useDb()<UserRow[]>`
+    update users set email = ${email}, email_verified = true where id = ${id} returning *
+  `;
+  return user;
+}
+
 export async function updatePasswordHash(id: string, passwordHash: string) {
   await useDb()`update users set password_hash = ${passwordHash} where id = ${id}`;
 }

@@ -70,7 +70,6 @@ export const ticketGroups: TicketFieldGroup[] = [
   {
     title: "Garanties et assurance",
     icon: ShieldCheck,
-    // La garantie légale n'est pas demandée : Tico la déduit des articles.
     fields: [
       { key: "warrantyMonths", label: "Garantie promise par le vendeur ou la marque (mois)", inputmode: "numeric", placeholder: "36", hint: "Seulement si le ticket, la boîte ou le vendeur l'indique. Laissez vide sinon : Tico s'occupe du reste.", show: (f) => (f.warrantyMonths ? `${f.warrantyMonths} mois` : null) },
       { key: "warrantyNote", label: "Mention de garantie lue sur le ticket", type: "textarea" },

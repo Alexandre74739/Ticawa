@@ -2,11 +2,11 @@ export type AdminAction = "user.update" | "user.delete" | "ticket.update" | "tic
 
 export type AdminLogKind = "update" | "delete";
 
-export interface FieldChange {
+export type FieldChange = {
   field: string;
   before: string | null;
   after: string | null;
-}
+};
 
 export interface AdminLog {
   id: string;
