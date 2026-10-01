@@ -180,6 +180,57 @@ export async function sendPasswordResetMail(user: UserRow, token: string) {
   });
 }
 
+export async function sendEmailChangeMail(user: UserRow, to: string, token: string) {
+  const url = new URL(link("/compte"));
+  url.searchParams.set("email", token);
+
+  await sendMail({
+    to,
+    subject: "Confirmez votre nouvelle adresse",
+    text: [
+      `Bonjour ${user.prenom},`,
+      "",
+      "Pour que Ticawa utilise désormais cette adresse, ouvrez ce lien :",
+      url.href,
+      "",
+      `Il est valable ${EMAIL_CHANGE_TTL_MINUTES} minutes. Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.`,
+      "",
+      "Tico, pour l'équipe Ticawa",
+    ].join("\n"),
+    html: shell(`
+        <p ${HEADING}>Bonjour ${escapeHtml(user.prenom)},</p>
+        <p ${BODY}>Pour que Ticawa utilise désormais cette adresse, confirmez-la.</p>
+        <a href="${url.href}" ${BUTTON}>Confirmer cette adresse</a>
+        <p ${NOTE}>
+          Ce lien est valable ${EMAIL_CHANGE_TTL_MINUTES} minutes. Si vous n'êtes pas
+          à l'origine de cette demande, ignorez ce message.
+        </p>`),
+  });
+}
+
+export async function sendEmailChangedNotice(user: UserRow, newEmail: string) {
+  const { mailFromEmail } = useRuntimeConfig();
+  await sendMail({
+    to: user.email,
+    subject: "L'adresse de votre compte Ticawa a changé",
+    text: [
+      `Bonjour ${user.prenom},`,
+      "",
+      `Votre compte Ticawa utilise désormais l'adresse ${newEmail}.`,
+      `Si vous n'êtes pas à l'origine de ce changement, écrivez-nous vite : ${mailFromEmail}`,
+      "",
+      "Tico, pour l'équipe Ticawa",
+    ].join("\n"),
+    html: shell(`
+        <p ${HEADING}>Bonjour ${escapeHtml(user.prenom)},</p>
+        <p ${BODY}>Votre compte Ticawa utilise désormais l'adresse <strong>${escapeHtml(newEmail)}</strong>.</p>
+        <p ${NOTE}>
+          Si vous n'êtes pas à l'origine de ce changement, écrivez-nous vite :
+          <a href="mailto:${mailFromEmail}" style="color:#5A67B8">${mailFromEmail}</a>.
+        </p>`),
+  });
+}
+
 const ITEM =
   'style="background:#FBF9F5;border-radius:16px;padding:12px 16px;margin:0 0 8px;font-size:14px;line-height:1.5"';
 
