@@ -59,3 +59,7 @@ Nuxt lit les variables préfixées `NUXT_` et les range dans `runtimeConfig` ([n
 | [Easter eggs de Tico](docs/tico-easter-eggs.md) | humeurs du curseur et leurs réglages |
 
 Le contexte produit et le design system sont aussi résumés dans [CLAUDE.md](CLAUDE.md).
+
+## Licence
+
+Distribué sous licence MIT : code, design system, mascotte Tico, logos et illustrations compris. Voir [LICENSE](LICENSE) (version officielle, en anglais) et [LICENSE.fr.md](LICENSE.fr.md) (traduction française).
