@@ -260,5 +260,6 @@ useSeoMeta({
   title: "Politique de confidentialité",
   description:
     "Comment Ticawa traite vos données personnelles : données collectées, finalités, durée de conservation, hébergement et droits RGPD.",
+  robots: "noindex",
 });
 </script>

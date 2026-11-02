@@ -44,6 +44,8 @@ export default defineNuxtConfig({
     cronSecret: "",
     session: { sessionHeader: false, cookie: { maxAge: 60 * 60 * 24 * 90 } },
     public: {
+      // URL canonique des pages (SEO).
+      siteUrl: process.env.NUXT_SITE_URL || "https://ticawa.vercel.app",
       vapidPublicKey: "",
     },
   },
@@ -75,6 +77,9 @@ export default defineNuxtConfig({
         { name: "mobile-web-app-capable", content: "yes" },
         { name: "apple-mobile-web-app-title", content: "Ticawa" },
         { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+        { property: "og:site_name", content: "Ticawa" },
+        { property: "og:locale", content: "fr_FR" },
+        { name: "twitter:card", content: "summary" },
       ],
     },
   },

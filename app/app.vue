@@ -16,6 +16,14 @@
 <script setup lang="ts">
 const pageKey = ref(0);
 
+const route = useRoute();
+const { siteUrl } = useRuntimeConfig().public;
+const origin = new URL(siteUrl).origin;
+const canonical = computed(() => origin + route.path);
+
+useHead({ link: [{ rel: "canonical", href: canonical }] });
+useSeoMeta({ ogUrl: canonical, ogImage: `${origin}/pwa/icon-512.png` });
+
 onMounted(() => {
   document.addEventListener(
     "click",
