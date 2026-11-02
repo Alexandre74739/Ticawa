@@ -155,5 +155,6 @@ useSeoMeta({
   title: "Conditions générales d'utilisation",
   description:
     "Conditions générales d'utilisation de Ticawa, le service gratuit qui conserve vos preuves d'achat et vous alerte avant l'expiration de vos garanties.",
+  robots: "noindex",
 });
 </script>

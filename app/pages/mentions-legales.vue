@@ -105,5 +105,6 @@ useSeoMeta({
   title: "Mentions légales",
   description:
     "Mentions légales de Ticawa : éditeur, directeur de la publication, hébergeur et propriété intellectuelle.",
+  robots: "noindex",
 });
 </script>

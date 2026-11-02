@@ -67,7 +67,16 @@
             </li>
           </ul>
         </nav>
-        <p class="text-xs text-paper/60">© {{ year }} Ticawa</p>
+        <p class="text-xs text-paper/60">
+          © {{ year }} Ticawa : conçue par Alexandre-Philippe Perez,
+          <a
+            href="https://fablioo.com"
+            target="_blank"
+            rel="noopener"
+            class="rounded underline underline-offset-2 transition-colors hover:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper"
+            >Fablioo</a
+          >
+        </p>
       </div>
     </div>
   </footer>
