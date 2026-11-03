@@ -50,8 +50,20 @@ useSeoMeta({
   ogType: "website",
 });
 
+const { siteUrl } = useRuntimeConfig().public;
+
 useHead({
   script: [
+    // Nom affiché par Google au-dessus du lien (sinon « Vercel »).
+    {
+      type: "application/ld+json",
+      innerHTML: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Ticawa",
+        url: new URL("/", siteUrl).href,
+      }),
+    },
     {
       type: "application/ld+json",
       innerHTML: JSON.stringify({

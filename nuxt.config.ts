@@ -69,7 +69,14 @@ export default defineNuxtConfig({
       htmlAttrs: { lang: "fr" },
       titleTemplate: "%s · Ticawa",
       link: [
-        { rel: "icon", type: "image/svg+xml", href: "/favicon.svg?v=2" },
+        { rel: "icon", type: "image/svg+xml", href: "/favicon.svg?v=3" },
+        // Version PNG carrée (multiple de 48 px) : celle que préfère Google.
+        {
+          rel: "icon",
+          type: "image/png",
+          sizes: "192x192",
+          href: "/pwa/icon-192.png?v=2",
+        },
         { rel: "apple-touch-icon", href: "/pwa/apple-touch-icon.png?v=2" },
       ],
       meta: [
